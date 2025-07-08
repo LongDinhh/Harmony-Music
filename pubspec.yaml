@@ -30,11 +30,11 @@ environment:
 dependencies:
   animations: ^2.0.11
   app_links: ^3.5.1
-  archive: ^3.1.6
+  archive: ^4.0.7
   audio_service: ^0.18.17
-  audio_service_mpris: ^0.1.5
+
   audio_video_progress_bar: ^2.0.3
-  audiotags: ^1.4.1
+  # audiotags: ^1.4.1  # Tạm thời comment để test lỗi FFI iOS
   buttons_tabbar: ^1.3.13
   cached_network_image: ^3.4.0
   dio: ^5.7.0
@@ -50,11 +50,12 @@ dependencies:
   hive_flutter: ^1.1.0
   ionicons: ^0.2.2
   jni: ^0.14.0
-  just_audio: ^0.9.46
-  just_audio_media_kit:
-    git:
-      url: https://github.com/anandnet/just_audio_media_kit.git
-      ref: 3738e6bcc07e289ff9621cf2514f1906c99de9aa
+  just_audio: ^0.10.4
+  just_audio_media_kit: ^2.1.0
+  
+  # Select the native media_kit libs only for mobile platforms:
+  media_kit_libs_android_audio: any
+  media_kit_libs_ios_audio: any
   palette_generator: ^0.3.3+4
   path: ^1.8.3
   path_provider: ^2.1.1
@@ -66,21 +67,19 @@ dependencies:
       url: https://github.com/anandnet/animated_side_bar.git
       branch: main
       ref: b53567a42b4ba3793a3cf00d478bdba0ecce33d7
-  smtc_windows: ^0.1.2
-  terminate_restart:
-    git:
-      url: https://github.com/anandnet/terminate_restart.git
-      branch: main
-      ref: eb505e07e11d0fe1f5c03993e707c6678428c353
+
+  restart_app: ^1.2.1
   toggle_switch: ^2.1.0
-  tray_manager: ^0.2.3
+
   url_launcher: ^6.2.1
   widget_marquee: ^0.0.8
-  window_manager: ^0.4.2
+
   youtube_explode_dart:
     git:
-      url: https://github.com/anandnet/youtube_explode_dart.git
-      ref: 1d9ec9baa806705b1d859260eeb389ec28c6b024
+      url: https://github.com/LongDinhh/googleapis.git
+      branch: master
+      ref: cdd6f40c6c2ca857c1e93ec1a93c68bb1a0b27be
+  media_kit: ^1.2.0
 dev_dependencies:
 
   # The "flutter_lints" package below contains a set of recommended lints to

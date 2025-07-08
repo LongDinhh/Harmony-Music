@@ -62,12 +62,76 @@ class ImageWidget extends StatelessWidget {
         borderRadius: artist != null ? null : BorderRadius.circular(5),
       ),
       child: offlineAvailable
-          ? Image.file(
-              File(
-                  "${Get.find<SettingsScreenController>().supportDirPath}/thumbnails/${song!.id}.png"),
-              height: size,
-              width: size,
-              fit: BoxFit.cover,
+          ? FutureBuilder<bool>(
+              future: File(
+                      "${Get.find<SettingsScreenController>().supportDirPath}/thumbnails/${song!.id}.png")
+                  .exists(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData &&
+                    snapshot.data == true) {
+                  return Image.file(
+                    File(
+                        "${Get.find<SettingsScreenController>().supportDirPath}/thumbnails/${song!.id}.png"),
+                    height: size,
+                    width: size,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.secondary,
+                            shape: artist != null
+                                ? BoxShape.circle
+                                : BoxShape.rectangle,
+                            borderRadius: artist != null
+                                ? null
+                                : BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(
+                              "assets/icons/${song != null ? "song" : artist != null ? "artist" : "album"}.png"));
+                    },
+                  );
+                }
+                // If file doesn't exist, fall back to network image
+                return CachedNetworkImage(
+                  height: size,
+                  width: size,
+                  memCacheHeight:
+                      (song != null && !isPlayerArtImage) ? 140 : null,
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) {
+                    return Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary,
+                          shape: artist != null
+                              ? BoxShape.circle
+                              : BoxShape.rectangle,
+                          borderRadius:
+                              artist != null ? null : BorderRadius.circular(10),
+                        ),
+                        child: Image.asset(
+                            "assets/icons/${song != null ? "song" : artist != null ? "artist" : "album"}.png"));
+                  },
+                  progressIndicatorBuilder: ((_, __, ___) => Shimmer.fromColors(
+                      baseColor: Colors.grey[500]!,
+                      highlightColor: Colors.grey[300]!,
+                      enabled: true,
+                      direction: ShimmerDirection.ltr,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: artist != null
+                              ? BoxShape.circle
+                              : BoxShape.rectangle,
+                          borderRadius:
+                              artist != null ? null : BorderRadius.circular(10),
+                          color: Colors.white54,
+                        ),
+                      ))),
+                );
+              },
             )
           : CachedNetworkImage(
               height: size,

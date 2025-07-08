@@ -23,7 +23,8 @@ class MiniPlayer extends StatelessWidget {
     final playerController = Get.find<PlayerController>();
     final size = MediaQuery.of(context).size;
     final isWideScreen = size.width > 800;
-    final bottomNavEnabled = Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue;
+    final bottomNavEnabled =
+        Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue;
     return Obx(() {
       return Visibility(
         visible: playerController.isPlayerpanelTopVisible.value,
@@ -36,6 +37,7 @@ class MiniPlayer extends StatelessWidget {
             color: Theme.of(context).bottomSheetTheme.backgroundColor,
             child: Center(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   !isWideScreen || bottomNavEnabled
                       ? GetX<PlayerController>(
@@ -122,6 +124,7 @@ class MiniPlayer extends StatelessWidget {
                             child: ColoredBox(
                               color: Colors.transparent,
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -163,10 +166,15 @@ class MiniPlayer extends StatelessWidget {
                           ),
                         ),
                         //player control
-                        SizedBox(
+                        Container(
                           width: isWideScreen && !bottomNavEnabled ? 450 : 90,
+                          constraints: BoxConstraints(
+                            maxWidth:
+                                isWideScreen && !bottomNavEnabled ? 450 : 90,
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               if (isWideScreen && !bottomNavEnabled)
                                 Row(
@@ -202,7 +210,7 @@ class MiniPlayer extends StatelessWidget {
                                                       .textTheme
                                                       .titleLarge!
                                                       .color!
-                                                      .withOpacity(0.2),
+                                                      .withValues(alpha: 0.2),
                                             ))),
                                   ],
                                 ),
@@ -273,7 +281,7 @@ class MiniPlayer extends StatelessWidget {
                                                 .textTheme
                                                 .titleLarge!
                                                 .color!
-                                                .withOpacity(0.2)
+                                                .withValues(alpha: 0.2)
                                             : Theme.of(context)
                                                 .textTheme
                                                 .titleMedium!
@@ -301,7 +309,7 @@ class MiniPlayer extends StatelessWidget {
                                                   .textTheme
                                                   .titleLarge!
                                                   .color!
-                                                  .withOpacity(0.2),
+                                                  .withValues(alpha: 0.2),
                                         )),
                                     IconButton(
                                         iconSize: 20,
@@ -341,6 +349,7 @@ class MiniPlayer extends StatelessWidget {
                               padding: EdgeInsets.only(
                                   right: size.width < 1004 ? 0 : 30.0),
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

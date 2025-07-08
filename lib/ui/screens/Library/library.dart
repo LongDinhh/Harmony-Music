@@ -22,6 +22,7 @@ class SongsLibraryWidget extends StatelessWidget {
           ? const EdgeInsets.only(left: 15)
           : EdgeInsets.only(left: 5.0, top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           isBottomNavActive
@@ -116,6 +117,7 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
           ? const EdgeInsets.only(left: 15)
           : EdgeInsets.only(top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 5.0),
@@ -244,6 +246,7 @@ class LibraryArtistWidget extends StatelessWidget {
           ? const EdgeInsets.only(left: 15)
           : EdgeInsets.only(left: 5, top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           isBottomNavActive
               ? const SizedBox(

@@ -12,7 +12,7 @@ import '../screens/Playlist/playlist_screen_controller.dart';
 import '../widgets/snackbar.dart';
 import '/services/synced_lyrics_service.dart';
 import '/ui/screens/Settings/settings_screen_controller.dart';
-import '../../services/windows_audio_service.dart';
+
 import '../../utils/helper.dart';
 import '/models/media_Item_builder.dart';
 import '../screens/Home/home_screen_controller.dart';
@@ -87,9 +87,6 @@ class PlayerController extends GetxController
 
   @override
   void onReady() {
-    if (GetPlatform.isWindows) {
-      Get.put(WindowsAudioService());
-    }
     _restorePrevSession();
     super.onReady();
   }
@@ -287,8 +284,7 @@ class PlayerController extends GetxController
   void _listenForCustomEvents() {
     _audioHandler.customEvent.listen((event) {
       if (event['eventType'] == 'playFromMediaId') {
-        _playViaAndroidAuto(
-            event['songId'], event['libraryId']);
+        _playViaAndroidAuto(event['songId'], event['libraryId']);
       }
     });
   }
@@ -424,8 +420,7 @@ class PlayerController extends GetxController
     _audioHandler.addQueueItems(listToEnqueue);
   }
 
-  void _playViaAndroidAuto(
-      String songId, String libraryId) {
+  void _playViaAndroidAuto(String songId, String libraryId) {
     Hive.openBox(libraryId).then((box) {
       List<MediaItem> songList = [];
       final songJson = box.values.toList();
@@ -796,9 +791,7 @@ class PlayerController extends GetxController
     scrollController.dispose();
     gesturePlayerStateAnimationController?.dispose();
     sleepTimer?.cancel();
-    if (GetPlatform.isWindows) {
-      Get.delete<WindowsAudioService>();
-    }
+
     super.dispose();
   }
 }

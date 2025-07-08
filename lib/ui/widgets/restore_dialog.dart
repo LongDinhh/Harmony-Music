@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:terminate_restart/terminate_restart.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '/ui/screens/Settings/settings_screen_controller.dart';
 import '/utils/helper.dart';
@@ -75,13 +75,13 @@ class RestoreDialog extends StatelessWidget {
                       onTap: () {
                         if (restoreDialogController.restoreProgress.toInt() ==
                             restoreDialogController.filesToRestore.toInt()) {
-                          GetPlatform.isAndroid
-                              ? TerminateRestart.instance.restartApp(
-                                  options: const TerminateRestartOptions(
-                                    terminate: true,
-                                  ),
-                                )
-                              : exit(0);
+                          // Sử dụng restart_app package để restart app
+                          try {
+                            Restart.restartApp();
+                          } catch (e) {
+                            // Fallback nếu restart_app không hoạt động
+                            exit(0);
+                          }
                         } else {
                           restoreDialogController.restore();
                         }

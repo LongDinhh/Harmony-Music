@@ -158,7 +158,8 @@ class MusicServices extends getx.GetxService {
     return home;
   }
 
-  Future<List<Map<String, dynamic>>> getCharts({String? countryCode}) async {
+  Future<List<Map<String, dynamic>>> getCharts(
+      {String? countryCode = "vi"}) async {
     final List<Map<String, dynamic>> charts = [];
     final data = Map.from(_context);
 

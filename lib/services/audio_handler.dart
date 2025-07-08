@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/services.dart';
 
-
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -28,8 +27,6 @@ import '/models/media_Item_builder.dart';
 import '/services/utils.dart';
 import '../ui/screens/Settings/settings_screen_controller.dart';
 import '../ui/screens/Library/library_controller.dart';
-// ignore: unused_import, implementation_imports, depend_on_referenced_packages
-import "package:media_kit/src/player/platform_player.dart" show MPVLogLevel;
 
 Future<AudioHandler> initAudioService() async {
   return await AudioService.init(
@@ -64,11 +61,18 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   // list of shuffled queue songs ids
   List<String> shuffledQueue = [];
 
-  final _playList =
-      ConcatenatingAudioSource(children: [], useLazyPreparation: false);
-
   MyAudioHandler() {
-    if (GetPlatform.isWindows || GetPlatform.isLinux) {
+    // Initialize JustAudioMediaKit only for mobile platforms (iOS & Android)
+    if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+      JustAudioMediaKit.ensureInitialized(
+        linux: false,
+        windows: false,
+        android: GetPlatform.isAndroid,
+        iOS: GetPlatform.isIOS,
+        macOS: false,
+      );
+
+      // Configure after initialization
       JustAudioMediaKit.title = 'Harmony music';
       JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
     }
@@ -110,7 +114,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
   void _addEmptyList() {
     try {
-      _player.setAudioSource(_playList);
+      // No need to set empty source in new API
+      // Player will be ready to accept audio sources when needed
     } catch (r) {
       printERROR(r.toString());
     }
@@ -292,9 +297,20 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
     printINFO("Playing Using AudioSource.uri");
     isPlayingUsingLockCachingSource = false;
+
+    // Add headers for iOS compatibility
+    final headers = {
+      'User-Agent':
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+    };
+
     return AudioSource.uri(
       Uri.tryParse(url)!,
       tag: mediaItem,
+      headers: headers,
     );
   }
 
@@ -444,7 +460,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
     switch (name) {
-
       case 'dispose':
         await _player.dispose();
         super.stop();
@@ -461,10 +476,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         isSongLoading = true;
         playbackState.add(playbackState.value
             .copyWith(processingState: AudioProcessingState.loading));
-        if (_playList.children.isNotEmpty) {
-          await _playList.clear();
-        }
-
         mediaItem.add(currentSong);
         final streamInfo = await futureStreamInfo;
         if (songIndex != currentIndex) {
@@ -482,7 +493,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         currentSongUrl = currentSong.extras!['url'] = streamInfo.audio!.url;
         playbackState
             .add(playbackState.value.copyWith(queueIndex: currentIndex));
-        await _playList.add(_createAudioSource(currentSong));
+
+        // Use new playlist API - set single audio source
+        await _player.setAudioSource(_createAudioSource(currentSong));
 
         isSongLoading = false;
         if (loudnessNormalizationEnabled && GetPlatform.isAndroid) {
@@ -546,7 +559,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         final futureStreamInfo = checkNGetUrl(currMed.id);
         isSongLoading = true;
         currentIndex = 0;
-        await _playList.clear();
         mediaItem.add(currMed);
         queue.add([currMed]);
         final streamInfo = (await futureStreamInfo);
@@ -560,7 +572,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         }
         currentSongUrl = currMed.extras!['url'] = streamInfo.audio!.url;
 
-        await _playList.add(_createAudioSource(currMed));
+        // Use new playlist API - set single audio source
+        await _player.setAudioSource(_createAudioSource(currMed));
         isSongLoading = false;
 
         // Normalize audio
@@ -868,7 +881,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 class UrlError extends Error {
   String message() => 'Unable to fetch url';
 }
-
 
 // for Android Auto
 class MediaLibrary {

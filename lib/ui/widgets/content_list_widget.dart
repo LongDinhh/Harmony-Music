@@ -29,23 +29,25 @@ class ContentListWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  !isHomeContent && content.title.length > 12
-                      ? "${content.title.substring(0, 12)}..."
-                      : content.title,
-                  //maxLines: 2,
-                  style: Theme.of(context).textTheme.titleLarge,
+                Expanded(
+                  child: Text(
+                    !isHomeContent && content.title.length > 12
+                        ? "${content.title.substring(0, 12)}..."
+                        : content.title,
+                    //maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
-                !isHomeContent
-                    ? TextButton(
-                        onPressed: () {
-                          final scrresController =
-                              Get.find<SearchResultScreenController>();
-                          scrresController.viewAllCallback(content.title);
-                        },
-                        child: Text("viewAll".tr,
-                            style: Theme.of(Get.context!).textTheme.titleSmall))
-                    : const SizedBox.shrink()
+                if (!isHomeContent)
+                  TextButton(
+                      onPressed: () {
+                        final scrresController =
+                            Get.find<SearchResultScreenController>();
+                        scrresController.viewAllCallback(content.title);
+                      },
+                      child: Text("viewAll".tr,
+                          style: Theme.of(Get.context!).textTheme.titleSmall))
               ],
             ),
           ),

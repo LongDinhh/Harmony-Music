@@ -289,7 +289,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                                     ? 1
                                     : -1) *
                                 dets.velocity.pixelsPerSecond.dy >
-                            0) _close();
+                            0) {
+                          _close();
+                        }
                       }
                     : null,
                 onTap: widget.backdropTapClosesPanel ? () => _close() : null,
@@ -305,8 +307,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                         //if a color exists, then touch events won't go through
                         color: _ac.value == 0.0
                             ? null
-                            : widget.backdropColor.withOpacity(
-                                widget.backdropOpacity * _ac.value),
+                            : widget.backdropColor.withValues(
+                                alpha: widget.backdropOpacity * _ac.value),
                       );
                     }),
               ),

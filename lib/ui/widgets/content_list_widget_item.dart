@@ -21,7 +21,8 @@ class ContentListItem extends StatelessWidget {
       onTap: () {
         if (isAlbum) {
           Get.toNamed(ScreenNavigationSetup.albumScreen,
-              id: ScreenNavigationSetup.id, arguments:(content, content.browseId));
+              id: ScreenNavigationSetup.id,
+              arguments: (content, content.browseId));
           return;
         }
         Get.toNamed(ScreenNavigationSetup.playlistScreen,
@@ -33,6 +34,7 @@ class ContentListItem extends StatelessWidget {
         height: 180,
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             isAlbum
@@ -127,6 +129,7 @@ class ContentListItem extends StatelessWidget {
             const SizedBox(height: 5),
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(

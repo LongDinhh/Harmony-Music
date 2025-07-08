@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
-import 'package:audiotags/audiotags.dart';
+// import 'package:audiotags/audiotags.dart';  // Tạm thời comment để test lỗi FFI iOS
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
@@ -18,7 +18,7 @@ import '../ui/screens/Settings/settings_screen_controller.dart';
 import '/utils/helper.dart';
 import '/models/media_Item_builder.dart';
 import '../ui/screens/Library/library_controller.dart';
-import 'music_service.dart';
+
 //import '../models/thumbnail.dart' as th;
 
 class Downloader extends GetxService {
@@ -98,7 +98,7 @@ class Downloader extends GetxService {
                     tag: Key(playlistId).hashCode.toString())
                 .isDownloaded
                 .value = true;
-          } 
+          }
           // in case of album
           else if (Get.isRegistered<AlbumScreenController>(
                   tag: Key(playlistId).hashCode.toString()) &&
@@ -206,17 +206,17 @@ class Downloader extends GetxService {
       (value) async {
         printINFO(value.data);
 
-        String? year;
-        try {
-          if (song.extras?['year'] != null) {
-            year = song.extras?['year'];
-          } else {
-            if (song.album != null) {
-              final musicServ = Get.find<MusicServices>();
-              year = await musicServ.getSongYear(song.id);
-            }
-          }
-        } catch (_) {}
+        // String? year;
+        // try {
+        //   if (song.extras?['year'] != null) {
+        //     year = song.extras?['year'];
+        //   } else {
+        //     if (song.album != null) {
+        //       final musicServ = Get.find<MusicServices>();
+        //       year = await musicServ.getSongYear(song.id);
+        //     }
+        //   }
+        // } catch (_) {}
 
         // Save Thumbnail
         try {
@@ -237,10 +237,12 @@ class Downloader extends GetxService {
         Get.find<LibrarySongsController>().librarySongsList.add(song);
         printINFO("Downloaded successfully");
 
-        final trackDetails = (song.extras?['trackDetails'])?.split("/");
-        final int? trackNumber = int.tryParse(trackDetails?[0] ?? "");
-        final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
+        // final trackDetails = (song.extras?['trackDetails'])?.split("/");
+        // final int? trackNumber = int.tryParse(trackDetails?[0] ?? "");
+        // final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
 
+        // Tạm thời comment code AudioTags để test lỗi FFI iOS
+        /*
         try {
           /// Reverted -- Removed AudioTags as using this package, app is flagged as TROJ_GEN.R002V01K623 by TrendMicro-HouseCall
           final imageUrl = song.artUri!.toString();
@@ -267,6 +269,7 @@ class Downloader extends GetxService {
         } catch (e) {
           printERROR("$e");
         }
+        */
         complete.complete();
       },
     ).onError(

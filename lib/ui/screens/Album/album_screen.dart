@@ -63,7 +63,7 @@ class AlbumScreen extends StatelessWidget {
                             opacity: opacityValue < 0 ||
                                     albumController.isSearchingOn.isTrue
                                 ? 0
-                                : opacityValue,
+                                : opacityValue.clamp(0.0, 1.0),
                             child: DecoratedBox(
                                 position: DecorationPosition.foreground,
                                 decoration: BoxDecoration(
@@ -117,6 +117,7 @@ class AlbumScreen extends StatelessWidget {
                     ),
             ),
             Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   padding: EdgeInsets.only(
@@ -493,6 +494,7 @@ class AlbumScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 25.0, bottom: 10, right: 30),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Marquee(

@@ -314,7 +314,9 @@ class SongInfoBottomSheet extends StatelessWidget {
     final artists = song.extras!['artists'];
     if (artists != null) {
       for (dynamic each in artists) {
-        if (each.containsKey("id") && each['id'] != null) artistList.add(each);
+        if (each.containsKey("id") && each['id'] != null) {
+          artistList.add(each);
+        }
       }
     }
     return artistList.isNotEmpty
@@ -362,7 +364,9 @@ class SongInfoController extends GetxController
     final artists = song.extras!['artists'];
     if (artists != null) {
       for (dynamic each in artists) {
-        if (each.containsKey("id") && each['id'] != null) artistList.add(each);
+        if (each.containsKey("id") && each['id'] != null) {
+          artistList.add(each);
+        }
       }
     }
   }
@@ -446,7 +450,9 @@ mixin RemoveSongFromPlaylistMixin {
     }
 
     if (playlist.playlistId == "SongDownloads" ||
-        playlist.playlistId == "SongsCache") return;
+        playlist.playlistId == "SongsCache") {
+      return;
+    }
     box.close();
   }
 }
