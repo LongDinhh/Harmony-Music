@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
-// import 'package:audiotags/audiotags.dart';  // Tạm thời comment để test lỗi FFI iOS
+import 'package:audio_metadata_reader/audio_metadata_reader.dart'; // Using fixed fork
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart'; // Unused after removing metadata code
 
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -237,39 +239,63 @@ class Downloader extends GetxService {
         Get.find<LibrarySongsController>().librarySongsList.add(song);
         printINFO("Downloaded successfully");
 
-        // final trackDetails = (song.extras?['trackDetails'])?.split("/");
-        // final int? trackNumber = int.tryParse(trackDetails?[0] ?? "");
-        // final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
+        final trackDetails = (song.extras?['trackDetails'])?.split("/");
+        final int? trackNumber = int.tryParse(trackDetails?[0] ?? "");
+        final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
 
-        // Tạm thời comment code AudioTags để test lỗi FFI iOS
-        /*
+        // Metadata writing using forked audio_metadata_reader
+        // Using fork: https://github.com/LongDinhh/audio_metadata_reader
+        // TODO: Fix bug in fork - mp4_writer.dart line 41 should use 'file' parameter instead of hardcoded "a_new.mp4"
         try {
-          /// Reverted -- Removed AudioTags as using this package, app is flagged as TROJ_GEN.R002V01K623 by TrendMicro-HouseCall
-          final imageUrl = song.artUri!.toString();
-          Tag tag = Tag(
-              title: song.title,
-              trackArtist: song.artist,
-              album: song.album,
-              year: int.tryParse(year ?? ""),
-              trackNumber: trackNumber,
-              trackTotal: totalTracks,
-              albumArtist: song.artist,
-              genre: song.genre,
-              pictures: [
-                Picture(
-                    bytes: (await NetworkAssetBundle(Uri.parse((imageUrl)))
-                            .load(imageUrl))
-                        .buffer
-                        .asUint8List(),
-                    mimeType: MimeType.png,
-                    pictureType: PictureType.coverFront)
-              ]);
+          final file = File(filePath);
 
-          await AudioTags.write(filePath, tag);
+          // Wait a bit to ensure file is fully written and released by dio
+          await Future.delayed(const Duration(milliseconds: 200));
+
+          // Verify file exists and is accessible
+          if (!await file.exists()) {
+            printERROR("File does not exist for metadata writing: $filePath");
+            return;
+          }
+
+          // Download artwork bytes for embedding
+          List<int>? artworkBytes;
+          if (song.artUri != null) {
+            try {
+              final response = await _dio.get<List<int>>(
+                song.artUri.toString(),
+                options: Options(responseType: ResponseType.bytes),
+              );
+              artworkBytes = response.data;
+            } catch (e) {
+              printERROR("Failed to download artwork: $e");
+            }
+          }
+
+          // Update metadata using audio_metadata_reader API
+          updateMetadata(file, (metadata) {
+            metadata.setTitle(song.title);
+            if (song.artist != null) metadata.setArtist(song.artist!);
+            if (song.album != null) metadata.setAlbum(song.album!);
+            if (trackNumber != null) metadata.setTrackNumber(trackNumber);
+            if (song.genre != null) metadata.setGenres([song.genre!]);
+
+            // Add artwork if available
+            if (artworkBytes != null) {
+              metadata.setPictures([
+                Picture(Uint8List.fromList(artworkBytes), "image/jpeg",
+                    PictureType.coverFront)
+              ]);
+            }
+          });
+
+          printINFO(
+              "✅ Metadata written successfully using audio_metadata_reader fork");
         } catch (e) {
-          printERROR("$e");
+          printWarning("⚠️ Metadata writing failed: $e");
+          printINFO(
+              "ℹ️ File downloaded successfully, metadata writing skipped due to permission/access issue");
         }
-        */
         complete.complete();
       },
     ).onError(

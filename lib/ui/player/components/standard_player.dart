@@ -62,7 +62,7 @@ class StandardPlayer extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 65 + Get.mediaQuery.padding.bottom + 120,
+                  height: 55 + Get.mediaQuery.padding.bottom + 120,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [

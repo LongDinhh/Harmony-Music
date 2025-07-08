@@ -25,18 +25,62 @@ class MusicServices extends getx.GetxService {
     'content-type': 'application/json',
     'content-encoding': 'gzip',
     'origin': domain,
-    'cookie': 'CONSENT=YES+1',
+    'cookie': 'VISITOR_INFO1_LIVE=q-krUsDDf8U; VISITOR_PRIVACY_METADATA=CgJWThIEGgAgFQ%3D%3D; LOGIN_INFO=AFmmF2swRgIhAIEdaLSu-B1LuE1uO39zo0o5_YwpaodP5_LofVdBXUDoAiEA01UylY7oM5B8SxRYKZxnI4P7brXoiKMlTmWz0up8KpU:QUQ3MjNmemNBZEFUMzhaUzlJVHEwSkF2cTlQaEZwcUNETUJzQy1RQlViWWpYNHhVLXlOUlozeVhQWVB1bHk5R1U1U0JSMEdvcTNLQTZ3bXRvR2ZsSk5URDlMWVFOa2JGZXRHbm9teEpYdDMyNUluZG5RazlBVXppOWNMdFlpNUxBN3pTeHhRV0x1dVU2ZkQ3aTdGRV95c0xUN19LdWhrUkdn; HSID=ASObiPAEosdn_4ihM; SSID=A-w15U2mdiOCPZb0c; APISID=W_0vAqTWVwuih7zB/Achkh4moi0UtgeJU4; SAPISID=FNNH5xHSo5EP7GV6/AnPGVLTSE_mlXLpEk; __Secure-1PAPISID=FNNH5xHSo5EP7GV6/AnPGVLTSE_mlXLpEk; __Secure-3PAPISID=FNNH5xHSo5EP7GV6/AnPGVLTSE_mlXLpEk; _gcl_au=1.1.501670752.1749787964; SID=g.a000ywi5nQobEs5lc-kj8Ej3I_DgUk-ceJVb-L33v46HTTsW8ofwRD3qmrCDwLjOL-RCX83p5QACgYKATESARMSFQHGX2Mih_3ta-ZQ3FWF5P1fkc0duxoVAUF8yKrus1KZcbJQeaj5WKkBpmqf0076; __Secure-1PSID=g.a000ywi5nQobEs5lc-kj8Ej3I_DgUk-ceJVb-L33v46HTTsW8ofwqUTRNCqUqToyRrxVvu2HkgACgYKAWISARMSFQHGX2Miri3THEBnFT__dNFeF0PawBoVAUF8yKofvQ2IbKtdk1OCPcsRTYAV0076; __Secure-3PSID=g.a000ywi5nQobEs5lc-kj8Ej3I_DgUk-ceJVb-L33v46HTTsW8ofwPBx2Rz5WfdDFiks40XS-kAACgYKAUYSARMSFQHGX2MiwWoT0nKFyTiTX2F5dUGw4xoVAUF8yKpDEKuwI6bU77-6Q0pbzHrO0076; YSC=_Bax-w1wU4g; __Secure-ROLLOUT_TOKEN=CP_Pv52t5eyJaBD81La0zaaLAxj2yfP85qmOAw%3D%3D; __Secure-1PSIDTS=sidts-CjEB5H03P-OLcno-IfIUUklUD1_1bQi-_UfH8C-WLSjG5PlnMbwj9JyBCtcE4xXhGh3BEAA; __Secure-3PSIDTS=sidts-CjEB5H03P-OLcno-IfIUUklUD1_1bQi-_UfH8C-WLSjG5PlnMbwj9JyBCtcE4xXhGh3BEAA; PREF=f6=40000080&f7=100&tz=Asia.Saigon&repeat=NONE&autoplay=true; SIDCC=AKEyXzVsP0rqAq4wAOwSgmcUAMEicDox1GA6LokPYrJd8VqoBTX8XR25zBXB5PJEZ-rON-aAAw; __Secure-1PSIDCC=AKEyXzUTMks9a26FCJd3l2PNmvOs_wY0RNJjU_z7Wr1Rxqyvd3Y67XcAB-D_iK55uxdDMqzQ9s4; __Secure-3PSIDCC=AKEyXzWH0n7Yc87OvuMrYi7LUn5kGcNxkhy0NYJVRGUnAQ1NKn5L0bOe4oGeGLaMkpjo96EGWYY',
   };
 
   final Map<String, dynamic> _context = {
     'context': {
       'client': {
         "clientName": "WEB_REMIX",
-        "clientVersion": "1.20230213.01.00",
+        "clientVersion": "1.20250702.03.00",
+        "hl": "vi",
+        "gl": "VN",
       },
       'user': {}
     }
   };
+
+//   {
+//   "hl": "vi",
+//   "gl": "VN",
+//   "remoteHost": "2402:9d80:858:27a0:10b3:27a:e252:e211",
+//   "deviceMake": "Apple",
+//   "deviceModel": "",
+//   "visitorData": "CgtxLWtyVXNERGY4VSi5h7LDBjIKCgJWThIEGgAgFQ%3D%3D",
+//   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36,gzip(gfe)",
+//   "clientName": "WEB_REMIX",
+//   "clientVersion": "1.20250702.03.00",
+//   "osName": "Macintosh",
+//   "osVersion": "10_15_7",
+//   "originalUrl": "https://music.youtube.com/watch?v=1DFa3baP16A&list=RDAMVMxEhVaOCI0Yo",
+//   "platform": "DESKTOP",
+//   "clientFormFactor": "UNKNOWN_FORM_FACTOR",
+//   "configInfo": {
+//     "appInstallData": "CLmHssMGELyczxwQxLvPHBDM364FELCGzxwQ8J3PHBCjrs8cEParsAUQ9rrPHBCrl4ATELfq_hIQudnOHBCZmLEFEIjjrwUQgc3OHBCLr88cEImwzhwQh6zOHBCU_rAFEO6gzxwQ5a7PHBCCs84cEIKgzxwQ9r3PHBCZjbEFEMn3rwUQ3rzOHBD8ss4cEIiHsAUQvYqwBRDH7s4cEIqCgBMQvbauBRDg4P8SEPGcsAUQuOTOHBDpu88cEPDizhwQ0-GvBRCjts8cEOK4sAUQ2vfOHBCQvM8cENO2zxwQntCwBRC72c4cENeczxwQ9f7_EhC1sM8cELifzxwQk4bPHBCXtc8cEL2ZsAUQqZ3PHBDRps8cKihDQU1TR0JVVG9MMndETkhrQnVIZGhRckwzQTZ2aUFhdTJ3WWRCdz09",
+//     "coldConfigData": "CLmHssMGGjJBT2pGb3gwOUJoR3MxUWZ4UUt3TjZCNDUxM1N5VEc4VUM4NVhwWDFaQnczTG1sdVlfUSIyQU9qRm94M1hhRGQxWGwxeVllSnF2LXF2ci1xamhuT1FkTmk2OGFHWllzX3hHLWJzTHc%3D",
+//     "coldHashData": "CLmHssMGEhM4MzcyMjg4Nzg1MDY2MDg0NzkyGLmHssMGMjJBT2pGb3gwOUJoR3MxUWZ4UUt3TjZCNDUxM1N5VEc4VUM4NVhwWDFaQnczTG1sdVlfUToyQU9qRm94M1hhRGQxWGwxeVllSnF2LXF2ci1xamhuT1FkTmk2OGFHWllzX3hHLWJzTHc%3D",
+//     "hotHashData": "CLmHssMGEhMxMjA0OTU2MjE4ODA1NTQxMTcwGLmHssMGMjJBT2pGb3gwOUJoR3MxUWZ4UUt3TjZCNDUxM1N5VEc4VUM4NVhwWDFaQnczTG1sdVlfUToyQU9qRm94M1hhRGQxWGwxeVllSnF2LXF2ci1xamhuT1FkTmk2OGFHWllzX3hHLWJzTHc%3D"
+//   },
+//   "userInterfaceTheme": "USER_INTERFACE_THEME_DARK",
+//   "timeZone": "Asia/Saigon",
+//   "browserName": "Chrome",
+//   "browserVersion": "140.0.0.0",
+//   "acceptHeader": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+//   "deviceExperimentId": "ChxOelV5TkRVek16a3dPVE0wT0RJeU5EWXlNdz09ELmHssMGGLmHssMG",
+//   "rolloutToken": "CP_Pv52t5eyJaBD81La0zaaLAxj2yfP85qmOAw%3D%3D",
+//   "screenWidthPoints": 1588,
+//   "screenHeightPoints": 1268,
+//   "screenPixelDensity": 1,
+//   "screenDensityFloat": 1,
+//   "utcOffsetMinutes": 420,
+//   "musicAppInfo": {
+//     "pwaInstallabilityStatus": "PWA_INSTALLABILITY_STATUS_CAN_BE_INSTALLED",
+//     "webDisplayMode": "WEB_DISPLAY_MODE_BROWSER",
+//     "storeDigitalGoodsApiSupportStatus": {
+//       "playStoreDigitalGoodsApiSupportStatus": "DIGITAL_GOODS_API_SUPPORT_STATUS_UNSUPPORTED"
+//     }
+//   }
+// }
 
   @override
   void onInit() {
@@ -50,14 +94,14 @@ class MusicServices extends getx.GetxService {
     //check visitor id in data base, if not generate one , set lang code
     final date = DateTime.now();
     _context['context']['client']['clientVersion'] =
-        "1.${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}.01.00";
+        "1.${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}.03.00";
     final signatureTimestamp = getDatestamp() - 1;
     _context['playbackContext'] = {
       'contentPlaybackContext': {'signatureTimestamp': signatureTimestamp},
     };
 
     final appPrefsBox = Hive.box('AppPrefs');
-    hlCode = appPrefsBox.get('contentLanguage') ?? "en";
+    hlCode = appPrefsBox.get('contentLanguage') ?? "vi";
     if (appPrefsBox.containsKey('visitorId')) {
       final visitorData = appPrefsBox.get("visitorId");
       if (visitorData != null && !isExpired(epoch: visitorData['exp'])) {

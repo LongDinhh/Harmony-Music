@@ -24,11 +24,14 @@ class SearchResultScreenBN extends StatelessWidget {
           child: Column(
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 55,
+                    height: 55,
                     child: Center(
                       child: IconButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
                           Get.nestedKey(ScreenNavigationSetup.id)!
                               .currentState!

@@ -227,26 +227,33 @@ class PlayerController extends GetxController
         val.buffered = oldState.buffered;
       });
       if (mediaItem != null) {
-        printINFO(mediaItem.title);
-        _newSongFlag = true;
-        isCurrentSongBuffered.value = false;
-        currentSong.value = mediaItem;
-        currentSongIndex.value = currentQueue
-            .indexWhere((element) => element.id == currentSong.value!.id);
-        await _checkFav();
-        await _addToRP(currentSong.value!);
-        if (isRadioModeOn && (currentSong.value!.id == currentQueue.last.id)) {
-          await _addRadioContinuation(radioInitiatorItem!);
-        }
-        lyrics.value = {"synced": "", "plainLyrics": ""};
-        showLyricsflag.value = false;
-        if (isDesktopLyricsDialogOpen) {
-          Navigator.pop(Get.context!);
-        }
+        // Chỉ xử lý khi thực sự là bài hát mới (khác ID)
+        final isNewSong = currentSong.value?.id != mediaItem.id;
+        if (isNewSong) {
+          printINFO(mediaItem.title);
+          _newSongFlag = true;
+          isCurrentSongBuffered.value = false;
+          currentSong.value = mediaItem;
+          currentSongIndex.value = currentQueue
+              .indexWhere((element) => element.id == currentSong.value!.id);
+          await _checkFav();
+          await _addToRP(currentSong.value!);
+          if (isRadioModeOn && (currentSong.value!.id == currentQueue.last.id)) {
+            await _addRadioContinuation(radioInitiatorItem!);
+          }
+          lyrics.value = {"synced": "", "plainLyrics": ""};
+          showLyricsflag.value = false;
+          if (isDesktopLyricsDialogOpen) {
+            Navigator.pop(Get.context!);
+          }
 
-        // reset player visible state when player is in gesture mode
-        if (Get.find<SettingsScreenController>().playerUi.value == 1) {
-          gesturePlayerVisibleState.value = 2;
+          // reset player visible state when player is in gesture mode
+          if (Get.find<SettingsScreenController>().playerUi.value == 1) {
+            gesturePlayerVisibleState.value = 2;
+          }
+        } else {
+          // Chỉ cập nhật currentSong nếu cùng ID để giữ metadata mới (như duration)
+          currentSong.value = mediaItem;
         }
       }
     });
@@ -479,7 +486,7 @@ class PlayerController extends GetxController
     }
 
     if (initFlagForPlayer) {
-      final miniPlayerHeight = isWideScreen ? 105.0 : 75.0;
+      final miniPlayerHeight = isWideScreen ? 95.0 : 65.0;
       if (Get.find<SettingsScreenController>().isBottomNavBarEnabled.isFalse ||
           getCurrentRouteName() != '/homeScreen') {
         playerPanelMinHeight.value =

@@ -215,11 +215,24 @@ class Body extends StatelessWidget {
                                     homeScreenController)
                               ]
                             : [const HomeShimmer()];
-                        return ListView.builder(
-                          padding:
-                              EdgeInsets.only(bottom: 200, top: topPadding),
-                          itemCount: items.length,
-                          itemBuilder: (context, index) => items[index],
+                        return NotificationListener<ScrollNotification>(
+                          onNotification:
+                              homeScreenController.handleScrollNotification,
+                          child: RefreshIndicator(
+                            onRefresh: homeScreenController.refresh,
+                            color: Colors.white, // Icon loading màu trắng sáng
+                            backgroundColor: Theme.of(context)
+                                .primaryColor
+                                .withValues(
+                                    alpha: 0.8), // Background có màu primary
+                            strokeWidth: 3.0, // Làm dày icon để dễ nhìn hơn
+                            child: ListView.builder(
+                              padding:
+                                  EdgeInsets.only(bottom: 200, top: topPadding),
+                              itemCount: items.length,
+                              itemBuilder: (context, index) => items[index],
+                            ),
+                          ),
                         );
                       }),
               ),

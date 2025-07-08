@@ -121,40 +121,41 @@ class AlbumScreen extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 10,
+                      top: MediaQuery.of(context).padding.top,
                       left: 10,
                       right: 10),
                   height: 80,
-                  child: Center(
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          child: IconButton(
-                              tooltip: "back".tr,
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              icon: const Icon(Icons.arrow_back_ios)),
-                        ),
-                        Expanded(
-                          child: Obx(
-                            () => Marquee(
-                              delay: const Duration(milliseconds: 300),
-                              duration: const Duration(seconds: 5),
-                              id: "${albumController.album.value.title.hashCode.toString()}_appbar",
-                              child: Text(
-                                albumController.appBarTitleVisible.isTrue
-                                    ? albumController.album.value.title
-                                    : "",
-                                maxLines: 1,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: IconButton(
+                            tooltip: "back".tr,
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.arrow_back_ios)),
+                      ),
+                      Expanded(
+                        child: Obx(
+                          () => Marquee(
+                            delay: const Duration(milliseconds: 300),
+                            duration: const Duration(seconds: 5),
+                            id: "${albumController.album.value.title.hashCode.toString()}_appbar",
+                            child: Text(
+                              albumController.appBarTitleVisible.isTrue
+                                  ? albumController.album.value.title
+                                  : "",
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -173,7 +174,8 @@ class AlbumScreen extends StatelessWidget {
                                   ? 0
                                   : landscape
                                       ? 150
-                                      : 200,
+                                      : MediaQuery.of(context).padding.top +
+                                          120,
                               bottom: 200,
                             ),
                             itemCount: albumController.songList.isEmpty
@@ -191,7 +193,7 @@ class AlbumScreen extends StatelessWidget {
                                         children: [
                                           // Bookmark button
                                           Obx(() => IconButton(
-                                            tooltip: albumController
+                                              tooltip: albumController
                                                       .isAddedToLibrary.isFalse
                                                   ? "addToLibrary".tr
                                                   : "removeFromLibrary".tr,
@@ -228,7 +230,7 @@ class AlbumScreen extends StatelessWidget {
                                                   : Icons.bookmark_added))),
                                           // Play button
                                           IconButton(
-                                            tooltip: "play".tr,
+                                              tooltip: "play".tr,
                                               onPressed: () {
                                                 playerController
                                                     .playPlayListSong(
@@ -255,7 +257,7 @@ class AlbumScreen extends StatelessWidget {
                                               )),
                                           // Enqueue button
                                           IconButton(
-                                            tooltip: "enqueueAlbumSongs".tr,
+                                              tooltip: "enqueueAlbumSongs".tr,
                                               onPressed: () {
                                                 Get.find<PlayerController>()
                                                     .enqueueSongList(
@@ -364,7 +366,7 @@ class AlbumScreen extends StatelessWidget {
                                           //           Icons.cloud_sync)),
 
                                           IconButton(
-                                            tooltip: "shareAlbum".tr,
+                                              tooltip: "shareAlbum".tr,
                                               visualDensity:
                                                   const VisualDensity(
                                                       vertical: -3),

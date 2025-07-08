@@ -35,57 +35,58 @@ class MiniPlayer extends StatelessWidget {
             height: playerController.playerPanelMinHeight.value,
             width: size.width,
             color: Theme.of(context).bottomSheetTheme.backgroundColor,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  !isWideScreen || bottomNavEnabled
-                      ? GetX<PlayerController>(
-                          builder: (controller) => Container(
-                              height: 3,
-                              color: Theme.of(context)
-                                  .progressIndicatorTheme
-                                  .color,
-                              child: MiniPlayerProgressBar(
-                                  progressBarStatus:
-                                      controller.progressBarStatus.value,
-                                  progressBarColor: Theme.of(context)
-                                          .progressIndicatorTheme
-                                          .linearTrackColor ??
-                                      Colors.white)),
-                        )
-                      : GetX<PlayerController>(builder: (controller) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15.0, top: 8, right: 15, bottom: 0),
-                            child: ProgressBar(
-                              timeLabelLocation: TimeLabelLocation.sides,
-                              thumbRadius: 7,
-                              barHeight: 4,
-                              thumbGlowRadius: 15,
-                              baseBarColor: Theme.of(context)
-                                  .sliderTheme
-                                  .inactiveTrackColor,
-                              bufferedBarColor: Theme.of(context)
-                                  .sliderTheme
-                                  .valueIndicatorColor,
-                              progressBarColor: Theme.of(context)
-                                  .sliderTheme
-                                  .activeTrackColor,
-                              thumbColor:
-                                  Theme.of(context).sliderTheme.thumbColor,
-                              timeLabelTextStyle:
-                                  Theme.of(context).textTheme.titleMedium,
-                              progress:
-                                  controller.progressBarStatus.value.current,
-                              total: controller.progressBarStatus.value.total,
-                              buffered:
-                                  controller.progressBarStatus.value.buffered,
-                              onSeek: controller.seek,
-                            ),
-                          );
-                        }),
-                  Padding(
+            child: Column(
+              // Thay từ Center
+              mainAxisAlignment:
+                  MainAxisAlignment.start, // Progress Bar sẽ ở top = 0
+              children: [
+                !isWideScreen || bottomNavEnabled
+                    ? GetX<PlayerController>(
+                        builder: (controller) => Container(
+                            height: 3,
+                            color:
+                                Theme.of(context).progressIndicatorTheme.color,
+                            child: MiniPlayerProgressBar(
+                                progressBarStatus:
+                                    controller.progressBarStatus.value,
+                                progressBarColor: Theme.of(context)
+                                        .progressIndicatorTheme
+                                        .linearTrackColor ??
+                                    Colors.white)),
+                      )
+                    : GetX<PlayerController>(builder: (controller) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 15.0, top: 8, right: 15, bottom: 0),
+                          child: ProgressBar(
+                            timeLabelLocation: TimeLabelLocation.sides,
+                            thumbRadius: 7,
+                            barHeight: 4,
+                            thumbGlowRadius: 15,
+                            baseBarColor: Theme.of(context)
+                                .sliderTheme
+                                .inactiveTrackColor,
+                            bufferedBarColor: Theme.of(context)
+                                .sliderTheme
+                                .valueIndicatorColor,
+                            progressBarColor:
+                                Theme.of(context).sliderTheme.activeTrackColor,
+                            thumbColor:
+                                Theme.of(context).sliderTheme.thumbColor,
+                            timeLabelTextStyle:
+                                Theme.of(context).textTheme.titleMedium,
+                            progress:
+                                controller.progressBarStatus.value.current,
+                            total: controller.progressBarStatus.value.total,
+                            buffered:
+                                controller.progressBarStatus.value.buffered,
+                            onSeek: controller.seek,
+                          ),
+                        );
+                      }),
+                Expanded(
+                  // Thay Padding thành Expanded để content chiếm hết space còn lại
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 17.0, vertical: 7),
                     child: Row(
@@ -508,8 +509,8 @@ class MiniPlayer extends StatelessWidget {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

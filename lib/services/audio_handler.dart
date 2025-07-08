@@ -309,11 +309,28 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       'Connection': 'keep-alive',
     };
 
-    return AudioSource.uri(
-      Uri.tryParse(url)!,
-      tag: mediaItem,
-      headers: headers,
-    );
+    // Check if URL is a local file path and add file:// scheme if needed
+    Uri uri;
+    if ((url.startsWith('/') ||
+            (url.length > 1 && url[1] == ':' && GetPlatform.isWindows)) &&
+        !url.startsWith('http') &&
+        !url.startsWith('file://')) {
+      // This is a local file path, add file:// scheme
+      uri = Uri.file(url);
+      printINFO("Playing local file: ${uri.toString()}");
+      return AudioSource.uri(
+        uri,
+        tag: mediaItem,
+      );
+    } else {
+      // This is a network URL, use with headers
+      uri = Uri.tryParse(url)!;
+      return AudioSource.uri(
+        uri,
+        tag: mediaItem,
+        headers: headers,
+      );
+    }
   }
 
   @override
@@ -500,7 +517,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         await _player.setAudioSource(_createAudioSource(currentSong));
 
         isSongLoading = false;
-        if (loudnessNormalizationEnabled && GetPlatform.isAndroid) {
+        if (loudnessNormalizationEnabled &&
+            (GetPlatform.isAndroid || GetPlatform.isIOS)) {
           _normalizeVolume(streamInfo.audio!.loudnessDb);
         }
 
@@ -579,7 +597,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         isSongLoading = false;
 
         // Normalize audio
-        if (loudnessNormalizationEnabled && GetPlatform.isAndroid) {
+        if (loudnessNormalizationEnabled &&
+            (GetPlatform.isAndroid || GetPlatform.isIOS)) {
           _normalizeVolume(streamInfo.audio!.loudnessDb);
         }
 

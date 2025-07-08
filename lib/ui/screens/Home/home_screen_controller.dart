@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
@@ -23,10 +24,13 @@ class HomeScreenController extends GetxController {
   final middleContent = [].obs;
   final fixedContent = [].obs;
   final showVersionDialog = true.obs;
+  final isRefreshing = false.obs; // Thêm biến để track trạng thái refresh
   //isHomeScreenOnTop var only useful if bottom nav enabled
   final isHomeSreenOnTop = true.obs;
   final List<ScrollController> contentScrollControllers = [];
   bool reverseAnimationtransiton = false;
+  bool _hasTriggeredRefreshHaptic =
+      false; // Track haptic khi đủ điều kiện refresh
 
   @override
   onInit() {
@@ -136,7 +140,8 @@ class HomeScreenController extends GetxController {
             middleContentTemp.addAll(rel);
           }
         } catch (e) {
-          printERROR("Seems Based on last interaction content currently not available!");
+          printERROR(
+              "Seems Based on last interaction content currently not available!");
         }
       }
 
@@ -163,6 +168,56 @@ class HomeScreenController extends GetxController {
       await Future.delayed(const Duration(seconds: 1));
       networkError.value = !silent;
     }
+  }
+
+  /// Method để refresh lại data khi pull-to-refresh
+  Future<void> refresh() async {
+    if (isRefreshing.value) return; // Tránh multiple refresh cùng lúc
+
+    try {
+      isRefreshing.value = true;
+
+      // Force load data từ network, bỏ qua cache
+      await loadContentFromNetwork(silent: false);
+    } catch (e) {
+      printERROR("Error refreshing home screen data: $e");
+    } finally {
+      isRefreshing.value = false;
+      _resetHapticState(); // Reset haptic state sau khi refresh
+    }
+  }
+
+  /// Handle scroll notification để trigger haptic khi đủ điều kiện refresh
+  bool handleScrollNotification(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification && !isRefreshing.value) {
+      final pixels = notification.metrics.pixels;
+
+      // Trigger haptic ở 140px
+      if (pixels < -140 && !_hasTriggeredRefreshHaptic) {
+        _hasTriggeredRefreshHaptic = true;
+        HapticFeedback.lightImpact();
+      }
+      // Reset flag khi scroll về vị trí bình thường
+      else if (pixels >= -40) {
+        _hasTriggeredRefreshHaptic = false;
+      }
+    }
+    // Reset flag khi bắt đầu và kết thúc scroll
+    else if (notification is ScrollStartNotification) {
+      if (notification.metrics.pixels <= 0) {
+        _hasTriggeredRefreshHaptic = false;
+      }
+    } else if (notification is ScrollEndNotification) {
+      if (notification.metrics.pixels <= 0) {
+        _hasTriggeredRefreshHaptic = false;
+      }
+    }
+    return false; // Không consume notification
+  }
+
+  /// Reset haptic state
+  void _resetHapticState() {
+    _hasTriggeredRefreshHaptic = false;
   }
 
   List _setContentList(
@@ -241,7 +296,7 @@ class HomeScreenController extends GetxController {
     const List<String> unsupportedLangIds = ["ia", "ga", "fj", "eo"];
     final userLangId =
         Get.find<SettingsScreenController>().currentAppLanguageCode.value;
-    return unsupportedLangIds.contains(userLangId) ? "en" : userLangId;
+    return unsupportedLangIds.contains(userLangId) ? "vi" : userLangId;
   }
 
   void onSideBarTabSelected(int index) {
@@ -289,14 +344,14 @@ class HomeScreenController extends GetxController {
       // Set miniplayer height accordingly
       if (!playerCon.initFlagForPlayer) {
         if (isHomeOnTop) {
-          playerCon.playerPanelMinHeight.value = 75.0;
+          playerCon.playerPanelMinHeight.value = 65.0;
         } else {
           Future.delayed(
               isResultScreenOnTop
                   ? const Duration(milliseconds: 300)
                   : Duration.zero, () {
             playerCon.playerPanelMinHeight.value =
-                75.0 + Get.mediaQuery.viewPadding.bottom;
+                65.0 + Get.mediaQuery.viewPadding.bottom;
           });
         }
       }

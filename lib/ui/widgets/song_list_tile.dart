@@ -166,7 +166,9 @@ class SongListTile extends StatelessWidget with RemoveSongFromPlaylistMixin {
               children: [
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.width > 800 ? 65 : 55,
+                    maxHeight:
+                        MediaQuery.of(context).size.width > 800 ? 65 : 55,
+                    maxWidth: 80,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -177,17 +179,25 @@ class SongListTile extends StatelessWidget with RemoveSongFromPlaylistMixin {
                             playerController.currentSong.value?.id == song.id
                                 ? Icon(
                                     Icons.equalizer,
-                                    size: MediaQuery.of(context).size.width > 800 ? 20 : 16,
+                                    size:
+                                        MediaQuery.of(context).size.width > 800
+                                            ? 18
+                                            : 14,
                                   )
                                 : const SizedBox.shrink()),
-                      if (isPlaylistOrAlbum && playerController.currentSong.value?.id == song.id)
-                        const SizedBox(height: 2), // Khoảng cách nhỏ giữa icon và text
-                      Flexible(
-                        child: Text(
-                          song.extras!['length'] ?? "",
-                          style: Theme.of(context).textTheme.titleSmall,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                      if (isPlaylistOrAlbum &&
+                          playerController.currentSong.value?.id == song.id)
+                        const SizedBox(height: 1),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            song.extras!['length'] ?? "",
+                            style: Theme.of(context).textTheme.titleSmall,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ],

@@ -21,7 +21,6 @@ class Player extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    printINFO("player");
     final size = MediaQuery.of(context).size;
     final PlayerController playerController = Get.find<PlayerController>();
     final settingsScreenController = Get.find<SettingsScreenController>();
@@ -32,7 +31,7 @@ class Player extends StatelessWidget {
         () => SlidingUpPanel(
           boxShadow: const [],
           minHeight: settingsScreenController.playerUi.value == 0
-              ? 65 + Get.mediaQuery.padding.bottom
+              ? 55 + Get.mediaQuery.padding.bottom
               : 0,
           maxHeight: size.height,
           isDraggable: !GetPlatform.isDesktop,
@@ -56,7 +55,7 @@ class Player extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 65,
+                      height: 55,
                       child: Center(
                           child: Icon(
                         color: Theme.of(context).textTheme.titleMedium!.color,

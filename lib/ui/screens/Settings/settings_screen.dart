@@ -358,7 +358,7 @@ class SettingsScreen extends StatelessWidget {
                       settingsController.showDownLoc();
                     },
                   ),
-                  if (GetPlatform.isAndroid)
+                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
                     ListTile(
                         contentPadding:
                             const EdgeInsets.only(left: 5, right: 10),
@@ -435,7 +435,7 @@ class SettingsScreen extends StatelessWidget {
                           onChanged: settingsController.toggleAutoOpenPlayer),
                     ),
                   ),
-                  if (!isDesktop)
+                  if (GetPlatform.isAndroid)
                     ListTile(
                       contentPadding:
                           const EdgeInsets.only(left: 5, right: 10, top: 0),
@@ -564,7 +564,7 @@ class SettingsScreen extends StatelessWidget {
                           },
                         )
                       : const SizedBox.shrink()),
-                  if (GetPlatform.isAndroid)
+                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
                     ListTile(
                       contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("exportDowloadedFiles".tr),
@@ -579,7 +579,7 @@ class SettingsScreen extends StatelessWidget {
                       ).whenComplete(
                           () => Get.delete<ExportFileDialogController>()),
                     ),
-                  if (GetPlatform.isAndroid)
+                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
                     ListTile(
                       contentPadding:
                           const EdgeInsets.only(left: 5, right: 10, top: 0),
@@ -648,52 +648,9 @@ class SettingsScreen extends StatelessWidget {
                         });
                       },
                     ),
-                  ]),
-              CustomExpansionTile(
-                icon: Icons.info,
-                title: "appInfo".tr,
-                children: [
-                  ListTile(
-                    contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                    title: Text("github".tr),
-                    subtitle: Text(
-                      "${"githubDes".tr}${((Get.find<PlayerController>().playerPanelMinHeight.value) == 0 || !isBottomNavActive) ? "" : "\n\n${settingsController.currentVersion} ${"by".tr} anandnet"}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    isThreeLine: true,
-                    onTap: () {
-                      launchUrl(
-                        Uri.parse(
-                          'https://github.com/anandnet/Harmony-Music',
-                        ),
-                        mode: LaunchMode.externalApplication,
-                      );
-                    },
-                  ),
-                  const Divider(),
-                  SizedBox(
-                    child: Column(
-                      children: [
-                        Text(
-                          "Harmony Music",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        Text(settingsController.currentVersion,
-                            style: Theme.of(context).textTheme.titleMedium)
-                      ],
-                    ),
-                  ),
-                ],
-              )
+                  ])
             ],
           )),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              "${settingsController.currentVersion} ${"by".tr} anandnet",
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
         ],
       ),
     );
