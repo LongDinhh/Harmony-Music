@@ -204,7 +204,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         ? 200
         : GetPlatform.isLinux
             ? 700
-            : 0;
+            : GetPlatform.isAndroid || GetPlatform.isIOS
+                ? 100 // Thêm offset nhỏ cho mobile để tránh bị cắt âm thanh
+                : 0;
     _player.positionStream.listen((value) async {
       if (_player.duration != null && _player.duration?.inSeconds != 0) {
         if (value.inMilliseconds >=

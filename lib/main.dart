@@ -47,8 +47,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         translations: Languages(),
         locale:
-            Locale(Hive.box("AppPrefs").get('currentAppLanguageCode') ?? "en"),
-        fallbackLocale: const Locale("en"),
+            Locale(Hive.box("AppPrefs").get('currentAppLanguageCode') ?? "vi"),
+        fallbackLocale: const Locale("vi"),
         builder: (context, child) {
           final mQuery = MediaQuery.of(context);
           final scale =

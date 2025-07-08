@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:widget_marquee/widget_marquee.dart';
 
 import '../../services/downloader.dart';
 import '../screens/Playlist/playlist_screen_controller.dart';
@@ -52,9 +53,14 @@ class SongInfoBottomSheet extends StatelessWidget {
                 song: song,
                 size: 50,
               ),
-              title: Text(
-                song.title,
-                maxLines: 1,
+              title: Marquee(
+                delay: const Duration(milliseconds: 500),
+                duration: const Duration(seconds: 6),
+                id: "songinfo${song.title.hashCode}",
+                child: Text(
+                  song.title,
+                  maxLines: 1,
+                ),
               ),
               subtitle: Text(song.artist!),
               trailing: SizedBox(
@@ -245,34 +251,34 @@ class SongInfoBottomSheet extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
             ),
-            ListTile(
-              leading: const Icon(Icons.open_with),
-              title: Text("openIn".tr),
-              trailing: SizedBox(
-                width: 200,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      splashRadius: 10,
-                      onPressed: () {
-                        launchUrl(Uri.parse(
-                            "https://youtube.com/watch?v=${song.id}"));
-                      },
-                      icon: const Icon(Ionicons.logo_youtube),
-                    ),
-                    IconButton(
-                      splashRadius: 10,
-                      onPressed: () {
-                        launchUrl(Uri.parse(
-                            "https://music.youtube.com/watch?v=${song.id}"));
-                      },
-                      icon: const Icon(Ionicons.play_circle),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.open_with),
+            //   title: Text("openIn".tr),
+            //   trailing: SizedBox(
+            //     width: 200,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: [
+            //         IconButton(
+            //           splashRadius: 10,
+            //           onPressed: () {
+            //             launchUrl(Uri.parse(
+            //                 "https://youtube.com/watch?v=${song.id}"));
+            //           },
+            //           icon: const Icon(Ionicons.logo_youtube),
+            //         ),
+            //         IconButton(
+            //           splashRadius: 10,
+            //           onPressed: () {
+            //             launchUrl(Uri.parse(
+            //                 "https://music.youtube.com/watch?v=${song.id}"));
+            //           },
+            //           icon: const Icon(Ionicons.play_circle),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
             if (calledFromPlayer)
               ListTile(
                 contentPadding: const EdgeInsets.only(left: 15),

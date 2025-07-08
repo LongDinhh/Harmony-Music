@@ -172,8 +172,9 @@ class PlayerController extends GetxController
       } else if (processingState != AudioProcessingState.completed) {
         buttonState.value = PlayButtonState.playing;
       } else {
-        _audioHandler.seek(Duration.zero);
-        _audioHandler.pause();
+        // Khi bài hát kết thúc, chỉ set button state thành paused
+        // Không seek về đầu và pause để cho audio handler xử lý auto-advance
+        buttonState.value = PlayButtonState.paused;
       }
     });
   }
