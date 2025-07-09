@@ -124,7 +124,7 @@ class AlbumScreen extends StatelessWidget {
                       top: MediaQuery.of(context).padding.top,
                       left: 10,
                       right: 10),
-                  height: 80,
+                  height: 100,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -141,18 +141,51 @@ class AlbumScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Obx(
-                          () => Marquee(
-                            delay: const Duration(milliseconds: 300),
-                            duration: const Duration(seconds: 5),
-                            id: "${albumController.album.value.title.hashCode.toString()}_appbar",
-                            child: Text(
-                              albumController.appBarTitleVisible.isTrue
-                                  ? albumController.album.value.title
-                                  : "",
-                              maxLines: 1,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ),
+                          () => albumController.appBarTitleVisible.isTrue
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Marquee(
+                                      delay: const Duration(milliseconds: 300),
+                                      duration: const Duration(seconds: 5),
+                                      id: "${albumController.album.value.title.hashCode.toString()}_appbar",
+                                      child: Text(
+                                        albumController.album.value.title,
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: 4.0),
+                                      child: Text(
+                                        albumController
+                                                .album.value.description ??
+                                            albumController
+                                                .album.value.artists
+                                                ?.map((e) => e['name'])
+                                                .join(", ") ??
+                                            "",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge
+                                                  ?.color
+                                                  ?.withValues(alpha: 0.7),
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
                         ),
                       ),
                     ],
