@@ -64,26 +64,45 @@ class HomeScreenController extends GetxController {
   Future<bool> loadContentFromDb() async {
     final homeScreenData = await Hive.openBox("homeScreenData");
     if (homeScreenData.keys.isNotEmpty) {
-      final String quickPicksType = homeScreenData.get("quickPicksType");
-      final List quickPicksData = homeScreenData.get("quickPicks");
-      final List middleContentData = homeScreenData.get("middleContent") ?? [];
-      final List fixedContentData = homeScreenData.get("fixedContent") ?? [];
-      quickPicks.value = QuickPicks(
-          quickPicksData.map((e) => MediaItemBuilder.fromJson(e)).toList(),
-          title: quickPicksType);
-      middleContent.value = middleContentData
-          .map((e) => e["type"] == "Album Content"
-              ? AlbumContent.fromJson(e)
-              : PlaylistContent.fromJson(e))
-          .toList();
-      fixedContent.value = fixedContentData
-          .map((e) => e["type"] == "Album Content"
-              ? AlbumContent.fromJson(e)
-              : PlaylistContent.fromJson(e))
-          .toList();
-      isContentFetched.value = true;
-      printINFO("Loaded from offline db");
-      return true;
+      try {
+        final String quickPicksType = homeScreenData.get("quickPicksType");
+        final List quickPicksData = homeScreenData.get("quickPicks");
+        final List middleContentData =
+            homeScreenData.get("middleContent") ?? [];
+        final List fixedContentData = homeScreenData.get("fixedContent") ?? [];
+        quickPicks.value = QuickPicks(
+            quickPicksData.map((e) => MediaItemBuilder.fromJson(e)).toList(),
+            title: quickPicksType);
+        middleContent.value = middleContentData.map((e) {
+          final data = Map<String, dynamic>.from(e as Map);
+          if (data["type"] == "Album Content") {
+            return AlbumContent.fromJson(data);
+          } else if (data["type"] == "QuickPicks") {
+            return QuickPicks.fromJson(data);
+          } else {
+            return PlaylistContent.fromJson(data);
+          }
+        }).toList();
+        fixedContent.value = fixedContentData.map((e) {
+          final data = Map<String, dynamic>.from(e as Map);
+          if (data["type"] == "Album Content") {
+            return AlbumContent.fromJson(data);
+          } else if (data["type"] == "QuickPicks") {
+            return QuickPicks.fromJson(data);
+          } else {
+            return PlaylistContent.fromJson(data);
+          }
+        }).toList();
+        isContentFetched.value = true;
+        printINFO("Loaded from offline db");
+        return true;
+      } catch (e) {
+        printERROR("Error loading cached data: $e");
+        // Xóa cache cũ nếu có lỗi
+        await homeScreenData.clear();
+        await homeScreenData.close();
+        return false;
+      }
     } else {
       return false;
     }
@@ -171,6 +190,7 @@ class HomeScreenController extends GetxController {
   }
 
   /// Method để refresh lại data khi pull-to-refresh
+  @override
   Future<void> refresh() async {
     if (isRefreshing.value) return; // Tránh multiple refresh cùng lúc
 
@@ -237,6 +257,12 @@ class HomeScreenController extends GetxController {
             albumList: (content["contents"]).whereType<Album>().toList(),
             title: content["title"]);
         if (tmp.albumList.length >= 2) {
+          contentTemp.add(tmp);
+        }
+      } else if ((content["contents"][0]).runtimeType == MediaItem) {
+        final songs = (content["contents"]).whereType<MediaItem>().toList();
+        if (songs.length >= 2) {
+          final tmp = QuickPicks(songs, title: content["title"]);
           contentTemp.add(tmp);
         }
       }
@@ -397,6 +423,10 @@ class HomeScreenController extends GetxController {
       return content.map((e) {
         if (e.runtimeType == AlbumContent) {
           return (e as AlbumContent).toJson();
+        } else if (e.runtimeType == PlaylistContent) {
+          return (e as PlaylistContent).toJson();
+        } else if (e.runtimeType == QuickPicks) {
+          return (e as QuickPicks).toJson();
         } else {
           return (e as PlaylistContent).toJson();
         }

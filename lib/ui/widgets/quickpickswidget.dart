@@ -13,6 +13,16 @@ class QuickPicksWidget extends StatelessWidget {
   final QuickPicks content;
   final ScrollController? scrollController;
 
+  String _getDisplayTitle(String title) {
+    // So sánh text gốc với text đã dịch
+    final translatedText = title.toLowerCase().removeAllWhitespace.tr;
+    final originalText = title.toLowerCase().removeAllWhitespace;
+    
+    // Nếu text dịch giống với text gốc (không có bản dịch), dùng text gốc
+    // Nếu text dịch khác với text gốc (có bản dịch), dùng text dịch
+    return translatedText == originalText ? title : translatedText;
+  }
+
   @override
   Widget build(BuildContext context) {
     final PlayerController playerController = Get.find<PlayerController>();
@@ -25,7 +35,7 @@ class QuickPicksWidget extends StatelessWidget {
           Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                content.title.toLowerCase().removeAllWhitespace.tr,
+                _getDisplayTitle(content.title),
                 style: Theme.of(context).textTheme.titleLarge,
               )),
           const SizedBox(height: 10),

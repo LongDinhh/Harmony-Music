@@ -2,6 +2,7 @@
 // ignore_for_file: constant_identifier_names, empty_catches
 
 import 'package:audio_service/audio_service.dart';
+import 'package:harmonymusic/utils/helper.dart';
 
 import '/models/media_Item_builder.dart';
 import '/services/utils.dart';
@@ -32,6 +33,7 @@ const carousel_title = [
 ];
 const mtrir = 'musicTwoRowItemRenderer';
 const mrlir = 'musicResponsiveListItemRenderer';
+const mcsr = 'musicCarouselShelfRenderer';
 const n_title = ['title', 'runs', 0]; //titile
 const navigation_browse = ['navigationEndpoint', 'browseEndpoint'];
 const page_type = [
@@ -162,6 +164,7 @@ List<Map<String, dynamic>> parseMixedContent(List<dynamic> rows) {
       for (var result in results['contents']) {
         var data = nav(result, [mtrir]);
         dynamic content;
+
         if (data != null) {
           var pageType = nav(data, n_title + navigation_browse + page_type,
               noneIfAbsent: true, funName: "mixed1");
@@ -173,15 +176,19 @@ List<Map<String, dynamic>> parseMixedContent(List<dynamic> rows) {
             }
           } else if (pageType == "MUSIC_PAGE_TYPE_ALBUM") {
             content = parseAlbum(data, reqAlbumObj: false);
-          } else if (pageType == "MUSIC_PAGE_TYPE_ARTIST" || pageType == "MUSIC_PAGE_TYPE_USER_CHANNEL") {
+          } else if (pageType == "MUSIC_PAGE_TYPE_ARTIST" ||
+              pageType == "MUSIC_PAGE_TYPE_USER_CHANNEL") {
             content = parseRelatedArtist(data);
           } else if (pageType == "MUSIC_PAGE_TYPE_PLAYLIST") {
             content = parsePlaylist(data);
           }
-        } else {
-          data = nav(result, [mrlir]);
-          content = parseSongFlat(data);
+
+          contents.add(content);
+          continue;
         }
+
+        data = nav(result, [mrlir]);
+        content = parseSongFlat(data);
 
         contents.add(content);
       }
@@ -500,11 +507,10 @@ List<dynamic> parsePlaylistItems(List<dynamic> results,
         'browseId'
       ]);
       videoId = creditId?.split("MPTC")[1];
-      
     }
 
-    if(isAlbum){
-      // Contains track number and total tracks 
+    if (isAlbum) {
+      // Contains track number and total tracks
       trackDetails = data?["index"] != null
           ? "${nav(data, ['index', 'runs', 0, 'text'])}/${results.length}"
           : null;

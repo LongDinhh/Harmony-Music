@@ -3,16 +3,18 @@ import 'package:get/get.dart';
 
 import '../screens/Search/search_result_screen_controller.dart';
 import '/ui/widgets/content_list_widget_item.dart';
+import '/ui/widgets/quickpickswidget.dart';
+import '/models/quick_picks.dart';
 
 class ContentListWidget extends StatelessWidget {
-  ///ContentListWidget is used to render a section of Content like a list of Albums or Playlists in HomeScreen
+  ///ContentListWidget is used to render a section of Content like a list of Albums, Playlists, or Songs in HomeScreen
   const ContentListWidget(
       {super.key,
       this.content,
       this.isHomeContent = true,
       this.scrollController});
 
-  ///content will be of class Type AlbumContent or PlaylistContent
+  ///content will be of class Type AlbumContent, PlaylistContent, or QuickPicks
   final dynamic content;
   final bool isHomeContent;
   final ScrollController? scrollController;
@@ -20,6 +22,16 @@ class ContentListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAlbumContent = content.runtimeType.toString() == "AlbumContent";
+    final isQuickPicks = content.runtimeType.toString() == "QuickPicks";
+    
+    // Nếu là QuickPicks, sử dụng QuickPicksWidget
+    if (isQuickPicks) {
+      return QuickPicksWidget(
+        content: content as QuickPicks,
+        scrollController: scrollController,
+      );
+    }
+    
     // ignore: avoid_unnecessary_containers
     return Container(
       child: Column(

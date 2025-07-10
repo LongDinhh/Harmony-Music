@@ -151,7 +151,6 @@ class MusicServices extends getx.GetxService {
           _headers['X-Goog-Visitor-Id'] = visitorId;
         }
       }
-
     } catch (e) {
       printERROR("Error initializing app data: $e");
       // Fallback: sử dụng visitorId mặc định
@@ -298,7 +297,6 @@ class MusicServices extends getx.GetxService {
 
     final sectionList =
         nav(response.data, single_column_tab + ['sectionListRenderer']);
-    //inspect(sectionList);
     //print(sectionList.containsKey('continuations'));
     if (sectionList.containsKey('continuations')) {
       requestFunc(additionalParams) async {
