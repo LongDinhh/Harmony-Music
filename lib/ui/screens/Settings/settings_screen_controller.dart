@@ -17,6 +17,7 @@ import '/services/music_service.dart';
 import '/ui/player/player_controller.dart';
 import '../Home/home_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
+import '/services/cookie_manager.dart';
 
 class SettingsScreenController extends GetxController {
   late String _supportDir;
@@ -53,6 +54,7 @@ class SettingsScreenController extends GetxController {
     _setInitValue();
     if (updateCheckFlag) _checkNewVersion();
     _createInAppSongDownDir();
+    _loadCookieInfo();
     super.onInit();
   }
 
@@ -339,5 +341,35 @@ class SettingsScreenController extends GetxController {
     } else {
       return (await getApplicationDocumentsDirectory()).path;
     }
+  }
+
+  // Cookie management methods
+  final cookieInfo = Rxn<Map<String, dynamic>>();
+  final hasValidCookies = false.obs;
+
+  Future<void> _loadCookieInfo() async {
+    final info = await CookieManager.getCookieInfo();
+    cookieInfo.value = info;
+    hasValidCookies.value = await CookieManager.hasValidCookies();
+  }
+
+  Future<void> refreshCookieInfo() async {
+    await _loadCookieInfo();
+  }
+
+  Future<void> clearCookies() async {
+    await CookieManager.removeCookies();
+    await _loadCookieInfo();
+    ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
+        Get.context!, "Cookies cleared successfully",
+        size: SanckBarSize.MEDIUM));
+  }
+
+  Future<void> updateCookies(String newCookieString) async {
+    await CookieManager.saveCookies(newCookieString);
+    await _loadCookieInfo();
+    ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
+        Get.context!, "Cookies updated successfully",
+        size: SanckBarSize.MEDIUM));
   }
 }

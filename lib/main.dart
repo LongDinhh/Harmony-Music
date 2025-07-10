@@ -113,6 +113,8 @@ initHive() async {
   await Hive.openBox("SongDownloads");
   await Hive.openBox('SongsUrlCache');
   await Hive.openBox("AppPrefs");
+  await Hive.openBox("CookieStorage");
+  await Hive.openBox("CookieKeysStorage");
 }
 
 void _setAppInitPrefs() {

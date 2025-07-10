@@ -173,7 +173,7 @@ List<Map<String, dynamic>> parseMixedContent(List<dynamic> rows) {
             }
           } else if (pageType == "MUSIC_PAGE_TYPE_ALBUM") {
             content = parseAlbum(data, reqAlbumObj: false);
-          } else if (pageType == "MUSIC_PAGE_TYPE_ARTIST") {
+          } else if (pageType == "MUSIC_PAGE_TYPE_ARTIST" || pageType == "MUSIC_PAGE_TYPE_USER_CHANNEL") {
             content = parseRelatedArtist(data);
           } else if (pageType == "MUSIC_PAGE_TYPE_PLAYLIST") {
             content = parsePlaylist(data);

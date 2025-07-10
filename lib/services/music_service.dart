@@ -11,6 +11,8 @@ import '../utils/helper.dart';
 import 'constant.dart';
 import 'continuations.dart';
 import 'nav_parser.dart';
+import 'package:crypto/crypto.dart';
+import 'cookie_manager.dart';
 
 enum AudioQuality {
   Low,
@@ -25,62 +27,20 @@ class MusicServices extends getx.GetxService {
     'content-type': 'application/json',
     'content-encoding': 'gzip',
     'origin': domain,
-    'cookie': 'VISITOR_INFO1_LIVE=q-krUsDDf8U; VISITOR_PRIVACY_METADATA=CgJWThIEGgAgFQ%3D%3D; LOGIN_INFO=AFmmF2swRgIhAIEdaLSu-B1LuE1uO39zo0o5_YwpaodP5_LofVdBXUDoAiEA01UylY7oM5B8SxRYKZxnI4P7brXoiKMlTmWz0up8KpU:QUQ3MjNmemNBZEFUMzhaUzlJVHEwSkF2cTlQaEZwcUNETUJzQy1RQlViWWpYNHhVLXlOUlozeVhQWVB1bHk5R1U1U0JSMEdvcTNLQTZ3bXRvR2ZsSk5URDlMWVFOa2JGZXRHbm9teEpYdDMyNUluZG5RazlBVXppOWNMdFlpNUxBN3pTeHhRV0x1dVU2ZkQ3aTdGRV95c0xUN19LdWhrUkdn; HSID=ASObiPAEosdn_4ihM; SSID=A-w15U2mdiOCPZb0c; APISID=W_0vAqTWVwuih7zB/Achkh4moi0UtgeJU4; SAPISID=FNNH5xHSo5EP7GV6/AnPGVLTSE_mlXLpEk; __Secure-1PAPISID=FNNH5xHSo5EP7GV6/AnPGVLTSE_mlXLpEk; __Secure-3PAPISID=FNNH5xHSo5EP7GV6/AnPGVLTSE_mlXLpEk; _gcl_au=1.1.501670752.1749787964; SID=g.a000ywi5nQobEs5lc-kj8Ej3I_DgUk-ceJVb-L33v46HTTsW8ofwRD3qmrCDwLjOL-RCX83p5QACgYKATESARMSFQHGX2Mih_3ta-ZQ3FWF5P1fkc0duxoVAUF8yKrus1KZcbJQeaj5WKkBpmqf0076; __Secure-1PSID=g.a000ywi5nQobEs5lc-kj8Ej3I_DgUk-ceJVb-L33v46HTTsW8ofwqUTRNCqUqToyRrxVvu2HkgACgYKAWISARMSFQHGX2Miri3THEBnFT__dNFeF0PawBoVAUF8yKofvQ2IbKtdk1OCPcsRTYAV0076; __Secure-3PSID=g.a000ywi5nQobEs5lc-kj8Ej3I_DgUk-ceJVb-L33v46HTTsW8ofwPBx2Rz5WfdDFiks40XS-kAACgYKAUYSARMSFQHGX2MiwWoT0nKFyTiTX2F5dUGw4xoVAUF8yKpDEKuwI6bU77-6Q0pbzHrO0076; YSC=_Bax-w1wU4g; __Secure-ROLLOUT_TOKEN=CP_Pv52t5eyJaBD81La0zaaLAxj2yfP85qmOAw%3D%3D; __Secure-1PSIDTS=sidts-CjEB5H03P-OLcno-IfIUUklUD1_1bQi-_UfH8C-WLSjG5PlnMbwj9JyBCtcE4xXhGh3BEAA; __Secure-3PSIDTS=sidts-CjEB5H03P-OLcno-IfIUUklUD1_1bQi-_UfH8C-WLSjG5PlnMbwj9JyBCtcE4xXhGh3BEAA; PREF=f6=40000080&f7=100&tz=Asia.Saigon&repeat=NONE&autoplay=true; SIDCC=AKEyXzVsP0rqAq4wAOwSgmcUAMEicDox1GA6LokPYrJd8VqoBTX8XR25zBXB5PJEZ-rON-aAAw; __Secure-1PSIDCC=AKEyXzUTMks9a26FCJd3l2PNmvOs_wY0RNJjU_z7Wr1Rxqyvd3Y67XcAB-D_iK55uxdDMqzQ9s4; __Secure-3PSIDCC=AKEyXzWH0n7Yc87OvuMrYi7LUn5kGcNxkhy0NYJVRGUnAQ1NKn5L0bOe4oGeGLaMkpjo96EGWYY',
+    'X-Goog-AuthUser': '0',
   };
 
   final Map<String, dynamic> _context = {
     'context': {
       'client': {
         "clientName": "WEB_REMIX",
-        "clientVersion": "1.20250702.03.00",
+        "clientVersion": "1.20250707.03.00",
         "hl": "vi",
         "gl": "VN",
       },
       'user': {}
     }
   };
-
-//   {
-//   "hl": "vi",
-//   "gl": "VN",
-//   "remoteHost": "2402:9d80:858:27a0:10b3:27a:e252:e211",
-//   "deviceMake": "Apple",
-//   "deviceModel": "",
-//   "visitorData": "CgtxLWtyVXNERGY4VSi5h7LDBjIKCgJWThIEGgAgFQ%3D%3D",
-//   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36,gzip(gfe)",
-//   "clientName": "WEB_REMIX",
-//   "clientVersion": "1.20250702.03.00",
-//   "osName": "Macintosh",
-//   "osVersion": "10_15_7",
-//   "originalUrl": "https://music.youtube.com/watch?v=1DFa3baP16A&list=RDAMVMxEhVaOCI0Yo",
-//   "platform": "DESKTOP",
-//   "clientFormFactor": "UNKNOWN_FORM_FACTOR",
-//   "configInfo": {
-//     "appInstallData": "CLmHssMGELyczxwQxLvPHBDM364FELCGzxwQ8J3PHBCjrs8cEParsAUQ9rrPHBCrl4ATELfq_hIQudnOHBCZmLEFEIjjrwUQgc3OHBCLr88cEImwzhwQh6zOHBCU_rAFEO6gzxwQ5a7PHBCCs84cEIKgzxwQ9r3PHBCZjbEFEMn3rwUQ3rzOHBD8ss4cEIiHsAUQvYqwBRDH7s4cEIqCgBMQvbauBRDg4P8SEPGcsAUQuOTOHBDpu88cEPDizhwQ0-GvBRCjts8cEOK4sAUQ2vfOHBCQvM8cENO2zxwQntCwBRC72c4cENeczxwQ9f7_EhC1sM8cELifzxwQk4bPHBCXtc8cEL2ZsAUQqZ3PHBDRps8cKihDQU1TR0JVVG9MMndETkhrQnVIZGhRckwzQTZ2aUFhdTJ3WWRCdz09",
-//     "coldConfigData": "CLmHssMGGjJBT2pGb3gwOUJoR3MxUWZ4UUt3TjZCNDUxM1N5VEc4VUM4NVhwWDFaQnczTG1sdVlfUSIyQU9qRm94M1hhRGQxWGwxeVllSnF2LXF2ci1xamhuT1FkTmk2OGFHWllzX3hHLWJzTHc%3D",
-//     "coldHashData": "CLmHssMGEhM4MzcyMjg4Nzg1MDY2MDg0NzkyGLmHssMGMjJBT2pGb3gwOUJoR3MxUWZ4UUt3TjZCNDUxM1N5VEc4VUM4NVhwWDFaQnczTG1sdVlfUToyQU9qRm94M1hhRGQxWGwxeVllSnF2LXF2ci1xamhuT1FkTmk2OGFHWllzX3hHLWJzTHc%3D",
-//     "hotHashData": "CLmHssMGEhMxMjA0OTU2MjE4ODA1NTQxMTcwGLmHssMGMjJBT2pGb3gwOUJoR3MxUWZ4UUt3TjZCNDUxM1N5VEc4VUM4NVhwWDFaQnczTG1sdVlfUToyQU9qRm94M1hhRGQxWGwxeVllSnF2LXF2ci1xamhuT1FkTmk2OGFHWllzX3hHLWJzTHc%3D"
-//   },
-//   "userInterfaceTheme": "USER_INTERFACE_THEME_DARK",
-//   "timeZone": "Asia/Saigon",
-//   "browserName": "Chrome",
-//   "browserVersion": "140.0.0.0",
-//   "acceptHeader": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-//   "deviceExperimentId": "ChxOelV5TkRVek16a3dPVE0wT0RJeU5EWXlNdz09ELmHssMGGLmHssMG",
-//   "rolloutToken": "CP_Pv52t5eyJaBD81La0zaaLAxj2yfP85qmOAw%3D%3D",
-//   "screenWidthPoints": 1588,
-//   "screenHeightPoints": 1268,
-//   "screenPixelDensity": 1,
-//   "screenDensityFloat": 1,
-//   "utcOffsetMinutes": 420,
-//   "musicAppInfo": {
-//     "pwaInstallabilityStatus": "PWA_INSTALLABILITY_STATUS_CAN_BE_INSTALLED",
-//     "webDisplayMode": "WEB_DISPLAY_MODE_BROWSER",
-//     "storeDigitalGoodsApiSupportStatus": {
-//       "playStoreDigitalGoodsApiSupportStatus": "DIGITAL_GOODS_API_SUPPORT_STATUS_UNSUPPORTED"
-//     }
-//   }
-// }
 
   @override
   void onInit() {
@@ -100,60 +60,215 @@ class MusicServices extends getx.GetxService {
       'contentPlaybackContext': {'signatureTimestamp': signatureTimestamp},
     };
 
+    // Khởi tạo cookie từ storage
+    await _initializeCookies();
+
+    // Thêm interceptor cho SAPISIDHASH
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        // Lấy tất cả cookie hợp lệ dưới dạng chuỗi
+        final cookies = await CookieManager.getAllValidCookiesString();
+        if (cookies.isNotEmpty) {
+          options.headers['cookie'] = cookies;
+
+          // Lấy SAPISID theo key
+          final sapisid = await CookieManager.getCookieByKey('SAPISID');
+          if (sapisid != null) {
+            // Tạo SAPISIDHASH với datasyncId từ storage
+            final sapisidHash =
+                await getSApiSidHash(null, sapisid, origin: domain);
+            if (sapisidHash != null) {
+              options.headers['Authorization'] = 'SAPISIDHASH $sapisidHash';
+            }
+          }
+        }
+
+        handler.next(options);
+      },
+      onResponse: (response, handler) async {
+        // Cập nhật cookie từ response headers nếu có
+        final responseCookies = response.headers.map['set-cookie'];
+        if (responseCookies != null && responseCookies.isNotEmpty) {
+          await CookieManager.updateCookiesFromResponse(responseCookies);
+        }
+        handler.next(response);
+      },
+    ));
+
+    // Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
+    await _initializeAppData();
+
     final appPrefsBox = Hive.box('AppPrefs');
     hlCode = appPrefsBox.get('contentLanguage') ?? "vi";
-    if (appPrefsBox.containsKey('visitorId')) {
-      final visitorData = appPrefsBox.get("visitorId");
-      if (visitorData != null && !isExpired(epoch: visitorData['exp'])) {
-        _headers['X-Goog-Visitor-Id'] = visitorData['id'];
-        appPrefsBox.put("visitorId", {
-          'id': visitorData['id'],
-          'exp': DateTime.now().millisecondsSinceEpoch ~/ 1000 + 2590200
-        });
-        printINFO("Got Visitor id ($visitorData['id']) from Box");
-        return;
-      }
-    }
 
-    final visitorId = await genrateVisitorId();
-    if (visitorId != null) {
-      _headers['X-Goog-Visitor-Id'] = visitorId;
-      printINFO("New Visitor id generated ($visitorId)");
-      appPrefsBox.put("visitorId", {
-        'id': visitorId,
-        'exp': DateTime.now().millisecondsSinceEpoch ~/ 1000 + 2592000
-      });
+    // Kiểm tra visitorId từ storage trước
+    final storedIds = await CookieManager.getIds();
+    if (storedIds['visitorId'] != null) {
+      _headers['X-Goog-Visitor-Id'] = storedIds['visitorId']!;
+      printINFO("Got Visitor id (${storedIds['visitorId']}) from storage");
       return;
     }
-    // not able to generate in that case
+
+    // Fallback: sử dụng visitorId mặc định nếu không có trong storage
     _headers['X-Goog-Visitor-Id'] =
-        visitorId ?? "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+        "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+  }
+
+  /// Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
+  Future<void> _initializeAppData() async {
+    try {
+      printINFO("Initializing app data...");
+
+      // Call API domain để lấy cookie và visitor data
+      final response =
+          await dio.get(domain, options: Options(headers: _headers));
+
+      // Cập nhật cookie từ response nếu có
+      final responseCookies = response.headers.map['set-cookie'];
+      if (responseCookies != null && responseCookies.isNotEmpty) {
+        await CookieManager.updateCookiesFromResponse(responseCookies);
+      }
+
+      // Parse visitorId và datasyncId từ response
+      final reg = RegExp(r'ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;');
+      final matches = reg.firstMatch(response.data.toString());
+
+      if (matches != null) {
+        final ytcfg = json.decode(matches.group(1).toString());
+        final visitorId = ytcfg['VISITOR_DATA']?.toString();
+        final datasyncId = ytcfg['USER_SESSION_ID']?.toString() ??
+            ytcfg['datasyncId']?.toString().replaceAll('|', '') ??
+            ytcfg['DATASYNC_ID']?.toString().replaceAll('|', '');
+
+        // Lưu visitorId và datasyncId vào storage (vĩnh viễn)
+        if (visitorId != null && datasyncId != null) {
+          await CookieManager.saveIds(datasyncId, visitorId, expiresIn: null);
+
+          // Cập nhật headers
+          _headers['X-Goog-Visitor-Id'] = visitorId;
+        } else if (visitorId != null) {
+          await CookieManager.saveVisitorId(visitorId, expiresIn: null);
+          _headers['X-Goog-Visitor-Id'] = visitorId;
+        }
+      }
+
+    } catch (e) {
+      printERROR("Error initializing app data: $e");
+      // Fallback: sử dụng visitorId mặc định
+      _headers['X-Goog-Visitor-Id'] =
+          "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+    }
   }
 
   set hlCode(String code) {
     _context['context']['client']['hl'] = code;
   }
 
+  /// Khởi tạo cookie từ storage hoặc tạo mới
+  Future<void> _initializeCookies() async {
+    // Kiểm tra xem có cookie hợp lệ trong storage không
+    final validCookies = await CookieManager.getAllValidCookiesString();
+    if (validCookies.isNotEmpty) {
+      _headers['cookie'] = validCookies;
+      printINFO('Loaded cookies from storage');
+      return;
+    }
+
+    // Nếu không có cookie hợp lệ, sử dụng cookie mặc định và lưu vào storage theo key
+    await _initializeDefaultCookiesByKey();
+    printINFO('Initialized with default cookies by key');
+  }
+
+  /// Khởi tạo cookie mặc định theo key
+  Future<void> _initializeDefaultCookiesByKey() async {
+    // Cookie mặc định được lưu theo key
+    final defaultCookies = {
+      'VISITOR_INFO1_LIVE': 'q-krUsDDf8U',
+      'VISITOR_PRIVACY_METADATA': 'CgJWThIEGgAgFQ%3D%3D',
+      '_gcl_au': '1.1.501670752.1749787964',
+      'YSC': 'eusn3kpOLfs',
+      '__Secure-ROLLOUT_TOKEN': 'CP_Pv52t5eyJaBD81La0zaaLAxioke269bGOAw%3D%3D',
+      'HSID': 'A7pQpWgAW2F50KNH_',
+      'SSID': 'AlIkzoKWvz032UgI-',
+      'APISID': 'f4z2w7kNLEJ_dqSs/At57bYt0jIyRaqFM_',
+      'SAPISID': '23BCIV3c09QiTMNc/Ay5Pl6vMnMoS8ccZB',
+      '__Secure-1PAPISID': '23BCIV3c09QiTMNc/Ay5Pl6vMnMoS8ccZB',
+      '__Secure-3PAPISID': '23BCIV3c09QiTMNc/Ay5Pl6vMnMoS8ccZB',
+      'SID':
+          'g.a000ywhZ840j5BNYqwIry9uq27YWivjaFcZVHAuMyiQhTFQkgIv6CugMmO8liIGkI-NsWg6C0wACgYKAaASARcSFQHGX2MiCdCkAawCZVJMiX3t5jmfPRoVAUF8yKprG9U94UR3koFOFiUfVi7G0076',
+      '__Secure-1PSID':
+          'g.a000ywhZ840j5BNYqwIry9uq27YWivjaFcZVHAuMyiQhTFQkgIv6c2-DIW1kOpYRMyXQl33IwgACgYKAZUSARcSFQHGX2MiQcM2U6p5qsAN4OMooFQFRRoVAUF8yKpdYrvYAqAEEGn4ry-cXLs00076',
+      '__Secure-3PSID':
+          'g.a000ywhZ840j5BNYqwIry9uq27YWivjaFcZVHAuMyiQhTFQkgIv678ydg2q4znw-PV2hmRGtYgACgYKAQ8SARcSFQHGX2MiWBqkTBpWZtSa8flyrhM8nRoVAUF8yKpDiGheBXXQz0c1fO-l8dFo0076',
+      'LOGIN_INFO':
+          'AFmmF2swRAIgTJKEUkwQxtdL_NstctthPi6sdsYegdOybb10zLFVrYYCIEn4zW1tmn3KujEdwq6boFuyxsb2k8ZkXW_rjD3D2q-d:QUQ3MjNmd255RTNRYW1VMW5hN2pFYmk5SHRBWHFnQ3o1TURjV3ZRNXhNbExIcTlXd0VHMkJJbjRweVlrdlV5QkpCLVlJcHg3WlFmZGl6Q28yMlZzUU9IZERQY0lDS2lnVUVKdkk3Ml9qNFRManVZelF1T0VvZ3c0NzNQOV91cHhyRnhqRmF1U3J2ZzMxTlI4Z0F1LWdEdENibUhoZ3BFM3Vn',
+      'PREF': 'f6=40000080&f7=100&tz=Asia.Saigon&repeat=NONE&autoplay=true',
+      '__Secure-1PSIDTS':
+          'sidts-CjIB5H03Px4xGvNMZRBRF4gAGC3veODcLQrPo2rVeh_i5H94V5j7s8YWGG8ZScQ5bCJuBBAA',
+      '__Secure-3PSIDTS':
+          'sidts-CjIB5H03Px4xGvNMZRBRF4gAGC3veODcLQrPo2rVeh_i5H94V5j7s8YWGG8ZScQ5bCJuBBAA',
+      'SIDCC':
+          'AKEyXzWZuTBr_7tD7OzJpnu8RON5ZJJExChV75Lmw4Pm1YDq2czXJfaL3URhLsGzGBrqmTuyLQ',
+      '__Secure-1PSIDCC':
+          'AKEyXzVlFUN2gDeeSrM3FY4anqqsmu65BoOyyV2hgbCCgqGD-LIZN7iKgQ37mP0gdsGJCMcn-g',
+      '__Secure-3PSIDCC':
+          'AKEyXzVQGpE_QHnc72Js9lhxjzvdN5_6Nh153sajAs_CTgkxYpKslfEh19cvQl7029Js5rq6hds',
+    };
+
+    // Lưu từng cookie theo key (vĩnh viễn)
+    for (final entry in defaultCookies.entries) {
+      await CookieManager.saveCookieByKey(entry.key, entry.value,
+          expiresIn: null);
+    }
+
+    // Cập nhật headers với cookie string
+    _headers['cookie'] = await CookieManager.getAllValidCookiesString();
+  }
+
   Future<String?> genrateVisitorId() async {
     try {
       final response =
           await dio.get(domain, options: Options(headers: _headers));
+
+      // Lưu cookie mới từ response nếu có
+      final responseCookies = response.headers.map['set-cookie'];
+      if (responseCookies != null && responseCookies.isNotEmpty) {
+        await CookieManager.updateCookiesFromResponse(responseCookies);
+      }
+
       final reg = RegExp(r'ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;');
       final matches = reg.firstMatch(response.data.toString());
       String? visitorId;
       if (matches != null) {
         final ytcfg = json.decode(matches.group(1).toString());
         visitorId = ytcfg['VISITOR_DATA']?.toString();
+        final datasyncId = ytcfg['USER_SESSION_ID']?.toString() ??
+            ytcfg['datasyncId']?.toString().replaceAll('|', '') ??
+            ytcfg['DATASYNC_ID']?.toString().replaceAll('|', '');
+
+        printINFO("=====datasyncId id: $datasyncId");
+
+        // Lưu datasyncId và visitorId vào storage nếu có
+        if (datasyncId != null && visitorId != null) {
+          await CookieManager.saveIds(datasyncId, visitorId, expiresIn: null);
+          printINFO("Saved datasyncId and visitorId from generateVisitorId");
+        } else if (datasyncId != null) {
+          await CookieManager.saveDatasyncId(datasyncId, expiresIn: null);
+          printINFO("Saved datasyncId from generateVisitorId");
+        } else if (visitorId != null) {
+          await CookieManager.saveVisitorId(visitorId, expiresIn: null);
+          printINFO("Saved visitorId from generateVisitorId");
+        }
       }
       return visitorId;
     } catch (e) {
+      printERROR("Error generating visitor ID: $e");
       return null;
     }
   }
 
   Future<Response> _sendRequest(String action, Map<dynamic, dynamic> data,
       {additionalParams = ""}) async {
-    //print("$baseUrl$action$fixedParms$additionalParams          data:$data");
     try {
       final response =
           await dio.post("$baseUrl$action$fixedParms$additionalParams",
@@ -916,6 +1031,45 @@ class MusicServices extends getx.GetxService {
   void onClose() {
     dio.close();
     super.onClose();
+  }
+
+  String _sha1(String input) {
+    var bytes = utf8.encode(input);
+    var digest = sha1.convert(bytes);
+    return digest.toString();
+  }
+
+  /// Tạo SAPISIDHASH cho YouTube API
+  ///
+  /// [datasyncId] - ID datasync (nếu null sẽ lấy từ storage)
+  /// [cookieString] - Chuỗi cookie chứa SAPISID
+  /// [origin] - Origin URL (mặc định là https://www.youtube.com)
+  Future<String?> getSApiSidHash(String? datasyncId, String sapisid,
+      {String origin = "https://music.youtube.com"}) async {
+    try {
+      // Nếu datasyncId không được truyền vào, lấy từ storage
+      String? finalDatasyncId = datasyncId;
+      if (finalDatasyncId == null) {
+        finalDatasyncId = await CookieManager.getDatasyncId();
+        if (finalDatasyncId == null) {
+          printERROR("No datasyncId available for SAPISIDHASH generation");
+          return null;
+        }
+      }
+
+      final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+
+      final inputString =
+          [finalDatasyncId, timestamp, sapisid, origin].join(' ');
+      final digest = _sha1(inputString);
+
+      final sapisidHash = '${timestamp}_${digest}_u';
+
+      return sapisidHash;
+    } catch (e) {
+      printERROR("Error generating SAPISIDHASH: $e");
+      return null;
+    }
   }
 }
 

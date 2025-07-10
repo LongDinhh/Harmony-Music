@@ -238,7 +238,8 @@ class PlayerController extends GetxController
               .indexWhere((element) => element.id == currentSong.value!.id);
           await _checkFav();
           await _addToRP(currentSong.value!);
-          if (isRadioModeOn && (currentSong.value!.id == currentQueue.last.id)) {
+          if (isRadioModeOn &&
+              (currentSong.value!.id == currentQueue.last.id)) {
             await _addRadioContinuation(radioInitiatorItem!);
           }
           lyrics.value = {"synced": "", "plainLyrics": ""};
