@@ -1,0 +1,44 @@
+# Platform-Specific Guidelines cho Harmony Music
+
+## Platform Support
+Dự án chỉ hỗ trợ iOS và Android. Không cần quan tâm đến web, desktop, hoặc Linux.
+
+## Android Specific
+- [android/app/src/main/kotlin/com/anandnet/harmonymusic/](mdc:android/app/src/main/kotlin/com/anandnet/harmonymusic/) - Native Android code
+- [android/app/src/main/kotlin/com/anandnet/harmonymusic/Equalizer.kt](mdc:android/app/src/main/kotlin/com/anandnet/harmonymusic/Equalizer.kt) - Native equalizer
+- [android/app/src/main/kotlin/com/anandnet/harmonymusic/MainActivity.kt](mdc:android/app/src/main/kotlin/com/anandnet/harmonymusic/MainActivity.kt) - Main activity
+- [android/app/build.gradle](mdc:android/app/build.gradle) - Android build configuration
+
+## iOS Specific
+- [ios/Runner/AppDelegate.swift](mdc:ios/Runner/AppDelegate.swift) - iOS app delegate
+- [ios/Runner/Info.plist](mdc:ios/Runner/Info.plist) - iOS configuration
+- [ios/Podfile](mdc:ios/Podfile) - iOS dependencies
+
+## Native Bindings
+- [lib/native_bindings/andrid_utils.dart](mdc:lib/native_bindings/andrid_utils.dart) - Android utilities
+- Sử dụng `ffi` hoặc `method_channel` cho native communication
+
+## Platform Detection
+```dart
+import 'dart:io';
+
+if (Platform.isAndroid) {
+  // Android specific code
+} else if (Platform.isIOS) {
+  // iOS specific code
+}
+```
+
+## Permissions
+- Android: [android/app/src/main/AndroidManifest.xml](mdc:android/app/src/main/AndroidManifest.xml)
+- iOS: [ios/Runner/Info.plist](mdc:ios/Runner/Info.plist)
+- Sử dụng [lib/services/permission_service.dart](mdc:lib/services/permission_service.dart) cho permission handling
+
+## Build Configuration
+- Android: [android/app/build.gradle](mdc:android/app/build.gradle)
+- iOS: [ios/Runner.xcodeproj/project.pbxproj](mdc:ios/Runner.xcodeproj/project.pbxproj)
+- [pubspec.yaml](mdc:pubspec.yaml) - Flutter dependencies
+description:
+globs:
+alwaysApply: false
+---

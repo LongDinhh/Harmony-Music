@@ -13,7 +13,6 @@ import '/ui/player/player_controller.dart';
 import '/ui/widgets/create_playlist_dialog.dart';
 import '../../navigator.dart';
 import '../../widgets/content_list_widget.dart';
-import '../../widgets/quickpickswidget.dart';
 import '../../widgets/shimmer_widgets/home_shimmer.dart';
 import 'home_screen_controller.dart';
 import '../Settings/settings_screen.dart';
@@ -195,26 +194,26 @@ class Body extends StatelessWidget {
                     : Obx(() {
                         // dispose all detachached scroll controllers
                         homeScreenController.disposeDetachedScrollControllers();
-                        final items = homeScreenController
-                                .isContentFetched.value
-                            ? [
-                                Obx(() {
-                                  final scrollController = ScrollController();
-                                  homeScreenController.contentScrollControllers
-                                      .add(scrollController);
-                                  return QuickPicksWidget(
-                                      content:
-                                          homeScreenController.quickPicks.value,
-                                      scrollController: scrollController);
-                                }),
-                                ...getWidgetList(
-                                    homeScreenController.middleContent,
-                                    homeScreenController),
-                                ...getWidgetList(
-                                    homeScreenController.fixedContent,
-                                    homeScreenController)
-                              ]
-                            : [const HomeShimmer()];
+                        final items =
+                            homeScreenController.isContentFetched.value
+                                ? [
+                                    // Obx(() {
+                                    //   final scrollController = ScrollController();
+                                    //   homeScreenController.contentScrollControllers
+                                    //       .add(scrollController);
+                                    //   return QuickPicksWidget(
+                                    //       content:
+                                    //           homeScreenController.quickPicks.value,
+                                    //       scrollController: scrollController);
+                                    // }),
+                                    ...getWidgetList(
+                                        homeScreenController.middleContent,
+                                        homeScreenController),
+                                    ...getWidgetList(
+                                        homeScreenController.fixedContent,
+                                        homeScreenController)
+                                  ]
+                                : [const HomeShimmer()];
                         return NotificationListener<ScrollNotification>(
                           onNotification:
                               homeScreenController.handleScrollNotification,

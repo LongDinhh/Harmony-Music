@@ -1,0 +1,40 @@
+# Tiêu chuẩn code Flutter cho Harmony Music
+
+## Quy tắc đặt tên
+- Sử dụng `snake_case` cho tên file và biến
+- Sử dụng `PascalCase` cho tên class
+- Sử dụng `camelCase` cho tên method và property
+
+## Cấu trúc file
+- Import statements ở đầu file
+- Class definition
+- Constructor
+- Properties
+- Methods
+- Private methods (bắt đầu với `_`)
+
+## State Management
+- Sử dụng GetX cho state management
+- Controllers nên được đặt trong thư mục `controllers` hoặc cùng thư mục với screen
+- Sử dụng `Obx()` hoặc `GetBuilder()` cho reactive UI
+
+## UI Guidelines
+- Sử dụng Material Design 3
+- Responsive design cho cả mobile và tablet
+- Dark mode support
+- Accessibility support với semantic labels
+
+## Error Handling
+- Sử dụng try-catch blocks cho async operations
+- Hiển thị user-friendly error messages
+- Log errors cho debugging
+
+## Performance
+- Sử dụng `const` constructors khi có thể
+- Tránh rebuilds không cần thiết
+- Sử dụng `ListView.builder()` cho danh sách dài
+- Lazy loading cho images và data
+description:
+globs:
+alwaysApply: false
+---

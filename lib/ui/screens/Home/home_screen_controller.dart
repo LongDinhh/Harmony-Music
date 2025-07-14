@@ -127,11 +127,13 @@ class HomeScreenController extends GetxController {
               title: "Trending");
         } else if (index == -1) {
           List charts = await _musicServices.getCharts();
-          final con =
-              charts.length == 4 ? charts.removeAt(3) : charts.removeAt(2);
-          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
-              title: con['title']);
-          middleContentTemp.addAll(charts);
+          if (charts.isNotEmpty) {
+            final con =
+                charts.length == 4 ? charts.removeAt(3) : charts.removeAt(2);
+            quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
+                title: con['title']);
+            middleContentTemp.addAll(charts);
+          }
         }
       } else if (contentType == "TMV") {
         final index = homeContentListMap
@@ -142,10 +144,12 @@ class HomeScreenController extends GetxController {
               title: con["title"]);
         } else if (index == -1) {
           List charts = await _musicServices.getCharts();
-          quickPicks.value = QuickPicks(
-              List<MediaItem>.from(charts[0]["contents"]),
-              title: charts[0]["title"]);
-          middleContentTemp.addAll(charts.sublist(1));
+          if (charts.isNotEmpty) {
+            quickPicks.value = QuickPicks(
+                List<MediaItem>.from(charts[0]["contents"]),
+                title: charts[0]["title"]);
+            middleContentTemp.addAll(charts.sublist(1));
+          }
         }
       } else if (contentType == "BOLI") {
         try {
@@ -153,10 +157,12 @@ class HomeScreenController extends GetxController {
           if (songId != null) {
             final rel = (await _musicServices.getContentRelatedToSong(
                 songId, getContentHlCode()));
-            final con = rel.removeAt(0);
-            quickPicks.value =
-                QuickPicks(List<MediaItem>.from(con["contents"]));
-            middleContentTemp.addAll(rel);
+            if (rel.isNotEmpty) {
+              final con = rel.removeAt(0);
+              quickPicks.value =
+                  QuickPicks(List<MediaItem>.from(con["contents"]));
+              middleContentTemp.addAll(rel);
+            }
           }
         } catch (e) {
           printERROR(
@@ -167,9 +173,16 @@ class HomeScreenController extends GetxController {
       if (quickPicks.value.songList.isEmpty) {
         final index = homeContentListMap
             .indexWhere((element) => element['title'] == "Quick picks");
-        final con = homeContentListMap.removeAt(index);
-        quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
-            title: "Quick picks");
+        if (index != -1) {
+          final con = homeContentListMap.removeAt(index);
+          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
+              title: "Quick picks");
+        } else if (homeContentListMap.isNotEmpty) {
+          // Fallback: use first available content if Quick picks not found
+          final con = homeContentListMap.removeAt(0);
+          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
+              title: con["title"] ?? "Quick picks");
+        }
       }
 
       middleContent.value = _setContentList(middleContentTemp);
@@ -185,6 +198,10 @@ class HomeScreenController extends GetxController {
     } on NetworkError catch (r, e) {
       printERROR("Home Content not loaded due to ${r.message}");
       await Future.delayed(const Duration(seconds: 1));
+      networkError.value = !silent;
+    } catch (e, stackTrace) {
+      printERROR("Unexpected error loading home content: $e");
+      printERROR("Stack trace: $stackTrace");
       networkError.value = !silent;
     }
   }
@@ -245,6 +262,13 @@ class HomeScreenController extends GetxController {
   ) {
     List contentTemp = [];
     for (var content in contents) {
+      // Safety check for content structure
+      if (content == null ||
+          content["contents"] == null ||
+          (content["contents"] as List).isEmpty) {
+        continue;
+      }
+
       if ((content["contents"][0]).runtimeType == Playlist) {
         final tmp = PlaylistContent(
             playlistList: (content["contents"]).whereType<Playlist>().toList(),
@@ -280,14 +304,18 @@ class HomeScreenController extends GetxController {
     } else if (val == "TMV" || val == 'TR') {
       try {
         final charts = await _musicServices.getCharts();
-        final index = val == "TMV"
-            ? 0
-            : charts.length == 4
-                ? 3
-                : 2;
-        quickPicks_ = QuickPicks(
-            List<MediaItem>.from(charts[index]["contents"]),
-            title: charts[index]["title"]);
+        if (charts.isNotEmpty) {
+          final index = val == "TMV"
+              ? 0
+              : charts.length == 4
+                  ? 3
+                  : 2;
+          if (index < charts.length) {
+            quickPicks_ = QuickPicks(
+                List<MediaItem>.from(charts[index]["contents"]),
+                title: charts[index]["title"]);
+          }
+        }
       } catch (e) {
         printERROR(
             "Seems ${val == "TMV" ? "Top music videos" : "Trending songs"} currently not available!");
@@ -299,7 +327,10 @@ class HomeScreenController extends GetxController {
           final value = await _musicServices.getContentRelatedToSong(
               songId, getContentHlCode());
           middleContent.value = _setContentList(value);
-          if (value.isNotEmpty && (value[0]['title']).contains("like")) {
+          if (value.isNotEmpty &&
+              value[0] != null &&
+              value[0]['title'] != null &&
+              (value[0]['title']).toString().contains("like")) {
             quickPicks_ =
                 QuickPicks(List<MediaItem>.from(value[0]["contents"]));
             Hive.box("AppPrefs").put("recentSongId", songId);
@@ -308,7 +339,7 @@ class HomeScreenController extends GetxController {
         } catch (e) {}
       }
     }
-    if (quickPicks_ == null) return;
+    if (quickPicks_ == null || quickPicks_.songList.isEmpty) return;
 
     quickPicks.value = quickPicks_;
 

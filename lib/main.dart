@@ -19,6 +19,7 @@ import 'ui/screens/Settings/settings_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
 import 'ui/screens/Home/home_screen_controller.dart';
 import 'ui/screens/Library/library_controller.dart';
+import 'ui/screens/Auth/auth_controller.dart';
 
 import 'utils/update_check_flag_file.dart';
 
@@ -94,12 +95,13 @@ Future<void> startApplicationServices() async {
   Get.lazyPut(() => LibraryArtistsController(), fenix: true);
   Get.lazyPut(() => SettingsScreenController(), fenix: true);
   Get.lazyPut(() => Downloader(), fenix: true);
+  Get.lazyPut(() => AuthController(), fenix: true);
   if (GetPlatform.isDesktop) {
     Get.lazyPut(() => SearchScreenController(), fenix: true);
   }
 }
 
-initHive() async {
+Future<void> initHive() async {
   String applicationDataDirectoryPath;
   if (GetPlatform.isDesktop) {
     applicationDataDirectoryPath =
@@ -113,8 +115,6 @@ initHive() async {
   await Hive.openBox("SongDownloads");
   await Hive.openBox('SongsUrlCache');
   await Hive.openBox("AppPrefs");
-  await Hive.openBox("CookieStorage");
-  await Hive.openBox("CookieKeysStorage");
 }
 
 void _setAppInitPrefs() {

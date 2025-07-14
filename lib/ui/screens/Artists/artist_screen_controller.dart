@@ -60,7 +60,7 @@ class ArtistScreenController extends GetxController
     super.onReady();
   }
 
-  _init(bool isIdOnly, dynamic artist) {
+  void _init(bool isIdOnly, dynamic artist) {
     if (!isIdOnly) artist_ = artist as Artist;
     _fetchArtistContent(isIdOnly ? artist as String : artist.browseId);
     _checkIfAddedToLibrary(isIdOnly ? artist as String : artist.browseId);

@@ -1,0 +1,36 @@
+# Localization Guidelines cho Harmony Music
+
+## File Structure
+- [localization/](mdc:localization/) - Thư mục chứa các file ngôn ngữ
+- [localization/generator.dart](mdc:localization/generator.dart) - Generator cho localization
+- [lib/utils/get_localization.dart](mdc:lib/utils/get_localization.dart) - Utility cho localization
+
+## Supported Languages
+- Tiếng Anh (en.json) - Ngôn ngữ mặc định
+- Tiếng Việt (vi.json) - Ngôn ngữ chính
+- Và nhiều ngôn ngữ khác trong thư mục localization/
+
+## Usage
+```dart
+// Sử dụng localization
+Text('app_name'.tr)
+// hoặc
+Text(GetLocalization.appName)
+```
+
+## Adding New Languages
+1. Tạo file JSON mới trong thư mục `localization/`
+2. Copy structure từ `en.json`
+3. Translate tất cả strings
+4. Update [lib/utils/lang_mapping.dart](mdc:lib/utils/lang_mapping.dart) nếu cần
+
+## Best Practices
+- Sử dụng key có ý nghĩa và dễ hiểu
+- Tránh hardcode strings trong code
+- Test UI với các ngôn ngữ khác nhau
+- Consider text length differences giữa các ngôn ngữ
+- Support RTL languages nếu cần
+description:
+globs:
+alwaysApply: false
+---

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:hive/hive.dart';
 import '../utils/helper.dart';
 
@@ -317,6 +316,7 @@ class CookieManager {
     try {
       final keys = await getAllCookieKeys();
       final validCookies = <String>[];
+      print('Keys: $keys');
 
       for (final key in keys) {
         final value = await getCookieByKey(key);

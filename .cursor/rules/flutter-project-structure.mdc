@@ -1,0 +1,36 @@
+# Cấu trúc dự án Harmony Music Flutter
+
+## Điểm vào chính
+- [lib/main.dart](mdc:lib/main.dart) - Điểm vào chính của ứng dụng
+- [pubspec.yaml](mdc:pubspec.yaml) - Cấu hình dependencies và assets
+
+## Cấu trúc thư mục chính
+
+### Models
+- [lib/models/](mdc:lib/models/) - Chứa các model dữ liệu (album.dart, artist.dart, playlist.dart, etc.)
+
+### Services
+- [lib/services/](mdc:lib/services/) - Chứa các service xử lý logic nghiệp vụ
+  - [lib/services/piped_service.dart](mdc:lib/services/piped_service.dart) - Service chính cho Piped API
+  - [lib/services/audio_handler.dart](mdc:lib/services/audio_handler.dart) - Xử lý audio
+  - [lib/services/music_service.dart](mdc:lib/services/music_service.dart) - Service âm nhạc
+
+### UI Components
+- [lib/ui/](mdc:lib/ui/) - Giao diện người dùng
+  - [lib/ui/screens/](mdc:lib/ui/screens/) - Các màn hình chính
+  - [lib/ui/widgets/](mdc:lib/ui/widgets/) - Các widget tái sử dụng
+  - [lib/ui/player/](mdc:lib/ui/player/) - Components cho music player
+
+### Utils
+- [lib/utils/](mdc:lib/utils/) - Các utility functions
+- [lib/native_bindings/](mdc:lib/native_bindings/) - Bindings cho native code
+
+### Localization
+- [localization/](mdc:localization/) - Các file ngôn ngữ đa ngôn ngữ
+
+## Platform Support
+Dự án chỉ hỗ trợ iOS và Android, không cần quan tâm đến web, desktop, hoặc Linux.
+description:
+globs:
+alwaysApply: false
+---

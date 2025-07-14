@@ -1,0 +1,37 @@
+# Audio Player Guidelines cho Harmony Music
+
+## Audio Handler
+- [lib/services/audio_handler.dart](mdc:lib/services/audio_handler.dart) - Xử lý audio background
+- Sử dụng `audio_service` package cho background playback
+- Implement đầy đủ các method: play, pause, stop, seek, skip
+
+## Player Components
+- [lib/ui/player/](mdc:lib/ui/player/) - UI components cho music player
+- [lib/ui/player/player_controller.dart](mdc:lib/ui/player/player_controller.dart) - Controller cho player
+- Sử dụng `GetX` cho state management của player
+
+## Background Audio
+- Cần permission cho background audio
+- Handle audio interruptions (calls, notifications)
+- Support media controls từ notification và lock screen
+- Resume playback khi app được mở lại
+
+## Equalizer
+- [lib/services/equalizer.dart](mdc:lib/services/equalizer.dart) - Xử lý equalizer
+- [android/app/src/main/kotlin/com/anandnet/harmonymusic/Equalizer.kt](mdc:android/app/src/main/kotlin/com/anandnet/harmonymusic/Equalizer.kt) - Native equalizer cho Android
+
+## Streaming
+- [lib/services/stream_service.dart](mdc:lib/services/stream_service.dart) - Xử lý streaming
+- [lib/services/piped_service.dart](mdc:lib/services/piped_service.dart) - API cho Piped
+- Handle network connectivity changes
+- Buffer management cho smooth playback
+
+## Playlist Management
+- [lib/models/playlist.dart](mdc:lib/models/playlist.dart) - Model cho playlist
+- Support shuffle và repeat modes
+- Queue management
+- History tracking
+description:
+globs:
+alwaysApply: false
+---

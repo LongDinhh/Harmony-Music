@@ -29,7 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animations: ^2.0.11
-  app_links: ^3.5.1
+  app_links: ^6.4.0
   archive: ^4.0.7
   audio_service: ^0.18.17
 
@@ -41,12 +41,12 @@ dependencies:
   buttons_tabbar: ^1.3.13
   cached_network_image: ^3.4.0
   dio: ^5.7.0
-  file_picker: ^8.0.6
+  file_picker: ^10.2.0
   flutter:
     sdk: flutter
   flutter_keyboard_visibility: ^6.0.0
   flutter_lyric: ^2.0.4+6
-  flutter_slidable: ^3.1.2
+  flutter_slidable: ^4.0.0
   get: ^4.7.1
   google_fonts: ^6.1.0
   hive: ^2.2.3
@@ -54,17 +54,15 @@ dependencies:
   ionicons: ^0.2.2
   jni: ^0.14.0
 
-  just_audio: ^0.10.4
-  just_audio_media_kit: ^2.1.0
-  # Select the native media_kit libs only for mobile platforms:
-  media_kit_libs_android_audio: any
-  media_kit_libs_ios_audio: any
+  media_kit: ^1.2.0
+  media_kit_video: ^1.3.0
+  media_kit_libs_video: ^1.0.6
 
   palette_generator: ^0.3.3+4
   path: ^1.8.3
   path_provider: ^2.1.1
-  permission_handler: ^11.0.1
-  share_plus: ^10.1.4
+  permission_handler: ^12.0.1
+  share_plus: ^11.0.0
   shimmer: ^3.0.0
   sidebar_with_animation:
     git:
@@ -76,13 +74,23 @@ dependencies:
   toggle_switch: ^2.1.0
 
   url_launcher: ^6.2.1
+  webview_flutter: ^4.7.0
+  webview_cookie_manager:
+    git:
+      url: https://github.com/fryette/webview_cookie_manager.git
+      ref: e03954491a6952e04d7fceeae4c4d074392c0fe2
   widget_marquee: ^0.0.8
 
+  # youtube_explode_dart:
+  #   git:
+  #     url: https://github.com/LongDinhh/googleapis.git
+  #     branch: master
+  #     ref: cdd6f40c6c2ca857c1e93ec1a93c68bb1a0b27be
   youtube_explode_dart:
     git:
-      url: https://github.com/LongDinhh/googleapis.git
+      url: https://github.com/LongDinhh/youtube_explode_dart.git
       branch: master
-      ref: cdd6f40c6c2ca857c1e93ec1a93c68bb1a0b27be
+      ref: b23f419
   crypto: ^3.0.6
 dev_dependencies:
 
@@ -91,7 +99,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   jnigen: ^0.14.0

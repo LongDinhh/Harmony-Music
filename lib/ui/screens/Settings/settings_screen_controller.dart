@@ -58,12 +58,12 @@ class SettingsScreenController extends GetxController {
     super.onInit();
   }
 
-  get currentVision => currentVersion;
-  get isCurrentPathsupportDownDir =>
+  String get currentVision => currentVersion;
+  bool get isCurrentPathsupportDownDir =>
       "$_supportDir/Music" == downloadLocationPath.toString();
   String get supportDirPath => _supportDir;
 
-  _checkNewVersion() {
+  void _checkNewVersion() {
     newVersionCheck(currentVersion)
         .then((value) => isNewVersionAvailable.value = value);
   }
@@ -87,7 +87,7 @@ class SettingsScreenController extends GetxController {
             : appLang;
     isBottomNavBarEnabled.value =
         isDesktop ? false : (setBox.get("isBottomNavBarEnabled") ?? true);
-    noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 3;
+    noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 7;
     isTransitionAnimationDisabled.value =
         setBox.get("isTransitionAnimationDisabled") ?? false;
     cacheSongs.value = setBox.get('cacheSongs') ?? false;

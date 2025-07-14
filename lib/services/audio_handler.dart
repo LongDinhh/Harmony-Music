@@ -6,16 +6,14 @@ import 'package:flutter/services.dart';
 
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:audio_service/audio_service.dart';
 // ignore: depend_on_referenced_packages
 import 'package:rxdart/rxdart.dart';
 
 import '/models/album.dart';
-import '../models/playlist.dart';
-import '/services/equalizer.dart';
+import '../models/playlist.dart' as hm_playlist;
 import '/services/stream_service.dart';
 import '/models/hm_streaming_data.dart';
 import '/ui/player/player_controller.dart';
@@ -44,7 +42,7 @@ Future<AudioHandler> initAudioService() async {
 class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   // ignore: prefer_typing_uninitialized_variables
   late final _cacheDir;
-  late AudioPlayer _player;
+  late Player _player;
   late MediaLibrary _mediaLibrary;
   // ignore: prefer_typing_uninitialized_variables
   dynamic currentIndex;
@@ -55,44 +53,23 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   bool queueLoopModeEnabled = false;
   bool shuffleModeEnabled = false;
   bool loudnessNormalizationEnabled = false;
-  // var networkErrorPause = false;
   bool isSongLoading = true;
-
+  bool isPreloading = false;
   // list of shuffled queue songs ids
   List<String> shuffledQueue = [];
 
   MyAudioHandler() {
-    // Initialize JustAudioMediaKit only for mobile platforms (iOS & Android)
-    if (GetPlatform.isAndroid || GetPlatform.isIOS) {
-      JustAudioMediaKit.ensureInitialized(
-        linux: false,
-        windows: false,
-        android: GetPlatform.isAndroid,
-        iOS: GetPlatform.isIOS,
-        macOS: false,
-      );
+    // Initialize MediaKit
+    MediaKit.ensureInitialized();
 
-      // Configure after initialization
-      JustAudioMediaKit.title = 'Harmony music';
-      JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
-    }
     _mediaLibrary = MediaLibrary();
-    _player = AudioPlayer(
-        audioLoadConfiguration: const AudioLoadConfiguration(
-            androidLoadControl: AndroidLoadControl(
-      minBufferDuration: Duration(seconds: 50),
-      maxBufferDuration: Duration(seconds: 120),
-      bufferForPlaybackDuration: Duration(milliseconds: 50),
-      bufferForPlaybackAfterRebufferDuration: Duration(seconds: 2),
-    )));
+    _player = Player();
     _createCacheDir();
     _addEmptyList();
     _notifyAudioHandlerAboutPlaybackEvents();
     _listenToPlaybackForNextSong();
     _listenForSequenceStateChanges();
     final appPrefsBox = Hive.box("appPrefs");
-    _player
-        .setSkipSilenceEnabled(appPrefsBox.get("skipSilenceEnabled") ?? false);
     loopModeEnabled = appPrefsBox.get("isLoopModeEnabled") ?? false;
     shuffleModeEnabled = appPrefsBox.get("isShuffleModeEnabled") ?? false;
     queueLoopModeEnabled =
@@ -114,89 +91,98 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
   void _addEmptyList() {
     try {
-      // No need to set empty source in new API
-      // Player will be ready to accept audio sources when needed
+      // MediaKit doesn't need empty source initialization
     } catch (r) {
       printERROR(r.toString());
     }
   }
 
   void _listenSessionIdStream() {
-    _player.androidAudioSessionIdStream.listen((int? id) {
-      if (id != null) {
-        EqualizerService.initAudioEffect(id);
+    // Media_kit doesn't expose androidAudioSessionIdStream directly
+    // We'll handle equalizer differently if needed
+  }
+
+  void _notifyAudioHandlerAboutPlaybackEvents() {
+    // Listen to playing state changes
+    _player.stream.playing.listen((bool playing) {
+      _updatePlaybackState();
+    });
+
+    // Listen to position changes
+    _player.stream.position.listen((Duration position) {
+      _updatePlaybackState();
+    });
+
+    // Listen to duration changes
+    _player.stream.duration.listen((Duration duration) {
+      _updatePlaybackState();
+    });
+
+    // Listen to buffering state
+    _player.stream.buffering.listen((bool buffering) {
+      _updatePlaybackState();
+    });
+
+    // Listen to playlist changes
+    _player.stream.playlist.listen((Playlist playlist) {
+      _updatePlaybackState();
+    });
+
+    // Listen to errors
+    _player.stream.error.listen((String error) {
+      printERROR('Media Kit Error: $error');
+      if (error.contains("403") || error.contains("Connection closed")) {
+        Duration curPos = _player.state.position;
+        _player.stop();
+
+        if (isPlayingUsingLockCachingSource &&
+            error.contains("Connection closed while receiving data")) {
+          _player.seek(curPos);
+          _player.play();
+          return;
+        }
+
+        customAction("playByIndex", {'index': currentIndex, 'newUrl': true});
+        _player.seek(curPos);
       }
     });
   }
 
-  void _notifyAudioHandlerAboutPlaybackEvents() {
-    _player.playbackEventStream.listen((PlaybackEvent event) {
-      final playing = _player.playing;
-      playbackState.add(playbackState.value.copyWith(
-        controls: [
-          MediaControl.skipToPrevious,
-          if (playing) MediaControl.pause else MediaControl.play,
-          MediaControl.skipToNext,
-        ],
-        systemActions: const {
-          MediaAction.seek,
-        },
-        androidCompactActionIndices: const [0, 1, 2],
-        processingState: isSongLoading
-            ? AudioProcessingState.loading
-            : const {
-                ProcessingState.idle: AudioProcessingState.idle,
-                ProcessingState.loading: AudioProcessingState.loading,
-                ProcessingState.buffering: AudioProcessingState.buffering,
-                ProcessingState.ready: AudioProcessingState.ready,
-                ProcessingState.completed: AudioProcessingState.completed,
-              }[_player.processingState]!,
-        repeatMode: const {
-          LoopMode.off: AudioServiceRepeatMode.none,
-          LoopMode.one: AudioServiceRepeatMode.one,
-          LoopMode.all: AudioServiceRepeatMode.all,
-        }[_player.loopMode]!,
-        shuffleMode: (shuffleModeEnabled)
-            ? AudioServiceShuffleMode.all
-            : AudioServiceShuffleMode.none,
-        playing: playing,
-        updatePosition: _player.position,
-        bufferedPosition: _player.bufferedPosition,
-        speed: _player.speed,
-        queueIndex: currentIndex,
-      ));
+  void _updatePlaybackState() {
+    final playing = _player.state.playing;
+    final position = _player.state.position;
+    final buffering = _player.state.buffering;
 
-      //print("set ${playbackState.value.queueIndex},${event.currentIndex}");
-    }, onError: (Object e, StackTrace st) async {
-      if (e is PlayerException) {
-        printERROR('Error code: ${e.code}');
-        printERROR('Error message: ${e.message}');
-      } else {
-        printERROR('An error occurred: $e');
-        Duration curPos = _player.position;
-        await _player.stop();
-
-        if (isPlayingUsingLockCachingSource &&
-            e.toString().contains("Connection closed while receiving data")) {
-          await _player.seek(curPos, index: 0);
-          await _player.play();
-          return;
-        }
-
-        //Workaround when 403 error encountered
-        // customAction("playByIndex", {'index': currentIndex, 'newUrl': true})
-        //     .whenComplete(() async {
-        //   await _player.stop();
-        //   if (currentSongUrl == null) {
-        //     networkErrorPause = true;
-        //   } else {
-        //     _player.play();
-        //   }
-        // });
-        customAction("playByIndex", {'index': currentIndex, 'newUrl': true});
-        await _player.seek(curPos, index: 0);
-      }
-    });
+    playbackState.add(playbackState.value.copyWith(
+      controls: [
+        MediaControl.skipToPrevious,
+        if (playing) MediaControl.pause else MediaControl.play,
+        MediaControl.skipToNext,
+      ],
+      systemActions: const {
+        MediaAction.seek,
+      },
+      androidCompactActionIndices: const [0, 1, 2],
+      processingState: isSongLoading
+          ? AudioProcessingState.loading
+          : buffering
+              ? AudioProcessingState.buffering
+              : AudioProcessingState.ready,
+      repeatMode: loopModeEnabled
+          ? AudioServiceRepeatMode.one
+          : queueLoopModeEnabled
+              ? AudioServiceRepeatMode.all
+              : AudioServiceRepeatMode.none,
+      shuffleMode: shuffleModeEnabled
+          ? AudioServiceShuffleMode.all
+          : AudioServiceShuffleMode.none,
+      playing: playing,
+      updatePosition: position,
+      bufferedPosition:
+          position, // Media kit doesn't expose buffered position directly
+      speed: _player.state.rate,
+      queueIndex: currentIndex,
+    ));
   }
 
   void _listenToPlaybackForNextSong() {
@@ -205,12 +191,13 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         : GetPlatform.isLinux
             ? 700
             : GetPlatform.isAndroid || GetPlatform.isIOS
-                ? 100 // Thêm offset nhỏ cho mobile để tránh bị cắt âm thanh
+                ? 100
                 : 0;
-    _player.positionStream.listen((value) async {
-      if (_player.duration != null && _player.duration?.inSeconds != 0) {
-        if (value.inMilliseconds >=
-            (_player.duration!.inMilliseconds - playerDurationOffset)) {
+    _player.stream.position.listen((Duration position) async {
+      final duration = _player.state.duration;
+      if (duration.inSeconds != 0) {
+        if (position.inMilliseconds >=
+            (duration.inMilliseconds - playerDurationOffset)) {
           await _triggerNext();
         }
       }
@@ -220,25 +207,35 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> _triggerNext() async {
     if (loopModeEnabled) {
       await _player.seek(Duration.zero);
-      if (!_player.playing) {
+      if (!_player.state.playing) {
         _player.play();
       }
       return;
     }
-    skipToNext();
+    await _autoNext();
+  }
+
+  Future<void> _autoNext() async {
+    final index = _getNextSongIndex();
+    if (index != currentIndex) {
+      // Không seek về đầu khi auto-next để tránh phát lại bài cũ
+      await customAction("playByIndex", {'index': index});
+    } else {
+      _player.seek(Duration.zero);
+      _player.pause();
+    }
   }
 
   void _listenForSequenceStateChanges() {
-    _player.sequenceStateStream.listen((SequenceState? sequenceState) {
-      final sequence = sequenceState?.effectiveSequence;
-      if (sequence == null || sequence.isEmpty) return;
+    _player.stream.playlist.listen((Playlist playlist) {
+      // Handle playlist changes if needed
     });
   }
 
   void _listenForDurationChanges() {
-    _player.durationStream.listen((duration) async {
+    _player.stream.duration.listen((Duration duration) async {
       final currQueue = queue.value;
-      if (currentIndex == null || currQueue.isEmpty || duration == null) return;
+      if (currentIndex == null || currQueue.isEmpty) return;
       final currentSong = queue.value[currentIndex];
       if (currentSong.duration == null || currentIndex == 0) {
         final newMediaItem = currentSong.copyWith(duration: duration);
@@ -283,53 +280,31 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     queue.add(newQueue);
   }
 
-  AudioSource _createAudioSource(MediaItem mediaItem) {
+  Media _createMediaSource(MediaItem mediaItem) {
     final url = mediaItem.extras!['url'] as String;
-    if (url.contains('/cache') ||
-        (Get.find<SettingsScreenController>().cacheSongs.isTrue &&
-            url.contains("http"))) {
-      printINFO("Playing Using LockCaching");
-      isPlayingUsingLockCachingSource = true;
-      return LockCachingAudioSource(
-        Uri.parse(url),
-        cacheFile: File("$_cacheDir/cachedSongs/${mediaItem.id}.mp3"),
-        tag: mediaItem,
-      );
-    }
-
-    printINFO("Playing Using AudioSource.uri");
-    isPlayingUsingLockCachingSource = false;
-
-    // Add headers for iOS compatibility
-    final headers = {
-      'User-Agent':
-          'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
-      'Accept': '*/*',
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Connection': 'keep-alive',
-    };
 
     // Check if URL is a local file path and add file:// scheme if needed
-    Uri uri;
     if ((url.startsWith('/') ||
             (url.length > 1 && url[1] == ':' && GetPlatform.isWindows)) &&
         !url.startsWith('http') &&
         !url.startsWith('file://')) {
-      // This is a local file path, add file:// scheme
-      uri = Uri.file(url);
-      printINFO("Playing local file: ${uri.toString()}");
-      return AudioSource.uri(
-        uri,
-        tag: mediaItem,
-      );
+      // This is a local file path
+      printINFO("Playing local file: $url");
+      return Media('file://$url');
     } else {
-      // This is a network URL, use with headers
-      uri = Uri.tryParse(url)!;
-      return AudioSource.uri(
-        uri,
-        tag: mediaItem,
-        headers: headers,
-      );
+      // This is a network URL
+      printINFO("Playing network URL: $url");
+
+      // Add headers for network URLs
+      final headers = {
+        'User-Agent':
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+      };
+
+      return Media(url, httpHeaders: headers);
     }
   }
 
@@ -359,23 +334,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> play() async {
     if (currentSongUrl == null ||
-        (GetPlatform.isDesktop &&
-            (_player.duration == null ||
-                _player.duration?.inMilliseconds == 0))) {
+        (GetPlatform.isDesktop && _player.state.duration.inMilliseconds == 0)) {
       await customAction("playByIndex", {'index': currentIndex});
       return;
     }
-    // Workaround for network error pause in case of PlayingUsingLockCachingSource
-    // if (isPlayingUsingLockCachingSource && networkErrorPause) {
-    //   await _player.play();
-    //   Future.delayed(const Duration(seconds: 2)).then((value) {
-    //     if (_player.playing) {
-    //       networkErrorPause = false;
-    //     }
-    //   });
-    //   await _player.play();
-    //   return;
-    // }
     await _player.play();
   }
 
@@ -389,6 +351,29 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= queue.value.length) return;
     await customAction("playByIndex", {'index': index});
+  }
+
+   Future<void> preloadNextSong() async {
+    if (isPreloading) return; // Tránh preload nhiều lần đồng thời
+    
+    final nextIndex = _getNextSongIndex();
+    if (nextIndex == currentIndex) return; // Không có bài tiếp theo
+    
+    final nextSong = queue.value[nextIndex];
+    
+    isPreloading = true;
+    printINFO("Preloading next song: ${nextSong.title}");
+    
+    try {
+      final streamInfo = await checkNGetUrl(nextSong.id);
+      if (streamInfo.playable) {
+        printINFO("Preloaded next song URL successfully");
+      }
+    } catch (e) {
+      printERROR("Failed to preload next song: $e");
+    } finally {
+      isPreloading = false;
+    }
   }
 
   int _getNextSongIndex() {
@@ -435,7 +420,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> skipToNext() async {
     final index = _getNextSongIndex();
     if (index != currentIndex) {
-      if (_player.position != Duration.zero) _player.seek(Duration.zero);
+      // Chỉ seek về đầu khi manual next
+      if (_player.state.position != Duration.zero) {
+        _player.seek(Duration.zero);
+      }
       await customAction("playByIndex", {'index': index});
     } else {
       _player.seek(Duration.zero);
@@ -445,7 +433,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
   @override
   Future<void> skipToPrevious() async {
-    if (_player.position.inMilliseconds > 5000) {
+    if (_player.state.position.inMilliseconds > 5000) {
       _player.seek(Duration.zero);
       return;
     }
@@ -492,6 +480,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         final futureStreamInfo =
             checkNGetUrl(currentSong.id, generateNewUrl: isNewUrlReq);
         final bool restoreSession = extras['restoreSession'] ?? false;
+
+        // Pause ngay lập tức để tránh phát bài cũ trong lúc load
+        await _player.pause();
+
         isSongLoading = true;
         playbackState.add(playbackState.value
             .copyWith(processingState: AudioProcessingState.loading));
@@ -510,11 +502,13 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
           return;
         }
         currentSongUrl = currentSong.extras!['url'] = streamInfo.audio!.url;
+        preloadNextSong();
         playbackState
             .add(playbackState.value.copyWith(queueIndex: currentIndex));
 
-        // Use new playlist API - set single audio source
-        await _player.setAudioSource(_createAudioSource(currentSong));
+        // Create media source and open it
+        final mediaSource = _createMediaSource(currentSong);
+        await _player.open(mediaSource, play: false);
 
         isSongLoading = false;
         if (loudnessNormalizationEnabled &&
@@ -525,17 +519,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         if (restoreSession) {
           if (!GetPlatform.isDesktop) {
             final position = extras['position'];
-            await _player.load();
-            await _player.seek(
-              Duration(
-                milliseconds: position,
-              ),
-            );
-            await _player.seek(
-              Duration(
-                milliseconds: position,
-              ),
-            );
+            await _player.seek(Duration(milliseconds: position));
           }
         } else {
           await _player.play();
@@ -552,7 +536,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
             song.extras!['date'] = DateTime.now().millisecondsSinceEpoch;
             final dbStreamData = Hive.box("SongsUrlCache").get(song.id);
             final jsonData = MediaItemBuilder.toJson(song);
-            jsonData['duration'] = _player.duration!.inSeconds;
+            jsonData['duration'] = _player.state.duration.inSeconds;
             // playbility status and info
             jsonData['streamInfo'] = dbStreamData != null
                 ? [
@@ -577,6 +561,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       case 'setSourceNPlay':
         final currMed = (extras!['mediaItem'] as MediaItem);
         final futureStreamInfo = checkNGetUrl(currMed.id);
+
+        // Pause ngay lập tức để tránh phát bài cũ trong lúc load
+        await _player.pause();
+
         isSongLoading = true;
         currentIndex = 0;
         mediaItem.add(currMed);
@@ -592,8 +580,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         }
         currentSongUrl = currMed.extras!['url'] = streamInfo.audio!.url;
 
-        // Use new playlist API - set single audio source
-        await _player.setAudioSource(_createAudioSource(currMed));
+        // Create media source and open it
+        final mediaSource = _createMediaSource(currMed);
+        await _player.open(mediaSource, play: false);
         isSongLoading = false;
 
         // Normalize audio
@@ -606,14 +595,14 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         break;
 
       case 'toggleSkipSilence':
-        final enable = (extras!['enable'] as bool);
-        await _player.setSkipSilenceEnabled(enable);
+        // Media kit doesn't have skip silence functionality built-in
+        // This would need to be implemented differently if needed
         break;
 
       case 'toggleLoudnessNormalization':
         loudnessNormalizationEnabled = (extras!['enable'] as bool);
         if (!loudnessNormalizationEnabled) {
-          _player.setVolume(1.0);
+          _player.setVolume(100.0);
           return;
         }
 
@@ -680,7 +669,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         break;
 
       case 'openEqualizer':
-        EqualizerService.openEqualizer(_player.androidAudioSessionId!);
+        // Media kit doesn't expose audio session ID directly
+        // Equalizer functionality would need to be implemented differently
         break;
 
       case 'saveSession':
@@ -688,7 +678,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         break;
 
       case 'setVolume':
-        _player.setVolume(extras!['value'] / 100);
+        _player.setVolume(extras!['value'].toDouble());
         break;
 
       case 'shuffleCmd':
@@ -741,7 +731,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     final volumeAdjustment = pow(10.0, loudnessDifference / 20.0);
     printINFO(
         "loudness:$currentLoudnessDb Normalized volume: $volumeAdjustment");
-    _player.setVolume(volumeAdjustment.toDouble().clamp(0, 1.0));
+    _player.setVolume((volumeAdjustment.toDouble().clamp(0, 1.0) * 100));
   }
 
   Future<void> saveSessionData() async {
@@ -753,7 +743,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       final queueData =
           currQueue.map((e) => MediaItemBuilder.toJson(e)).toList();
       final currIndex = currentIndex ?? 0;
-      final position = _player.position.inMilliseconds;
+      final position = _player.state.position.inMilliseconds;
       final prevSessionData = await Hive.openBox("prevSessionData");
       await prevSessionData.clear();
       await prevSessionData.putAll(
@@ -967,7 +957,7 @@ class MediaLibrary {
     final playlists = [
       ...LibraryPlaylistsController.initPlst.map((e) => e.toMediaItem()),
       ...(box.values
-          .map((item) => Playlist.fromJson(item).toMediaItem())
+          .map((item) => hm_playlist.Playlist.fromJson(item).toMediaItem())
           .toList())
     ];
     await box.close();

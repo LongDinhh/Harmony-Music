@@ -9,7 +9,9 @@ import '../../widgets/cust_switch.dart';
 import '../../widgets/export_file_dialog.dart';
 import '../../widgets/backup_dialog.dart';
 import '../../widgets/restore_dialog.dart';
+import '../../widgets/google_login_button.dart';
 import '../Library/library_controller.dart';
+import '../Auth/auth_controller.dart';
 import '../../widgets/snackbar.dart';
 import '/ui/widgets/link_piped.dart';
 import '/services/music_service.dart';
@@ -648,7 +650,94 @@ class SettingsScreen extends StatelessWidget {
                         });
                       },
                     ),
-                  ])
+                  ]),
+              // Section đăng nhập Google
+              CustomExpansionTile(
+                icon: Icons.account_circle,
+                title: "Tài khoản",
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Đăng nhập Google",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Đăng nhập để truy cập YouTube Music với tài khoản Google của bạn",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
+                        ),
+                        const SizedBox(height: 16),
+                        GoogleLoginButton(
+                          onSuccess: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text('Đăng nhập thành công!'),
+                                backgroundColor: Colors.green,
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          onError: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    const Text('Có lỗi xảy ra khi đăng nhập'),
+                                backgroundColor: Colors.red,
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        Obx(() {
+                          final authController = Get.find<AuthController>();
+                          if (authController.isLoggedIn) {
+                            return Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade50,
+                                borderRadius: BorderRadius.circular(8),
+                                border:
+                                    Border.all(color: Colors.green.shade200),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.check_circle,
+                                          color: Colors.green, size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Đã đăng nhập',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text('Email: ${authController.userEmail}'),
+                                  Text('Tên: ${authController.userName}'),
+                                ],
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ],
           )),
         ],

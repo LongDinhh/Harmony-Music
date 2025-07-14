@@ -1,0 +1,15 @@
+# Hướng dẫn cấu trúc dự án
+
+Đây là một dự án Flutter để phát nhạc.
+
+- **Điểm vào chính** là `lib/main.dart`.
+- **Dịch vụ nền** xử lý logic nghiệp vụ nằm trong `lib/services/`.
+  - `lib/services/audio_handler.dart` quản lý việc phát lại âm thanh.
+  - `lib/services/music_service.dart` tương tác với các nguồn nhạc.
+- **Mô hình dữ liệu** được định nghĩa trong `lib/models/`.
+- **Giao diện người dùng (UI)** nằm trong `lib/ui/`.
+  - Các màn hình chính được đặt trong `lib/ui/screens/`.
+  - Các widget có thể tái sử dụng nằm trong `lib/ui/widgets/`.
+- **Các tiện ích chung** có thể được tìm thấy trong `lib/utils/`.
+- **Bản địa hóa** được quản lý trong thư mục `localization/` với các tệp JSON cho mỗi ngôn ngữ.
+- **Tài sản** như biểu tượng và hình ảnh nằm trong `assets/`.
