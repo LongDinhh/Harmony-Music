@@ -73,7 +73,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     loopModeEnabled = appPrefsBox.get("isLoopModeEnabled") ?? false;
     shuffleModeEnabled = appPrefsBox.get("isShuffleModeEnabled") ?? false;
     queueLoopModeEnabled =
-        Hive.box("AppPrefs").get("queueLoopModeEnabled") ?? false;
+        Hive.box("appPrefs").get("queueLoopModeEnabled") ?? false;
     loudnessNormalizationEnabled =
         appPrefsBox.get("loudnessNormalizationEnabled") ?? false;
     _listenForDurationChanges();
@@ -542,7 +542,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
                 ? [
                     true,
                     dbStreamData[
-                        Hive.box('AppPrefs').get('streamingQuality') == 0
+                        Hive.box('appPrefs').get('streamingQuality') == 0
                             ? 'lowQualityAudio'
                             : "highQualityAudio"]
                   ]
@@ -864,7 +864,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     } else {
       //check if song stream url is cached and allocate url accordingly
       final songsUrlCacheBox = Hive.box("SongsUrlCache");
-      final qualityIndex = Hive.box('AppPrefs').get('streamingQuality') ?? 1;
+      final qualityIndex = Hive.box('appPrefs').get('streamingQuality') ?? 1;
       HMStreamingData? streamInfo;
       if (songsUrlCacheBox.containsKey(songId) && !generateNewUrl) {
         final streamInfoJson = songsUrlCacheBox.get(songId);

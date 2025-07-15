@@ -100,7 +100,7 @@ class MusicServices extends getx.GetxService {
     // Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
     await _initializeAppData();
 
-    final appPrefsBox = Hive.box('AppPrefs');
+    final appPrefsBox = Hive.box('appPrefs');
     hlCode = appPrefsBox.get('contentLanguage') ?? "vi";
 
     // Kiểm tra visitorId từ storage trước

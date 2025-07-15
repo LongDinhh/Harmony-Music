@@ -12,7 +12,7 @@ class PipedServices extends GetxService {
   bool _isLoggedIn = false;
 
   PipedServices() {
-    final appPrefsBox = Hive.box('AppPrefs');
+    final appPrefsBox = Hive.box('appPrefs');
     final piped = appPrefsBox.get('piped') ??
         {"isLoggedIn": false, "token": "", "instApiUrl": ""};
     _isLoggedIn = piped["isLoggedIn"];
@@ -30,7 +30,7 @@ class PipedServices extends GetxService {
       final response = await _dio
           .post(url, data: {"username": userName, "password": password});
       final data = response.data;
-      final appPrefsBox = Hive.box('AppPrefs');
+      final appPrefsBox = Hive.box('appPrefs');
       appPrefsBox.put("piped", {
         "isLoggedIn": true,
         "token": data['token'],
@@ -54,7 +54,7 @@ class PipedServices extends GetxService {
   }
 
   void logout() {
-    final appPrefsBox = Hive.box('AppPrefs');
+    final appPrefsBox = Hive.box('appPrefs');
     appPrefsBox
         .put("piped", {"isLoggedIn": false, "token": "", "instApiUrl": ""});
     _headers["Authorization"] = "";
