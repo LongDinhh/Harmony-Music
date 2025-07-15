@@ -12,7 +12,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 import '../../../base_class/playlist_album_screen_con_base.dart';
-import '../../../mixins/additional_opeartion_mixin.dart';
+import '../../../mixins/additional_operation_mixin.dart';
 import '../../../models/album.dart' show Album;
 import '../../../models/media_Item_builder.dart';
 import '../../../models/playlist.dart';
@@ -25,7 +25,7 @@ import '../Library/library_controller.dart';
 ///
 ///Playlist title,image,songs
 class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
-    with AdditionalOpeartionMixin, GetSingleTickerProviderStateMixin {
+    with AdditionalOperationMixin, GetSingleTickerProviderStateMixin {
   final MusicServices _musicServices = Get.find<MusicServices>();
   final playlist = Playlist(
     title: "",
