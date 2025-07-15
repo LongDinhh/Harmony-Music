@@ -190,8 +190,11 @@ class Downloader extends GetxService {
     final dirPath = settingsScreenController.downloadLocationPath.string;
     final actualDownformat =
         requiredAudioStream.audioCodec.name.contains("mp") ? "m4a" : "opus";
-    final RegExp invalidChar =
-        RegExp(r'Container.|\/|\\|\"|\<|\>|\*|\?|\:|\!|\[|\]|\¡|\||\%');
+    // Remove characters that can invalidate the filename on most platforms
+    // Also strip the accidental "Container." text that may appear when
+    // converting widgets to string.
+    final RegExp invalidChar = RegExp(
+        r'Container\.\s?|\/|\\|\"|\<|\>|\*|\?|\:|\!|\[|\]|\¡|\||\%');
     final songTitle = "${song.title.trim()} (${song.artist?.trim()})"
         .replaceAll(invalidChar, "");
     String filePath = "$dirPath/$songTitle.$actualDownformat";
