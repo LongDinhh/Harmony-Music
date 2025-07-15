@@ -84,7 +84,7 @@ class SongInfoDialog extends StatelessWidget {
       final dbStreamData = Hive.box("SongsUrlCache").get(id);
       tempstreamInfo = dbStreamData != null &&
               dbStreamData.runtimeType.toString().contains("Map")
-          ? dbStreamData[Hive.box('AppPrefs').get('streamingQuality') == 0
+          ? dbStreamData[Hive.box('appPrefs').get('streamingQuality') == 0
               ? 'lowQualityAudio'
               : "highQualityAudio"]
           : nullVal;

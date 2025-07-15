@@ -22,7 +22,7 @@ import '/services/cookie_manager.dart';
 class SettingsScreenController extends GetxController {
   late String _supportDir;
   final cacheSongs = false.obs;
-  final setBox = Hive.box("AppPrefs");
+  final setBox = Hive.box("appPrefs");
   final themeModetype = ThemeType.dynamic.obs;
   final skipSilenceEnabled = false.obs;
   final loudnessNormalizationEnabled = false.obs;

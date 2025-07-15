@@ -262,7 +262,7 @@ class LibraryPlaylistsController extends GetxController
           .toList())
     ];
 
-    final appPrefsBox = Hive.box("AppPrefs");
+    final appPrefsBox = Hive.box("appPrefs");
     if (appPrefsBox.containsKey("piped")) {
       if (appPrefsBox.get("piped")['isLoggedIn']) await syncPipedPlaylist();
     }

@@ -100,7 +100,7 @@ class PlayerController extends GetxController
     _listenForPlaylistChange();
     _listenForKeyboardActivity();
     _setInitLyricsMode();
-    final appPrefs = Hive.box("AppPrefs");
+    final appPrefs = Hive.box("appPrefs");
     isLoopModeEnabled.value = appPrefs.get("isLoopModeEnabled") ?? false;
     isShuffleModeEnabled.value = appPrefs.get("isShuffleModeEnabled") ?? false;
     isQueueLoopModeEnabled.value =
@@ -133,7 +133,7 @@ class PlayerController extends GetxController
   }
 
   void _setInitLyricsMode() {
-    lyricsMode.value = Hive.box("AppPrefs").get("lyricsMode") ?? 0;
+    lyricsMode.value = Hive.box("appPrefs").get("lyricsMode") ?? 0;
   }
 
   void panellistener(double x) {
@@ -269,7 +269,7 @@ class PlayerController extends GetxController
 
   Future<void> _restorePrevSession() async {
     final restrorePrevSessionEnabled =
-        Hive.box("AppPrefs").get("restrorePlaybackSession") ?? false;
+        Hive.box("appPrefs").get("restrorePlaybackSession") ?? false;
     if (restrorePrevSessionEnabled) {
       final prevSessionData = await Hive.openBox("prevSessionData");
       if (prevSessionData.keys.isNotEmpty) {
@@ -334,7 +334,7 @@ class PlayerController extends GetxController
         _playerPanelCheck();
         await _audioHandler.customAction("playByIndex", {"index": 0});
       } else {
-        if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+        if (Hive.box("appPrefs").get("discoverContentType") == "BOLI") {
           Get.find<HomeScreenController>()
               .changeDiscoverContent("BOLI", songId: mediaItem!.id);
         }
@@ -370,7 +370,7 @@ class PlayerController extends GetxController
 
     //for changing home content based on last interation
     Future.delayed(const Duration(seconds: 3), () {
-      if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+      if (Hive.box("appPrefs").get("discoverContentType") == "BOLI") {
         Get.find<HomeScreenController>()
             .changeDiscoverContent("BOLI", songId: mediaItems[index].id);
       }
@@ -480,7 +480,7 @@ class PlayerController extends GetxController
 
   void _playerPanelCheck({bool restoreSession = false}) {
     final isWideScreen = Get.size.width > 800;
-    final autoOpenPlayer = Hive.box("AppPrefs").get("autoOpenPlayer") ?? true;
+    final autoOpenPlayer = Hive.box("appPrefs").get("autoOpenPlayer") ?? true;
     if ((!isWideScreen && autoOpenPlayer && playerPanelController.isAttached) &&
         !restoreSession) {
       playerPanelController.open();
@@ -517,13 +517,13 @@ class PlayerController extends GetxController
         ? _audioHandler.setShuffleMode(AudioServiceShuffleMode.none)
         : _audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
     isShuffleModeEnabled.value = !shuffleModeEnabled;
-    await Hive.box("AppPrefs").put("isShuffleModeEnabled", !shuffleModeEnabled);
+    await Hive.box("appPrefs").put("isShuffleModeEnabled", !shuffleModeEnabled);
     // restrict queue loop mode when shuffle mode is enabled
     if (isShuffleModeEnabled.isTrue && isQueueLoopModeEnabled.isFalse) {
       isQueueLoopModeEnabled.value = true;
     } else if (isShuffleModeEnabled.isFalse) {
       isQueueLoopModeEnabled.value =
-          Hive.box("AppPrefs").get("queueLoopModeEnabled", defaultValue: false);
+          Hive.box("appPrefs").get("queueLoopModeEnabled", defaultValue: false);
     }
   }
 
@@ -590,7 +590,7 @@ class PlayerController extends GetxController
         ? _audioHandler.setRepeatMode(AudioServiceRepeatMode.one)
         : _audioHandler.setRepeatMode(AudioServiceRepeatMode.none);
     isLoopModeEnabled.value = !isLoopModeEnabled.value;
-    await Hive.box("AppPrefs")
+    await Hive.box("appPrefs")
         .put("isLoopModeEnabled", isLoopModeEnabled.value);
   }
 
@@ -614,14 +614,14 @@ class PlayerController extends GetxController
     isQueueLoopModeEnabled.value = !isQueueLoopModeEnabled.value;
     await _audioHandler.customAction(
         "toggleQueueLoopMode", {"enable": isQueueLoopModeEnabled.value});
-    await Hive.box("AppPrefs")
+    await Hive.box("appPrefs")
         .put("queueLoopModeEnabled", isQueueLoopModeEnabled.value);
   }
 
   Future<void> setVolume(int value) async {
     _audioHandler.customAction("setVolume", {"value": value});
     volume.value = value;
-    await Hive.box("AppPrefs").put("volume", value);
+    await Hive.box("appPrefs").put("volume", value);
   }
 
   Future<void> mute() async {
@@ -629,10 +629,10 @@ class PlayerController extends GetxController
     if (volume.value != 0) {
       vol = 0;
     } else {
-      vol = await Hive.box("AppPrefs").get("volume", defaultValue: 10);
+      vol = await Hive.box("appPrefs").get("volume", defaultValue: 10);
       if (vol == 0) {
         vol = 10;
-        await Hive.box("AppPrefs").put("volume", vol);
+        await Hive.box("appPrefs").put("volume", vol);
       }
     }
     _audioHandler.customAction("setVolume", {"value": vol!});
@@ -740,7 +740,7 @@ class PlayerController extends GetxController
   }
 
   void changeLyricsMode(int? val) {
-    Hive.box("AppPrefs").put("lyricsMode", val);
+    Hive.box("appPrefs").put("lyricsMode", val);
     lyricsMode.value = val!;
   }
 

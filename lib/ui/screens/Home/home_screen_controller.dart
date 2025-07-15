@@ -40,7 +40,7 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> loadContent() async {
-    final box = Hive.box("AppPrefs");
+    final box = Hive.box("appPrefs");
     final isCachedHomeScreenDataEnabled =
         box.get("cacheHomeScreenData") ?? true;
     if (isCachedHomeScreenDataEnabled) {
@@ -109,7 +109,7 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> loadContentFromNetwork({bool silent = false}) async {
-    final box = Hive.box("AppPrefs");
+    final box = Hive.box("appPrefs");
     String contentType = box.get("discoverContentType") ?? "QP";
 
     networkError.value = false;
@@ -192,7 +192,7 @@ class HomeScreenController extends GetxController {
 
       // set home content last update time
       cachedHomeScreenData(updateAll: true);
-      await Hive.box("AppPrefs")
+      await Hive.box("appPrefs")
           .put("homeScreenDataTime", DateTime.now().millisecondsSinceEpoch);
       // ignore: unused_catch_stack
     } on NetworkError catch (r, e) {
@@ -321,7 +321,7 @@ class HomeScreenController extends GetxController {
             "Seems ${val == "TMV" ? "Top music videos" : "Trending songs"} currently not available!");
       }
     } else {
-      songId ??= Hive.box("AppPrefs").get("recentSongId");
+      songId ??= Hive.box("appPrefs").get("recentSongId");
       if (songId != null) {
         try {
           final value = await _musicServices.getContentRelatedToSong(
@@ -333,7 +333,7 @@ class HomeScreenController extends GetxController {
               (value[0]['title']).toString().contains("like")) {
             quickPicks_ =
                 QuickPicks(List<MediaItem>.from(value[0]["contents"]));
-            Hive.box("AppPrefs").put("recentSongId", songId);
+            Hive.box("appPrefs").put("recentSongId", songId);
           }
           // ignore: empty_catches
         } catch (e) {}
@@ -345,7 +345,7 @@ class HomeScreenController extends GetxController {
 
     // set home content last update time
     cachedHomeScreenData(updateQuickPicksNMiddleContent: true);
-    await Hive.box("AppPrefs")
+    await Hive.box("appPrefs")
         .put("homeScreenDataTime", DateTime.now().millisecondsSinceEpoch);
   }
 
@@ -368,7 +368,7 @@ class HomeScreenController extends GetxController {
 
   void _checkNewVersion() {
     showVersionDialog.value =
-        Hive.box("AppPrefs").get("newVersionVisibility") ?? true;
+        Hive.box("appPrefs").get("newVersionVisibility") ?? true;
     if (showVersionDialog.isTrue) {
       newVersionCheck(Get.find<SettingsScreenController>().currentVersion)
           .then((value) {
@@ -382,7 +382,7 @@ class HomeScreenController extends GetxController {
   }
 
   void onChangeVersionVisibility(bool val) {
-    Hive.box("AppPrefs").put("newVersionVisibility", !val);
+    Hive.box("appPrefs").put("newVersionVisibility", !val);
     showVersionDialog.value = !val;
   }
 

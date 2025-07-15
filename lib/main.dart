@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         translations: Languages(),
         locale:
-            Locale(Hive.box("AppPrefs").get('currentAppLanguageCode') ?? "vi"),
+            Locale(Hive.box("appPrefs").get('currentAppLanguageCode') ?? "vi"),
         fallbackLocale: const Locale("vi"),
         builder: (context, child) {
           final mQuery = MediaQuery.of(context);
@@ -114,11 +114,11 @@ Future<void> initHive() async {
   await Hive.openBox("SongsCache");
   await Hive.openBox("SongDownloads");
   await Hive.openBox('SongsUrlCache');
-  await Hive.openBox("AppPrefs");
+  await Hive.openBox("appPrefs");
 }
 
 void _setAppInitPrefs() {
-  final appPrefs = Hive.box("AppPrefs");
+  final appPrefs = Hive.box("appPrefs");
   if (appPrefs.isEmpty) {
     appPrefs.putAll({
       'themeModeType': 0,
