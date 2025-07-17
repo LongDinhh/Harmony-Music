@@ -18,6 +18,8 @@ import '/ui/player/player_controller.dart';
 import '../Home/home_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
 import '/services/cookie_manager.dart';
+import '/services/youtube_cookie_manager.dart';
+import 'google_login_webview.dart';
 
 class SettingsScreenController extends GetxController {
   late String _supportDir;
@@ -31,7 +33,7 @@ class SettingsScreenController extends GetxController {
   final playerUi = 0.obs;
   final slidableActionEnabled = true.obs;
   final isIgnoringBatteryOptimizations = false.obs;
-  final autoOpenPlayer = false.obs;
+  final autoOpenPlayer = true.obs;
   final discoverContentType = "QP".obs;
   final isNewVersionAvailable = false.obs;
   final isLinkedWithPiped = false.obs;
@@ -99,7 +101,7 @@ class SettingsScreenController extends GetxController {
         : (setBox.get("loudnessNormalizationEnabled") ?? false);
     autoOpenPlayer.value = (setBox.get("autoOpenPlayer") ?? true);
     restorePlaybackSession.value =
-        setBox.get("restrorePlaybackSession") ?? false;
+        setBox.get("restrorePlaybackSession") ?? true;
     cacheHomeScreenData.value = setBox.get("cacheHomeScreenData") ?? true;
     streamingQuality.value =
         AudioQuality.values[setBox.get('streamingQuality')];
@@ -346,11 +348,19 @@ class SettingsScreenController extends GetxController {
   // Cookie management methods
   final cookieInfo = Rxn<Map<String, dynamic>>();
   final hasValidCookies = false.obs;
+  final isGoogleLoggedIn = false.obs;
+  final googleLoginInfo = Rxn<Map<String, dynamic>>();
 
   Future<void> _loadCookieInfo() async {
     final info = await CookieManager.getCookieInfo();
     cookieInfo.value = info;
     hasValidCookies.value = await CookieManager.hasValidCookies();
+    
+    // Cleanup expired cookies
+    await YouTubeCookieManager.cleanupExpiredCookies();
+    
+    // Load Google/YouTube login info
+    await refreshGoogleLoginStatus();
   }
 
   Future<void> refreshCookieInfo() async {
@@ -371,5 +381,53 @@ class SettingsScreenController extends GetxController {
     ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
         Get.context!, "Cookies updated successfully",
         size: SanckBarSize.MEDIUM));
+  }
+
+  // Google/YouTube login methods
+  Future<void> refreshGoogleLoginStatus() async {
+    try {
+      final loginInfo = await YouTubeCookieManager.getLoginInfo();
+      googleLoginInfo.value = loginInfo;
+      isGoogleLoggedIn.value = loginInfo['isLoggedIn'] as bool;
+    } catch (e) {
+      printERROR('Error refreshing Google login status: $e');
+      isGoogleLoggedIn.value = false;
+      googleLoginInfo.value = {'isLoggedIn': false, 'cookieCount': 0, 'cookies': {}};
+    }
+  }
+
+  Future<void> logoutGoogle() async {
+    try {
+      await YouTubeCookieManager.clearAllYouTubeCookies();
+      await refreshGoogleLoginStatus();
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
+          Get.context!, "Đã đăng xuất Google", size: SanckBarSize.MEDIUM));
+    } catch (e) {
+      printERROR('Error logging out Google: $e');
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
+          Get.context!, "Lỗi khi đăng xuất: $e", size: SanckBarSize.MEDIUM));
+    }
+  }
+
+  Future<void> openGoogleLoginWebView() async {
+    try {
+      final result = await Get.to(() => const GoogleLoginWebView());
+      if (result == true) {
+        await refreshGoogleLoginStatus();
+      }
+    } catch (e) {
+      printERROR('Error opening Google login WebView: $e');
+    }
+  }
+
+  Future<void> cleanupExpiredCookies() async {
+    try {
+      await YouTubeCookieManager.cleanupExpiredCookies();
+      await refreshGoogleLoginStatus();
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
+          Get.context!, "Đã dọn dẹp cookie hết hạn", size: SanckBarSize.MEDIUM));
+    } catch (e) {
+      printERROR('Error cleaning up expired cookies: $e');
+    }
   }
 }

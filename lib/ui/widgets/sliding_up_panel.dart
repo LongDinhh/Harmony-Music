@@ -430,6 +430,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
   @override
   void dispose() {
     _ac.dispose();
+    _sc.dispose();
     super.dispose();
   }
 

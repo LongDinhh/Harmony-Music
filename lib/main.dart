@@ -115,6 +115,7 @@ initHive() async {
   await Hive.openBox("AppPrefs");
   await Hive.openBox("CookieStorage");
   await Hive.openBox("CookieKeysStorage");
+  await Hive.openBox("YTBCookies");
 }
 
 Future<void> _setAppInitPrefsAsync() async {

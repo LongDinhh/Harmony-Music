@@ -73,6 +73,7 @@ class MusicServices extends getx.GetxService {
 
           // Lấy SAPISID theo key
           final sapisid = await CookieManager.getCookieByKey('SAPISID');
+          print(sapisid);
           if (sapisid != null) {
             // Tạo SAPISIDHASH với datasyncId từ storage
             final sapisidHash =
@@ -167,6 +168,7 @@ class MusicServices extends getx.GetxService {
   Future<void> _initializeCookies() async {
     // Kiểm tra xem có cookie hợp lệ trong storage không
     final validCookies = await CookieManager.getAllValidCookiesString();
+    print(validCookies);
     if (validCookies.isNotEmpty) {
       _headers['cookie'] = validCookies;
       printINFO('Loaded cookies from storage');
@@ -180,48 +182,9 @@ class MusicServices extends getx.GetxService {
 
   /// Khởi tạo cookie mặc định theo key
   Future<void> _initializeDefaultCookiesByKey() async {
-    // Cookie mặc định được lưu theo key
-    final defaultCookies = {
-      'VISITOR_INFO1_LIVE': 'q-krUsDDf8U',
-      'VISITOR_PRIVACY_METADATA': 'CgJWThIEGgAgFQ%3D%3D',
-      '_gcl_au': '1.1.501670752.1749787964',
-      'YSC': 'eusn3kpOLfs',
-      '__Secure-ROLLOUT_TOKEN': 'CP_Pv52t5eyJaBD81La0zaaLAxioke269bGOAw%3D%3D',
-      'HSID': 'A7pQpWgAW2F50KNH_',
-      'SSID': 'AlIkzoKWvz032UgI-',
-      'APISID': 'f4z2w7kNLEJ_dqSs/At57bYt0jIyRaqFM_',
-      'SAPISID': '23BCIV3c09QiTMNc/Ay5Pl6vMnMoS8ccZB',
-      '__Secure-1PAPISID': '23BCIV3c09QiTMNc/Ay5Pl6vMnMoS8ccZB',
-      '__Secure-3PAPISID': '23BCIV3c09QiTMNc/Ay5Pl6vMnMoS8ccZB',
-      'SID':
-          'g.a000ywhZ840j5BNYqwIry9uq27YWivjaFcZVHAuMyiQhTFQkgIv6CugMmO8liIGkI-NsWg6C0wACgYKAaASARcSFQHGX2MiCdCkAawCZVJMiX3t5jmfPRoVAUF8yKprG9U94UR3koFOFiUfVi7G0076',
-      '__Secure-1PSID':
-          'g.a000ywhZ840j5BNYqwIry9uq27YWivjaFcZVHAuMyiQhTFQkgIv6c2-DIW1kOpYRMyXQl33IwgACgYKAZUSARcSFQHGX2MiQcM2U6p5qsAN4OMooFQFRRoVAUF8yKpdYrvYAqAEEGn4ry-cXLs00076',
-      '__Secure-3PSID':
-          'g.a000ywhZ840j5BNYqwIry9uq27YWivjaFcZVHAuMyiQhTFQkgIv678ydg2q4znw-PV2hmRGtYgACgYKAQ8SARcSFQHGX2MiWBqkTBpWZtSa8flyrhM8nRoVAUF8yKpDiGheBXXQz0c1fO-l8dFo0076',
-      'LOGIN_INFO':
-          'AFmmF2swRAIgTJKEUkwQxtdL_NstctthPi6sdsYegdOybb10zLFVrYYCIEn4zW1tmn3KujEdwq6boFuyxsb2k8ZkXW_rjD3D2q-d:QUQ3MjNmd255RTNRYW1VMW5hN2pFYmk5SHRBWHFnQ3o1TURjV3ZRNXhNbExIcTlXd0VHMkJJbjRweVlrdlV5QkpCLVlJcHg3WlFmZGl6Q28yMlZzUU9IZERQY0lDS2lnVUVKdkk3Ml9qNFRManVZelF1T0VvZ3c0NzNQOV91cHhyRnhqRmF1U3J2ZzMxTlI4Z0F1LWdEdENibUhoZ3BFM3Vn',
-      'PREF': 'f6=40000080&f7=100&tz=Asia.Saigon&repeat=NONE&autoplay=true',
-      '__Secure-1PSIDTS':
-          'sidts-CjIB5H03Px4xGvNMZRBRF4gAGC3veODcLQrPo2rVeh_i5H94V5j7s8YWGG8ZScQ5bCJuBBAA',
-      '__Secure-3PSIDTS':
-          'sidts-CjIB5H03Px4xGvNMZRBRF4gAGC3veODcLQrPo2rVeh_i5H94V5j7s8YWGG8ZScQ5bCJuBBAA',
-      'SIDCC':
-          'AKEyXzWZuTBr_7tD7OzJpnu8RON5ZJJExChV75Lmw4Pm1YDq2czXJfaL3URhLsGzGBrqmTuyLQ',
-      '__Secure-1PSIDCC':
-          'AKEyXzVlFUN2gDeeSrM3FY4anqqsmu65BoOyyV2hgbCCgqGD-LIZN7iKgQ37mP0gdsGJCMcn-g',
-      '__Secure-3PSIDCC':
-          'AKEyXzVQGpE_QHnc72Js9lhxjzvdN5_6Nh153sajAs_CTgkxYpKslfEh19cvQl7029Js5rq6hds',
-    };
-
-    // Lưu từng cookie theo key (vĩnh viễn)
-    for (final entry in defaultCookies.entries) {
-      await CookieManager.saveCookieByKey(entry.key, entry.value,
-          expiresIn: null);
-    }
-
-    // Cập nhật headers với cookie string
-    _headers['cookie'] = await CookieManager.getAllValidCookiesString();
+    final cookies = await CookieManager.getAllValidCookiesString();
+    print(cookies);
+    _headers['cookie'] = cookies == '' ? 'CONSENT=YES+1' : cookies;
   }
 
   Future<String?> genrateVisitorId() async {

@@ -202,7 +202,7 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
                               childAspectRatio: (itemWidth / itemHeight),
                             ),
                             controller:
-                                ScrollController(keepScrollOffset: false),
+                                Get.find<LibraryPlaylistsController>().gridScrollController,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             padding:

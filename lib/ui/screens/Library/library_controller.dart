@@ -239,6 +239,7 @@ class LibraryPlaylistsController extends GetxController
   final creationInProgress = false.obs;
   final textInputController = TextEditingController();
   List<Playlist> tempListContainer = [];
+  final ScrollController gridScrollController = ScrollController(keepScrollOffset: false);
 
   // Add these RxBool to track import progress
   final isImporting = false.obs;
@@ -456,6 +457,7 @@ class LibraryPlaylistsController extends GetxController
   void dispose() {
     textInputController.dispose();
     controller.dispose();
+    gridScrollController.dispose();
     super.dispose();
   }
 

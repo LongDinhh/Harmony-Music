@@ -243,9 +243,6 @@ class Downloader extends GetxService {
         final int? trackNumber = int.tryParse(trackDetails?[0] ?? "");
         final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
 
-        // Metadata writing using forked audio_metadata_reader
-        // Using fork: https://github.com/LongDinhh/audio_metadata_reader
-        // TODO: Fix bug in fork - mp4_writer.dart line 41 should use 'file' parameter instead of hardcoded "a_new.mp4"
         try {
           final file = File(filePath);
 

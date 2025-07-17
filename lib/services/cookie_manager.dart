@@ -6,7 +6,7 @@ class CookieManager {
   static const String _cookieKey = 'youtube_cookies';
 
   /// Lưu trữ cookie theo key riêng biệt
-  static const String _cookieKeysBoxName = 'CookieKeysStorage';
+  static const String _cookieKeysBoxName = 'YTBCookies';
 
   /// Lưu cookie với thời gian hết hạn
   /// [cookieString] - Chuỗi cookie

@@ -109,8 +109,7 @@ class HomeScreen extends StatelessWidget {
       dynamic list, HomeScreenController homeScreenController) {
     return list
         .map((content) {
-          final scrollController = ScrollController();
-          homeScreenController.contentScrollControllers.add(scrollController);
+          final scrollController = homeScreenController.getOrCreateScrollController('content_${content.runtimeType}_${content.hashCode}');
           return ContentListWidget(
               content: content, scrollController: scrollController);
         })
@@ -215,9 +214,7 @@ class Body extends StatelessWidget {
                                 .isContentFetched.value
                             ? [
                                 Obx(() {
-                                  final scrollController = ScrollController();
-                                  homeScreenController.contentScrollControllers
-                                      .add(scrollController);
+                                  final scrollController = homeScreenController.getOrCreateScrollController('quick_picks');
                                   return QuickPicksWidget(
                                       content:
                                           homeScreenController.quickPicks.value,
@@ -297,8 +294,7 @@ class Body extends StatelessWidget {
       dynamic list, HomeScreenController homeScreenController) {
     return list
         .map((content) {
-          final scrollController = ScrollController();
-          homeScreenController.contentScrollControllers.add(scrollController);
+          final scrollController = homeScreenController.getOrCreateScrollController('content_${content.runtimeType}_${content.hashCode}');
           return ContentListWidget(
               content: content, scrollController: scrollController);
         })

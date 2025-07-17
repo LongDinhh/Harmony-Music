@@ -17,6 +17,7 @@ import '/ui/player/player_controller.dart';
 import '/ui/utils/theme_controller.dart';
 import 'components/custom_expansion_tile.dart';
 import 'settings_screen_controller.dart';
+import 'google_login_webview.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key, this.isBottomNavActive = false});
@@ -286,7 +287,39 @@ class SettingsScreen extends StatelessWidget {
                             } else {
                               settingsController.unlinkPiped();
                             }
-                          }),
+                          })),
+                    ListTile(
+                      contentPadding:
+                          const EdgeInsets.only(left: 5, right: 10, top: 0),
+                      title: Text("Google Login".tr),
+                      subtitle: Obx(() {
+                        final isLoggedIn = settingsController.isGoogleLoggedIn.value;
+                        final cookieCount = settingsController.googleLoginInfo.value?['cookieCount'] ?? 0;
+                        return Text(
+                          isLoggedIn 
+                              ? "Đã đăng nhập Google ($cookieCount cookies)".tr
+                              : "Đăng nhập Google để truy cập nội dung cá nhân".tr,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        );
+                      }),
+                      trailing: Obx(() {
+                        return TextButton(
+                          child: Text(
+                            settingsController.isGoogleLoggedIn.value ? "logout".tr : "login".tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(fontSize: 15),
+                          ),
+                          onPressed: () {
+                            if (settingsController.isGoogleLoggedIn.value) {
+                              settingsController.logoutGoogle();
+                            } else {
+                              settingsController.openGoogleLoginWebView();
+                            }
+                          },
+                        );
+                      }),
                     ),
                     Obx(() => (settingsController.isLinkedWithPiped.isTrue)
                         ? ListTile(
@@ -646,6 +679,17 @@ class SettingsScreen extends StatelessWidget {
                                   size: SanckBarSize.BIG,
                                   duration: const Duration(seconds: 2)));
                         });
+                      },
+                    ),
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                      title: Text("cleanupExpiredCookies".tr),
+                      subtitle: Text(
+                        "cleanupExpiredCookiesDes".tr,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      onTap: () {
+                        settingsController.cleanupExpiredCookies();
                       },
                     ),
                   ])

@@ -28,6 +28,7 @@ class HomeScreenController extends GetxController {
   //isHomeScreenOnTop var only useful if bottom nav enabled
   final isHomeSreenOnTop = true.obs;
   final List<ScrollController> contentScrollControllers = [];
+  final Map<String, ScrollController> _managedScrollControllers = {};
   bool reverseAnimationtransiton = false;
   bool _hasTriggeredRefreshHaptic =
       false; // Track haptic khi đủ điều kiện refresh
@@ -115,9 +116,10 @@ class HomeScreenController extends GetxController {
     networkError.value = false;
     try {
       List middleContentTemp = [];
-      final homeContentListMap = await _musicServices.getHome(
-          limit:
-              Get.find<SettingsScreenController>().noOfHomeScreenContent.value);
+      final limitContent =
+          Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
+      final homeContentListMap =
+          await _musicServices.getHome(limit: limitContent);
       if (contentType == "TR") {
         final index = homeContentListMap
             .indexWhere((element) => element['title'] == "Trending");
@@ -444,6 +446,21 @@ class HomeScreenController extends GetxController {
         contoller.dispose();
       }
     }
+  }
+
+  ScrollController getOrCreateScrollController(String key) {
+    if (_managedScrollControllers.containsKey(key)) {
+      return _managedScrollControllers[key]!;
+    }
+
+    final controller = ScrollController();
+    _managedScrollControllers[key] = controller;
+    contentScrollControllers.add(controller);
+    return controller;
+  }
+
+  ScrollController? getScrollController(String key) {
+    return _managedScrollControllers[key];
   }
 
   @override
