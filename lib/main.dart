@@ -8,7 +8,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:metadata_god/metadata_god.dart'; // Có vấn đề FFI trên iOS
 import 'package:path_provider/path_provider.dart';
 
-import '/ui/screens/Search/search_screen_controller.dart';
 import '/utils/get_localization.dart';
 import '/services/downloader.dart';
 import '/services/piped_service.dart';
@@ -16,11 +15,7 @@ import 'utils/app_link_controller.dart';
 import '/services/audio_handler.dart';
 import '/services/music_service.dart';
 import '/ui/home.dart';
-import '/ui/player/player_controller.dart';
-import 'ui/screens/Settings/settings_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
-import 'ui/screens/Home/home_screen_controller.dart';
-import 'ui/screens/Library/library_controller.dart';
 
 import 'utils/update_check_flag_file.dart';
 
@@ -70,6 +65,7 @@ class MyApp extends StatelessWidget {
           return Stack(
             children: [
               GetX<ThemeController>(
+                init: ThemeController(),
                 builder: (controller) => MediaQuery(
                   data: mQuery.copyWith(textScaler: scale),
                   child: AnimatedTheme(
@@ -95,21 +91,10 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> startApplicationServices() async {
-  // Use lazyPut with fenix for automatic memory management
+  // Only register essential background services
   Get.lazyPut(() => PipedServices(), fenix: true);
   Get.lazyPut(() => MusicServices(), fenix: true);
-  Get.lazyPut(() => ThemeController(), fenix: true);
-  Get.lazyPut(() => PlayerController(), fenix: true);
-  Get.lazyPut(() => HomeScreenController(), fenix: true);
-  Get.lazyPut(() => LibrarySongsController(), fenix: true);
-  Get.lazyPut(() => LibraryPlaylistsController(), fenix: true);
-  Get.lazyPut(() => LibraryAlbumsController(), fenix: true);
-  Get.lazyPut(() => LibraryArtistsController(), fenix: true);
-  Get.lazyPut(() => SettingsScreenController(), fenix: true);
   Get.lazyPut(() => Downloader(), fenix: true);
-  if (GetPlatform.isDesktop) {
-    Get.lazyPut(() => SearchScreenController(), fenix: true);
-  }
 }
 
 initHive() async {

@@ -36,9 +36,9 @@ class SongsLibraryWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-          Obx(() {
-            final libSongsController = Get.find<LibrarySongsController>();
-            return SortWidget(
+          GetBuilder<LibrarySongsController>(
+            init: LibrarySongsController(),
+            builder: (libSongsController) => Obx(() => SortWidget(
               tag: "LibSongSort",
               screenController: libSongsController,
               itemCountTitle: "${libSongsController.librarySongsList.length}",
@@ -60,10 +60,11 @@ class SongsLibraryWidget extends StatelessWidget {
                   libSongsController.performAdditionalOperation,
               cancelAdditionalOperation:
                   libSongsController.cancelAdditionalOperation,
-            );
-          }),
-          GetX<LibrarySongsController>(builder: (controller) {
-            return controller.librarySongsList.isNotEmpty
+            ))
+          ),
+          GetBuilder<LibrarySongsController>(
+            init: LibrarySongsController(),
+            builder: (controller) => controller.librarySongsList.isNotEmpty
                 ? (controller.additionalOperationMode.value ==
                         OperationMode.none
                     ? ListWidget(
@@ -87,8 +88,8 @@ class SongsLibraryWidget extends StatelessWidget {
                       "noOfflineSong".tr,
                       style: Theme.of(context).textTheme.titleMedium,
                     )),
-                  );
-          })
+                  )
+          )
         ],
       ),
     );
@@ -103,9 +104,9 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final libralbumCntrller = Get.find<LibraryAlbumsController>();
-    final librplstCntrller = Get.find<LibraryPlaylistsController>();
-    final settingscrnController = Get.find<SettingsScreenController>();
+    final libralbumCntrller = Get.put(LibraryAlbumsController(), permanent: true);
+    final librplstCntrller = Get.put(LibraryPlaylistsController(), permanent: true);
+    final settingscrnController = Get.put(SettingsScreenController(), permanent: true);
     final size = MediaQuery.of(context).size;
 
     const double itemHeight = 180;
@@ -239,7 +240,7 @@ class LibraryArtistWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cntrller = Get.find<LibraryArtistsController>();
+    final cntrller = Get.put(LibraryArtistsController(), permanent: true);
     final topPadding = context.isLandscape ? 50.0 : 90.0;
     return Padding(
       padding: isBottomNavActive

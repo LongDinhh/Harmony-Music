@@ -29,78 +29,94 @@ class HomeScreen extends StatelessWidget {
         Get.find<SettingsScreenController>();
 
     return Scaffold(
-        floatingActionButton: Obx(
-          () => ((homeScreenController.tabIndex.value == 0 &&
-                          !GetPlatform.isDesktop) ||
-                      homeScreenController.tabIndex.value == 2) &&
-                  settingsScreenController.isBottomNavBarEnabled.isFalse
-              ? Obx(
-                  () => Padding(
-                    padding: EdgeInsets.only(
-                        bottom: playerController.playerPanelMinHeight.value >
-                                Get.mediaQuery.padding.bottom
-                            ? playerController.playerPanelMinHeight.value -
-                                Get.mediaQuery.padding.bottom
-                            : playerController.playerPanelMinHeight.value),
-                    child: SizedBox(
-                      height: 60,
-                      width: 60,
-                      child: FittedBox(
-                        child: FloatingActionButton(
-                            focusElevation: 0,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(14))),
-                            elevation: 0,
-                            onPressed: () async {
-                              if (homeScreenController.tabIndex.value == 2) {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        const CreateNRenamePlaylistPopup());
-                              } else {
-                                Get.toNamed(ScreenNavigationSetup.searchScreen,
-                                    id: ScreenNavigationSetup.id);
-                              }
-                              // file:///data/user/0/com.example.harmonymusic/cache/libCachedImageData/
-                              //file:///data/user/0/com.example.harmonymusic/cache/just_audio_cache/
-                            },
-                            child: Icon(homeScreenController.tabIndex.value == 2
-                                ? Icons.add
-                                : Icons.search)),
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-        body: Obx(
-          () => Row(
-            children: <Widget>[
-              // create a navigation rail
-              settingsScreenController.isBottomNavBarEnabled.isFalse
-                  ? const SideNavBar()
-                  : const SizedBox(
-                      width: 0,
-                    ),
-              //const VerticalDivider(thickness: 1, width: 2),
-              Expanded(
-                child: Obx(() => AnimatedScreenTransition(
-                    enabled: settingsScreenController
-                        .isTransitionAnimationDisabled.isFalse,
-                    resverse: homeScreenController.reverseAnimationtransiton,
-                    horizontalTransition:
-                        settingsScreenController.isBottomNavBarEnabled.isTrue,
-                    child: Center(
-                      key: ValueKey<int>(homeScreenController.tabIndex.value),
-                      child: const Body(),
-                    ))),
-              ),
-            ],
-          ),
-        ));
+        floatingActionButton: _buildFloatingActionButton(
+            homeScreenController, settingsScreenController, playerController),
+        body: _buildBody(settingsScreenController, homeScreenController));
   }
 }
+
+  Widget _buildFloatingActionButton(HomeScreenController homeScreenController,
+      SettingsScreenController settingsScreenController, PlayerController playerController) {
+    return Obx(() {
+      final showFAB = ((homeScreenController.tabIndex.value == 0 &&
+                  !GetPlatform.isDesktop) ||
+              homeScreenController.tabIndex.value == 2) &&
+          settingsScreenController.isBottomNavBarEnabled.isFalse;
+      
+      if (!showFAB) return const SizedBox.shrink();
+      
+      return Padding(
+        padding: EdgeInsets.only(
+            bottom: playerController.playerPanelMinHeight.value >
+                    Get.mediaQuery.padding.bottom
+                ? playerController.playerPanelMinHeight.value -
+                    Get.mediaQuery.padding.bottom
+                : playerController.playerPanelMinHeight.value),
+        child: SizedBox(
+          height: 60,
+          width: 60,
+          child: FittedBox(
+            child: FloatingActionButton(
+                focusElevation: 0,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14))),
+                elevation: 0,
+                onPressed: () async {
+                  if (homeScreenController.tabIndex.value == 2) {
+                    showDialog(
+                        context: Get.context!,
+                        builder: (context) => const CreateNRenamePlaylistPopup());
+                  } else {
+                    Get.toNamed(ScreenNavigationSetup.searchScreen,
+                        id: ScreenNavigationSetup.id);
+                  }
+                },
+                child: Icon(homeScreenController.tabIndex.value == 2
+                    ? Icons.add
+                    : Icons.search)),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildBody(SettingsScreenController settingsScreenController,
+      HomeScreenController homeScreenController) {
+    return Obx(() => Row(
+          children: <Widget>[
+            settingsScreenController.isBottomNavBarEnabled.isFalse
+                ? const SideNavBar()
+                : const SizedBox(width: 0),
+            Expanded(
+              child: AnimatedScreenTransition(
+                  enabled: settingsScreenController
+                      .isTransitionAnimationDisabled.isFalse,
+                  resverse: homeScreenController.reverseAnimationtransiton,
+                  horizontalTransition:
+                      settingsScreenController.isBottomNavBarEnabled.isTrue,
+                  child: Center(
+                    key: ValueKey<int>(homeScreenController.tabIndex.value),
+                    child: const Body(),
+                  )),
+            ),
+          ],
+        ));
+  }
+
+
+
+  List<Widget> getWidgetList(
+      dynamic list, HomeScreenController homeScreenController) {
+    return list
+        .map((content) {
+          final scrollController = ScrollController();
+          homeScreenController.contentScrollControllers.add(scrollController);
+          return ContentListWidget(
+              content: content, scrollController: scrollController);
+        })
+        .whereType<Widget>()
+        .toList();
+  }
 
 class Body extends StatelessWidget {
   const Body({
