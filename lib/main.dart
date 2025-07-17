@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,16 +26,26 @@ import 'utils/update_check_flag_file.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Ensure Hive is initialized first
   await initHive();
-  // await MetadataGod.initialize(); // Skip vì có vấn đề FFI trên iOS
-  _setAppInitPrefs();
+  
+  // Then set app preferences
+  await _setAppInitPrefsAsync();
+  
+  // Lazy initialization of services
   startApplicationServices();
-  Get.put<AudioHandler>(await initAudioService(), permanent: true);
+  
+  // Initialize audio service - required for app to function
+  final audioHandler = await initAudioService();
+  Get.put<AudioHandler>(audioHandler, permanent: true);
+  
   WidgetsBinding.instance.addObserver(LifecycleHandler());
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  // restart_app không cần initialize, chỉ cần gọi Restart.restartApp() khi cần
+  
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -83,6 +95,7 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> startApplicationServices() async {
+  // Use lazyPut with fenix for automatic memory management
   Get.lazyPut(() => PipedServices(), fenix: true);
   Get.lazyPut(() => MusicServices(), fenix: true);
   Get.lazyPut(() => ThemeController(), fenix: true);
@@ -109,6 +122,8 @@ initHive() async {
         (await getApplicationDocumentsDirectory()).path;
   }
   await Hive.initFlutter(applicationDataDirectoryPath);
+  
+  // Open boxes sequentially to ensure proper initialization
   await Hive.openBox("SongsCache");
   await Hive.openBox("SongDownloads");
   await Hive.openBox('SongsUrlCache');
@@ -117,7 +132,7 @@ initHive() async {
   await Hive.openBox("CookieKeysStorage");
 }
 
-void _setAppInitPrefs() {
+Future<void> _setAppInitPrefsAsync() async {
   final appPrefs = Hive.box("AppPrefs");
   if (appPrefs.isEmpty) {
     appPrefs.putAll({
@@ -128,7 +143,9 @@ void _setAppInitPrefs() {
       'themePrimaryColor': 4278199603,
       'discoverContentType': "QP",
       'newVersionVisibility': updateCheckFlag,
-      "cacheHomeScreenData": true
+      "cacheHomeScreenData": true,
+      'currentAppLanguageCode': "vi",
+      'noOfHomeScreenContent': 7
     });
   }
 }

@@ -1,13 +1,11 @@
 <img src="https://github.com/anandnet/Harmony-Music/blob/main/cover.png" width="1200" >
 
 # Harmony Music
-A cross platform app for music streaming made with Flutter (Android, iOS, Windows, Linux).
+A cross platform app for music streaming made with Flutter (Android, iOS).
 
 ## ✨ Platform Support
 - ✅ **Android** - Full featured support
 - ✅ **iOS** - Core features supported with iOS-specific optimizations
-- ✅ **Windows** - Desktop optimized
-- ✅ **Linux** - Desktop optimized
 
 # Features
 
@@ -47,11 +45,6 @@ A cross platform app for music streaming made with Flutter (Android, iOS, Window
 * ✅ Loudness normalization
 * ⚠️ Equalizer through iOS Control Center/Settings
 * ⚠️ CarPlay integration (planned)
-
-### Desktop (Windows, Linux)
-* ✅ Desktop-optimized UI
-* ✅ System integration
-* ✅ File management
 
 ## 🚧 iOS Features Under Development
 

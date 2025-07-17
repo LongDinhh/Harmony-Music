@@ -26,7 +26,7 @@ class SettingsScreenController extends GetxController {
   final themeModetype = ThemeType.dynamic.obs;
   final skipSilenceEnabled = false.obs;
   final loudnessNormalizationEnabled = false.obs;
-  final noOfHomeScreenContent = 3.obs;
+  final noOfHomeScreenContent = 7.obs;
   final streamingQuality = AudioQuality.High.obs;
   final playerUi = 0.obs;
   final slidableActionEnabled = true.obs;
@@ -87,7 +87,7 @@ class SettingsScreenController extends GetxController {
             : appLang;
     isBottomNavBarEnabled.value =
         isDesktop ? false : (setBox.get("isBottomNavBarEnabled") ?? true);
-    noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 3;
+    noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 7;
     isTransitionAnimationDisabled.value =
         setBox.get("isTransitionAnimationDisabled") ?? false;
     cacheSongs.value = setBox.get('cacheSongs') ?? false;
