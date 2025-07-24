@@ -520,10 +520,12 @@ class AlbumScreen extends StatelessWidget {
     return AnimatedBuilder(
       animation: albumController.animationController,
       builder: (context, child) {
-        return SizedBox(
-          height: albumController.heightAnimation.value,
-          child: Transform.scale(
-              scale: albumController.scaleAnimation.value, child: child),
+        return ClipRect(
+          child: SizedBox(
+            height: albumController.heightAnimation.value,
+            child: Transform.scale(
+                scale: albumController.scaleAnimation.value, child: child),
+          ),
         );
       },
       child: Padding(

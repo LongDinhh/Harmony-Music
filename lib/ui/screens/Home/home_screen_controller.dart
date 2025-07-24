@@ -111,8 +111,11 @@ class HomeScreenController extends GetxController {
 
   Future<void> loadContentFromNetwork({bool silent = false}) async {
     final box = Hive.box("AppPrefs");
-    String contentType = box.get("discoverContentType") ?? "QP";
+    String contentType = box.get("discoverContentType") ?? "BOLI";
 
+    // Clean up scroll controllers when loading new content
+    disposeDetachedScrollControllers();
+    
     networkError.value = false;
     try {
       List middleContentTemp = [];
@@ -159,14 +162,18 @@ class HomeScreenController extends GetxController {
             quickPicks.value =
                 QuickPicks(List<MediaItem>.from(con["contents"]));
             middleContentTemp.addAll(rel);
+            printINFO("BOLI - Successfully loaded content for songId: $songId");
+          } else {
+            printERROR("BOLI - recentSongId is null, cannot load BOLI content");
           }
         } catch (e) {
           printERROR(
-              "Seems Based on last interaction content currently not available!");
+              "Seems Based on last interaction content currently not available! Error: $e");
         }
       }
 
-      if (quickPicks.value.songList.isEmpty) {
+      // Chỉ fallback về Quick Picks nếu không phải BOLI
+      if (quickPicks.value.songList.isEmpty && contentType != "BOLI") {
         final index = homeContentListMap
             .indexWhere((element) => element['title'] == "Quick picks");
         if (index != -1) {
@@ -440,11 +447,26 @@ class HomeScreenController extends GetxController {
 
   void disposeDetachedScrollControllers({bool disposeAll = false}) {
     final scrollControllersCopy = contentScrollControllers.toList();
-    for (final contoller in scrollControllersCopy) {
-      if (!contoller.hasClients || disposeAll) {
-        contentScrollControllers.remove(contoller);
-        contoller.dispose();
+    final keysToRemove = <String>[];
+    
+    for (final controller in scrollControllersCopy) {
+      if (!controller.hasClients || disposeAll) {
+        // Tìm key tương ứng với controller này
+        for (final entry in _managedScrollControllers.entries) {
+          if (entry.value == controller) {
+            keysToRemove.add(entry.key);
+            break;
+          }
+        }
+        
+        contentScrollControllers.remove(controller);
+        controller.dispose();
       }
+    }
+    
+    // Remove keys từ _managedScrollControllers
+    for (final key in keysToRemove) {
+      _managedScrollControllers.remove(key);
     }
   }
 

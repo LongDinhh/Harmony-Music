@@ -160,15 +160,9 @@ class YouTubeCookieManager {
 
         await box.put(cookieName, cookieInfo);
         updatedCount++;
-
-        // Log thông tin cookie
-        printINFO('Saved cookie $cookieName, value: $cookieValue');
       }
 
       if (updatedCount > 0) {
-        printINFO('YouTube cookies saved successfully ($updatedCount updated)');
-
-        // Clear cache khi có thay đổi
         _cachedCookieString = null;
       }
     } catch (e) {

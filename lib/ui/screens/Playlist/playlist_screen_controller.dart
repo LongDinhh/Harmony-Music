@@ -139,7 +139,9 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
       playlist.value = Playlist.fromJson(content);
       _animationController.forward();
     }
-    songList.value = List<MediaItem>.from(content['tracks']);
+    songList.value = content['tracks'] != null 
+        ? List<MediaItem>.from(content['tracks']) 
+        : <MediaItem>[];
     checkDownloadStatus();
   }
 

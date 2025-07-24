@@ -188,7 +188,7 @@ class SongListTile extends StatelessWidget with RemoveSongFromPlaylistMixin {
                       if (isPlaylistOrAlbum &&
                           playerController.currentSong.value?.id == song.id)
                         const SizedBox(height: 1),
-                      Expanded(
+                      Flexible(
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(

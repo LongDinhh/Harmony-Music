@@ -560,13 +560,15 @@ class PlaylistScreen extends StatelessWidget {
                                   animation:
                                       playlistController.animationController,
                                   builder: (context, child) {
-                                    return SizedBox(
-                                      height: playlistController
-                                          .heightAnimation.value,
-                                      child: Transform.scale(
-                                        scale: playlistController
-                                            .scaleAnimation.value,
-                                        child: child,
+                                    return ClipRect(
+                                      child: SizedBox(
+                                        height: playlistController
+                                            .heightAnimation.value,
+                                        child: Transform.scale(
+                                          scale: playlistController
+                                              .scaleAnimation.value,
+                                          child: child,
+                                        ),
                                       ),
                                     );
                                   },

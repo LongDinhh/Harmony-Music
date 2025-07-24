@@ -335,8 +335,11 @@ class PlayerController extends GetxController
         await _audioHandler.customAction("playByIndex", {"index": 0});
       } else {
         if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+          // Lưu recentSongId ngay khi gọi pushSongToQueue
+          Hive.box("AppPrefs").put("recentSongId", mediaItem!.id);
+          printINFO("BOLI - Saved recentSongId in pushSongToQueue: ${mediaItem.id}");
           Get.find<HomeScreenController>()
-              .changeDiscoverContent("BOLI", songId: mediaItem!.id);
+              .changeDiscoverContent("BOLI", songId: mediaItem.id);
         }
       }
     });
@@ -368,13 +371,19 @@ class PlayerController extends GetxController
     playinfrom.value =
         playfrom ?? PlaylingFrom(type: PlaylingFromType.SELECTION);
 
-    //for changing home content based on last interation
-    Future.delayed(const Duration(seconds: 3), () {
-      if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
-        Get.find<HomeScreenController>()
-            .changeDiscoverContent("BOLI", songId: mediaItems[index].id);
-      }
-    });
+        //for changing home content based on last interation
+        // Lưu recentSongId ngay khi phát nhạc
+        if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+          Hive.box("AppPrefs").put("recentSongId", mediaItems[index].id);
+          printINFO("BOLI - Saved recentSongId: ${mediaItems[index].id}");
+        }
+        
+        Future.delayed(const Duration(seconds: 3), () {
+          if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+            Get.find<HomeScreenController>()
+                .changeDiscoverContent("BOLI", songId: mediaItems[index].id);
+          }
+        });
 
     _playerPanelCheck();
     await _audioHandler.updateQueue(mediaItems);

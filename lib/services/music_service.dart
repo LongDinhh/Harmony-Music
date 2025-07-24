@@ -538,7 +538,7 @@ class MusicServices extends getx.GetxService {
     final Map<String, dynamic> response =
         (await _sendRequest('browse', data)).data;
     if (playlistId != null) {
-      final Map<String, dynamic> header =
+      final dynamic headerData =
           nav(response, ['header', "musicDetailHeaderRenderer"]) ??
               nav(response, [
                 'contents',
@@ -553,7 +553,7 @@ class MusicServices extends getx.GetxService {
                 "musicResponsiveHeaderRenderer"
               ]);
 
-      final Map<String, dynamic> results =
+      final dynamic resultsData =
           nav(response, musicPlaylistShelfRenderer) ??
               nav(
                 response,
@@ -570,9 +570,23 @@ class MusicServices extends getx.GetxService {
                   "musicPlaylistShelfRenderer"
                 ],
               );
-      final Map<String, dynamic> playlist = {'id': results['playlistId']};
 
-      playlist['title'] = nav(header, title_text);
+      // Return empty playlist if essential data is missing
+      if (headerData == null || resultsData == null) {
+        return {
+          'id': playlistId,
+          'title': 'Unknown Playlist',
+          'tracks': <dynamic>[],
+          'trackCount': 0,
+          'duration_seconds': 0,
+        };
+      }
+
+      final Map<String, dynamic> header = headerData as Map<String, dynamic>;
+      final Map<String, dynamic> results = resultsData as Map<String, dynamic>;
+      final Map<String, dynamic> playlist = {'id': results['playlistId'] ?? playlistId};
+
+      playlist['title'] = nav(header, title_text) ?? 'Unknown Playlist';
       playlist['thumbnails'] = nav(header, thumnail_cropped) ??
           nav(header, [
             "thumbnail",
@@ -581,28 +595,36 @@ class MusicServices extends getx.GetxService {
             "thumbnails"
           ]);
       playlist["description"] = nav(header, description);
-      final int runCount = header['subtitle']['runs'].length;
-      if (runCount > 1) {
-        playlist['author'] = {
-          'name': nav(header, subtitle2),
-          'id': nav(header, ['subtitle', 'runs', 2] + navigation_browse_id)
-        };
-        if (runCount == 5) {
-          playlist['year'] = nav(header, subtitle3);
+      
+      // Safely check subtitle data
+      int runCount = 0;
+      if (header['subtitle'] != null && header['subtitle']['runs'] != null) {
+        runCount = header['subtitle']['runs'].length;
+        if (runCount > 1) {
+          playlist['author'] = {
+            'name': nav(header, subtitle2),
+            'id': nav(header, ['subtitle', 'runs', 2] + navigation_browse_id)
+          };
+          if (runCount == 5) {
+            playlist['year'] = nav(header, subtitle3);
+          }
         }
       }
 
-      final int secondSubtitleRunCount =
-          header['secondSubtitle']['runs'].length;
-      final String count = (((header['secondSubtitle']['runs']
-                      [secondSubtitleRunCount % 3]['text'])
-                  .split(' ')[0])
-              .split(',') as List)
-          .join();
-      final int songCount = int.parse(count);
-      if (header['secondSubtitle']['runs'].length > 1) {
-        playlist['duration'] = header['secondSubtitle']['runs']
-            [(secondSubtitleRunCount % 3) + 2]['text'];
+      int songCount = 0;
+      if (header['secondSubtitle'] != null && header['secondSubtitle']['runs'] != null) {
+        final int secondSubtitleRunCount =
+            header['secondSubtitle']['runs'].length;
+        final String count = (((header['secondSubtitle']['runs']
+                        [secondSubtitleRunCount % 3]['text'])
+                    .split(' ')[0])
+                .split(',') as List)
+            .join();
+        songCount = int.parse(count);
+        if (header['secondSubtitle']['runs'].length > 1) {
+          playlist['duration'] = header['secondSubtitle']['runs']
+              [(secondSubtitleRunCount % 3) + 2]['text'];
+        }
       }
       playlist['trackCount'] = songCount;
 
@@ -624,6 +646,9 @@ class MusicServices extends getx.GetxService {
           ...(await getContinuationsPlaylist(
               results, limit, requestFuncCountinuation, parseFunc))
         ];
+      } else {
+        // Initialize empty tracks list when no songs found
+        playlist['tracks'] = <dynamic>[];
       }
       playlist['duration_seconds'] = sumTotalDuration(playlist);
       return playlist;

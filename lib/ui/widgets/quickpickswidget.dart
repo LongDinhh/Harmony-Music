@@ -42,9 +42,9 @@ class QuickPicksWidget extends StatelessWidget {
           Expanded(
             child: Scrollbar(
               thickness: GetPlatform.isDesktop ? null : 0,
-              controller: scrollController,
+              controller: scrollController?.hasClients == true ? scrollController : null,
               child: GridView.builder(
-                  controller: scrollController,
+                  controller: scrollController?.hasClients == true ? scrollController : null,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: content.songList.length,

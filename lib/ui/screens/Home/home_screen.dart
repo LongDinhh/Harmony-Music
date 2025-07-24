@@ -208,26 +208,27 @@ class Body extends StatelessWidget {
                         ),
                       )
                     : Obx(() {
-                        // dispose all detachached scroll controllers
-                        homeScreenController.disposeDetachedScrollControllers();
-                        final items = homeScreenController
-                                .isContentFetched.value
-                            ? [
-                                Obx(() {
-                                  final scrollController = homeScreenController.getOrCreateScrollController('quick_picks');
-                                  return QuickPicksWidget(
-                                      content:
-                                          homeScreenController.quickPicks.value,
-                                      scrollController: scrollController);
-                                }),
-                                ...getWidgetList(
-                                    homeScreenController.middleContent,
-                                    homeScreenController),
-                                ...getWidgetList(
-                                    homeScreenController.fixedContent,
-                                    homeScreenController)
-                              ]
-                            : [const HomeShimmer()];
+                        final List<Widget> items = [];
+                        
+                        if (homeScreenController.isContentFetched.value) {
+                          // Chỉ thêm QuickPicksWidget nếu có dữ liệu
+                          if (homeScreenController.quickPicks.value.songList.isNotEmpty) {
+                            final scrollController = homeScreenController.getOrCreateScrollController('quick_picks');
+                            items.add(QuickPicksWidget(
+                                content: homeScreenController.quickPicks.value,
+                                scrollController: scrollController));
+                          }
+                          
+                          // Thêm các widget khác
+                          items.addAll(getWidgetList(
+                              homeScreenController.middleContent,
+                              homeScreenController));
+                          items.addAll(getWidgetList(
+                              homeScreenController.fixedContent,
+                              homeScreenController));
+                        } else {
+                          items.add(const HomeShimmer());
+                        }
                         return NotificationListener<ScrollNotification>(
                           onNotification:
                               homeScreenController.handleScrollNotification,
