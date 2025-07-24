@@ -8,6 +8,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../services/youtube_cookie_manager.dart';
+import 'google_login_webview.dart';
+
 import '../../../utils/update_check_flag_file.dart';
 import '/services/piped_service.dart';
 import '../Library/library_controller.dart';
@@ -17,9 +20,6 @@ import '/services/music_service.dart';
 import '/ui/player/player_controller.dart';
 import '../Home/home_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
-import '/services/cookie_manager.dart';
-import '/services/youtube_cookie_manager.dart';
-import 'google_login_webview.dart';
 
 class SettingsScreenController extends GetxController {
   late String _supportDir;
@@ -50,22 +50,23 @@ class SettingsScreenController extends GetxController {
   final restorePlaybackSession = false.obs;
   final cacheHomeScreenData = true.obs;
   final currentVersion = "V1.12.0";
+  final RxBool isGoogleLoggedIn = false.obs;
 
   @override
   void onInit() {
     _setInitValue();
+    _checkGoogleLogin();
     if (updateCheckFlag) _checkNewVersion();
     _createInAppSongDownDir();
-    _loadCookieInfo();
     super.onInit();
   }
 
-  get currentVision => currentVersion;
-  get isCurrentPathsupportDownDir =>
+  String get currentVision => currentVersion;
+  bool get isCurrentPathsupportDownDir =>
       "$_supportDir/Music" == downloadLocationPath.toString();
   String get supportDirPath => _supportDir;
 
-  _checkNewVersion() {
+  void _checkNewVersion() {
     newVersionCheck(currentVersion)
         .then((value) => isNewVersionAvailable.value = value);
   }
@@ -345,89 +346,42 @@ class SettingsScreenController extends GetxController {
     }
   }
 
-  // Cookie management methods
-  final cookieInfo = Rxn<Map<String, dynamic>>();
-  final hasValidCookies = false.obs;
-  final isGoogleLoggedIn = false.obs;
-  final googleLoginInfo = Rxn<Map<String, dynamic>>();
-
-  Future<void> _loadCookieInfo() async {
-    final info = await CookieManager.getCookieInfo();
-    cookieInfo.value = info;
-    hasValidCookies.value = await CookieManager.hasValidCookies();
-    
-    // Cleanup expired cookies
-    await YouTubeCookieManager.cleanupExpiredCookies();
-    
-    // Load Google/YouTube login info
-    await refreshGoogleLoginStatus();
-  }
-
-  Future<void> refreshCookieInfo() async {
-    await _loadCookieInfo();
-  }
-
-  Future<void> clearCookies() async {
-    await CookieManager.removeCookies();
-    await _loadCookieInfo();
-    ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
-        Get.context!, "Cookies cleared successfully",
-        size: SanckBarSize.MEDIUM));
-  }
-
-  Future<void> updateCookies(String newCookieString) async {
-    await CookieManager.saveCookies(newCookieString);
-    await _loadCookieInfo();
-    ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
-        Get.context!, "Cookies updated successfully",
-        size: SanckBarSize.MEDIUM));
-  }
-
-  // Google/YouTube login methods
-  Future<void> refreshGoogleLoginStatus() async {
+  /// Check if Google is logged in by querying YouTube cookies
+  Future<void> _checkGoogleLogin() async {
     try {
-      final loginInfo = await YouTubeCookieManager.getLoginInfo();
-      googleLoginInfo.value = loginInfo;
-      isGoogleLoggedIn.value = loginInfo['isLoggedIn'] as bool;
+      final validCookies = await YouTubeCookieManager.getValidYouTubeCookies();
+      isGoogleLoggedIn.value = validCookies.isNotEmpty;
     } catch (e) {
-      printERROR('Error refreshing Google login status: $e');
+      printERROR('Error checking Google login status: $e');
       isGoogleLoggedIn.value = false;
-      googleLoginInfo.value = {'isLoggedIn': false, 'cookieCount': 0, 'cookies': {}};
     }
   }
 
-  Future<void> logoutGoogle() async {
-    try {
-      await YouTubeCookieManager.clearAllYouTubeCookies();
-      await refreshGoogleLoginStatus();
-      ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
-          Get.context!, "Đã đăng xuất Google", size: SanckBarSize.MEDIUM));
-    } catch (e) {
-      printERROR('Error logging out Google: $e');
-      ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
-          Get.context!, "Lỗi khi đăng xuất: $e", size: SanckBarSize.MEDIUM));
-    }
-  }
-
-  Future<void> openGoogleLoginWebView() async {
+  /// Login with Google using WebView
+  Future<void> loginWithGoogle(BuildContext ctx) async {
     try {
       final result = await Get.to(() => const GoogleLoginWebView());
       if (result == true) {
-        await refreshGoogleLoginStatus();
+        isGoogleLoggedIn.value = true;
       }
     } catch (e) {
-      printERROR('Error opening Google login WebView: $e');
+      printERROR('Error during Google login: $e');
+      if (ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          snackbar(ctx, 'Error during Google login: $e'),
+        );
+      }
     }
   }
 
-  Future<void> cleanupExpiredCookies() async {
+  /// Logout from Google by clearing YouTube cookies
+  Future<void> logoutGoogle() async {
     try {
-      await YouTubeCookieManager.cleanupExpiredCookies();
-      await refreshGoogleLoginStatus();
-      ScaffoldMessenger.of(Get.context!).showSnackBar(snackbar(
-          Get.context!, "Đã dọn dẹp cookie hết hạn", size: SanckBarSize.MEDIUM));
+      await YouTubeCookieManager.clearAll();
+      isGoogleLoggedIn.value = false;
     } catch (e) {
-      printERROR('Error cleaning up expired cookies: $e');
+      printERROR('Error during Google logout: $e');
     }
   }
+
 }

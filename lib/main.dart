@@ -16,6 +16,7 @@ import '/services/audio_handler.dart';
 import '/services/music_service.dart';
 import '/ui/home.dart';
 import '/ui/utils/theme_controller.dart';
+import '/services/youtube_cookie_manager.dart';
 
 import 'utils/update_check_flag_file.dart';
 
@@ -97,7 +98,7 @@ Future<void> startApplicationServices() async {
   Get.lazyPut(() => Downloader(), fenix: true);
 }
 
-initHive() async {
+Future<void> initHive() async {
   String applicationDataDirectoryPath;
   if (GetPlatform.isDesktop) {
     applicationDataDirectoryPath =
@@ -108,14 +109,24 @@ initHive() async {
   }
   await Hive.initFlutter(applicationDataDirectoryPath);
   
-  // Open boxes sequentially to ensure proper initialization
-  await Hive.openBox("SongsCache");
-  await Hive.openBox("SongDownloads");
-  await Hive.openBox('SongsUrlCache');
+  // Open critical boxes first (for app to start)
   await Hive.openBox("AppPrefs");
-  await Hive.openBox("CookieStorage");
-  await Hive.openBox("CookieKeysStorage");
-  await Hive.openBox("YTBCookies");
+  
+  // Open other boxes in parallel for better performance
+  await Future.wait([
+    Hive.openBox("SongsCache"),
+    Hive.openBox("SongDownloads"),
+    Hive.openBox('SongsUrlCache'),
+    Hive.openBox("YTBCookies"),
+  ]);
+  
+  // Initialize YouTube Cookie Manager in background
+  unawaited(_initYouTubeCookieManager());
+}
+
+Future<void> _initYouTubeCookieManager() async {
+  await YouTubeCookieManager.init();
+  YouTubeCookieManager.startBackgroundCleanup();
 }
 
 Future<void> _setAppInitPrefsAsync() async {

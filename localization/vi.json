@@ -265,5 +265,10 @@
     "importErrorFormat": "Định dạng tệp không hợp lệ",
     "importErrorDatabase": "Lỗi khi lưu vào cơ sở dữ liệu",
     "fileNotFound": "Không tìm thấy tệp",
-    "importLargeFileNote": "Lưu ý: Danh sách phát lớn có thể tốn nhiều thời gian hơn để nhập"
+    "importLargeFileNote": "Lưu ý: Danh sách phát lớn có thể tốn nhiều thời gian hơn để nhập",
+    "googleAccount": "Tài khoản Google",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "loggedIn": "Đã đăng nhập",
+    "notLoggedIn": "Chưa đăng nhập"
 }

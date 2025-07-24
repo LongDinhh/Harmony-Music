@@ -13,7 +13,7 @@ class HMStreamingData {
     this.highQualityAudio,
   });
 
-  setQualityIndex(int index) {
+  void setQualityIndex(int index) {
     qualityIndex = index;
   }
 

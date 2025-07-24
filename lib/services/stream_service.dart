@@ -5,8 +5,6 @@ class CookieYT extends YoutubeHttpClient {
   @override
   Map<String, String> get headers => {
         ...super.headers,
-        'X-Goog-FieldMask':
-            'playabilityStatus.status,playabilityStatus.reason,playerConfig.audioConfig,streamingData.adaptiveFormats,videoDetails.videoId',
       };
 }
 
@@ -21,22 +19,24 @@ class StreamProvider {
     final yt = YoutubeExplode(CookieYT());
 
     try {
-      final res = await yt.videos.streamsClient.getManifest(videoId);
+      final res = await yt.videos.streamsClient.getManifest(videoId, ytClients: [
+        YoutubeApiClient.androidVr,
+      ]);
       final audio = res.audioOnly;
       return StreamProvider(
-        playable: true,
-        statusMSG: "OK",
-        audioFormats: audio
-          .map((e) => Audio(
-            itag: e.tag,
-            audioCodec:
-                e.audioCodec.contains('mp') ? Codec.mp4a : Codec.opus,
-            bitrate: e.bitrate.bitsPerSecond,
-            duration: e.duration ?? 0,
-            loudnessDb: e.loudnessDb,
-            url: e.url.toString(),
-            size: e.size.totalBytes))
-          .toList());
+          playable: true,
+          statusMSG: "OK",
+          audioFormats: audio
+              .map((e) => Audio(
+                  itag: e.tag,
+                  audioCodec:
+                      e.audioCodec.contains('mp') ? Codec.mp4a : Codec.opus,
+                  bitrate: e.bitrate.bitsPerSecond,
+                  duration: e.duration ?? 0,
+                  loudnessDb: e.loudnessDb,
+                  url: e.url.toString(),
+                  size: e.size.totalBytes))
+              .toList());
     } catch (e) {
       if (e is SocketException) {
         return StreamProvider(

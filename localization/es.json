@@ -266,5 +266,10 @@
     "exportingPlaylist": "Exportando lista de reproducción..",
     "exportPlaylist": "Exportar Lista de Reproducción",
     "importPlaylistDesc": "Seleccione un archivo JSON de lista de reproducción previamente exportado para importarlo",
-    "importLargeFileNote": "Nota: Las listas de reproducción grandes pueden tardar más en importarse"
+    "importLargeFileNote": "Nota: Las listas de reproducción grandes pueden tardar más en importarse",
+    "googleAccount": "Cuenta de Google",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "loggedIn": "Sesión iniciada",
+    "notLoggedIn": "Sin sesión iniciada"
 }

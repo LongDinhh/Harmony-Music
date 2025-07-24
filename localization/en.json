@@ -263,5 +263,10 @@
   "invalidPlaylistFile": "Invalid playlist file structure",
   "importErrorDatabase": "Error saving to database",
   "fileNotFound": "File not found",
-  "importLargeFileNote": "Note: Large playlists may take longer to import"
+  "importLargeFileNote": "Note: Large playlists may take longer to import",
+  "googleAccount": "Google Account",
+  "login": "Login",
+  "logout": "Logout",
+  "loggedIn": "Logged in",
+  "notLoggedIn": "Not logged in"
 }

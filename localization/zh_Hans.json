@@ -262,5 +262,10 @@
     "importErrorFormat": "无效的文件格式",
     "importErrorDatabase": "保存到数据库时出错",
     "fileNotFound": "文件不存在",
-    "importLargeFileNote": "注意：如果当前导入的播放列表包含内容较多，可能需要更长的时间"
+    "importLargeFileNote": "注意：如果当前导入的播放列表包含内容较多，可能需要更长的时间",
+    "googleAccount": "Google 账户",
+    "login": "登录",
+    "logout": "退出登录",
+    "loggedIn": "已登录",
+    "notLoggedIn": "未登录"
 }

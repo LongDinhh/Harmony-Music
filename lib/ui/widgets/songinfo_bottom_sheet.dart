@@ -361,7 +361,7 @@ class SongInfoController extends GetxController
   SongInfoController(this.song, this.calledFromPlayer) {
     _setInitStatus(song);
   }
-  _setInitStatus(MediaItem song) async {
+  Future<void> _setInitStatus(MediaItem song) async {
     isDownloaded.value = Hive.box("SongDownloads").containsKey(song.id);
     isCurrentSongFav.value =
         (await Hive.openBox("LIBFAV")).containsKey(song.id);
