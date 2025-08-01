@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../navigator.dart';
-import '../screens/Search/search_screen_controller.dart';
 import '../../utils/haptic_utils.dart';
 
 class HomeSearchBar extends StatefulWidget {
@@ -41,7 +40,7 @@ class _HomeSearchBarState extends State<HomeSearchBar>
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.only(right: 16.0, bottom: 20.0),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(16.0),
@@ -76,26 +75,25 @@ class _HomeSearchBarState extends State<HomeSearchBar>
             },
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      color:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                      color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Icon(
                       Icons.search_rounded,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).textTheme.titleMedium?.color,
                       size: 20.0,
                     ),
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
                     child: Text(
-                      'searchHint'.tr,
+                      'searchDes'.tr,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context)
                                 .textTheme

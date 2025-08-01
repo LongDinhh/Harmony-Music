@@ -130,126 +130,127 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreenController = Get.find<HomeScreenController>();
     final settingsScreenController = Get.find<SettingsScreenController>();
-    final size = MediaQuery.of(context).size;
-    final topPadding = context.isLandscape
-        ? 50.0
-        : size.height < 750
-            ? 60.0
-            : 65.0;
+    final topPadding = context.isLandscape ? 50.0 : 15.0;
     final leftPadding =
         settingsScreenController.isBottomNavBarEnabled.isTrue ? 20.0 : 5.0;
     if (homeScreenController.tabIndex.value == 0) {
       return Padding(
         padding: EdgeInsets.only(left: leftPadding),
-        child: Stack(
+        child: Column(
           children: [
-            GestureDetector(
-              child: Obx(
-                () => homeScreenController.networkError.isTrue
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height - 180,
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "home".tr,
-                                style: Theme.of(context).textTheme.titleLarge,
+            const CategoryButtons(), // Fixed top CategoryButtons
+            Expanded(
+              child: GestureDetector(
+                child: Obx(
+                  () => homeScreenController.networkError.isTrue
+                      ? SizedBox(
+                          height: MediaQuery.of(context).size.height - 180,
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "home".tr,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "networkError1".tr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 10),
-                                        decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .color,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: InkWell(
-                                          onTap: () {
-                                            homeScreenController
-                                                .loadContentFromNetwork();
-                                          },
-                                          child: Text(
-                                            "retry".tr,
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .canvasColor),
+                              Expanded(
+                                child: Center(
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "networkError1".tr,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 10),
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: InkWell(
+                                            onTap: () {
+                                              homeScreenController
+                                                  .loadContentFromNetwork();
+                                            },
+                                            child: Text(
+                                              "retry".tr,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .canvasColor),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ]),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    : Obx(() {
-                        final List<Widget> items = [];
-                        // Thêm CategoryButtons vào đầu danh sách
-                        items.add(const CategoryButtons());
-
-                        if (homeScreenController.isContentFetched.value) {
-                          // Chỉ thêm QuickPicksWidget nếu có dữ liệu
-                          if (homeScreenController
-                              .quickPicks.value.songList.isNotEmpty) {
-                            final scrollController = homeScreenController
-                                .getOrCreateScrollController('quick_picks');
-                            items.add(QuickPicksWidget(
-                                content: homeScreenController.quickPicks.value,
-                                scrollController: scrollController));
-                          }
-
-                          // Thêm các widget khác
-                          items.addAll(getWidgetList(
-                              homeScreenController.middleContent,
-                              homeScreenController));
-                          items.addAll(getWidgetList(
-                              homeScreenController.fixedContent,
-                              homeScreenController));
-                        } else {
-                          items.add(const HomeShimmer());
-                        }
-                        return NotificationListener<ScrollNotification>(
-                          onNotification:
-                              homeScreenController.handleScrollNotification,
-                          child: RefreshIndicator(
-                            onRefresh: homeScreenController.refresh,
-                            color: Colors.white, // Icon loading màu trắng sáng
-                            backgroundColor: Theme.of(context)
-                                .primaryColor
-                                .withValues(
-                                    alpha: 0.8), // Background có màu primary
-                            strokeWidth: 3.0, // Làm dày icon để dễ nhìn hơn
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(
-                                bottom: 200,
-                                top: GetPlatform.isDesktop
-                                    ? topPadding
-                                    : topPadding,
-                              ),
-                              itemCount: items.length,
-                              itemBuilder: (context, index) => items[index],
-                            ),
+                                      ]),
+                                ),
+                              )
+                            ],
                           ),
-                        );
-                      }),
+                        )
+                      : Obx(() {
+                          final List<Widget> items = [];
+                          // Thêm HomeSearchBar vào đầu danh sách
+                          items.add(const HomeSearchBar());
+
+                          if (homeScreenController.isContentFetched.value) {
+                            // Chỉ thêm QuickPicksWidget nếu có dữ liệu
+                            if (homeScreenController
+                                .quickPicks.value.songList.isNotEmpty) {
+                              final scrollController = homeScreenController
+                                  .getOrCreateScrollController('quick_picks');
+                              items.add(QuickPicksWidget(
+                                  content:
+                                      homeScreenController.quickPicks.value,
+                                  scrollController: scrollController));
+                            }
+
+                            // Thêm các widget khác
+                            items.addAll(getWidgetList(
+                                homeScreenController.middleContent,
+                                homeScreenController));
+                            items.addAll(getWidgetList(
+                                homeScreenController.fixedContent,
+                                homeScreenController));
+                          } else {
+                            items.add(const HomeShimmer());
+                          }
+                          return NotificationListener<ScrollNotification>(
+                            onNotification:
+                                homeScreenController.handleScrollNotification,
+                            child: RefreshIndicator(
+                              onRefresh: homeScreenController.refresh,
+                              color:
+                                  Colors.white, // Icon loading màu trắng sáng
+                              backgroundColor: Theme.of(context)
+                                  .primaryColor
+                                  .withValues(
+                                      alpha: 0.8), // Background có màu primary
+                              strokeWidth: 3.0, // Làm dày icon để dễ nhìn hơn
+                              child: ListView.builder(
+                                padding: EdgeInsets.only(
+                                  bottom: 200,
+                                  top: GetPlatform.isDesktop
+                                      ? topPadding
+                                      : topPadding,
+                                ),
+                                itemCount: items.length,
+                                itemBuilder: (context, index) => items[index],
+                              ),
+                            ),
+                          );
+                        }),
+                ),
               ),
             ),
           ],

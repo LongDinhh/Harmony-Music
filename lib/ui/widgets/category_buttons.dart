@@ -55,7 +55,7 @@ class _CategoryButtonsState extends State<CategoryButtons>
   Widget build(BuildContext context) {
     return Container(
       height: 40,
-      margin: const EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 16.0, top: 60.0),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
