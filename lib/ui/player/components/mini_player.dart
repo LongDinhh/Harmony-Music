@@ -22,7 +22,7 @@ class MiniPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerController = Get.find<PlayerController>();
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final isWideScreen = size.width > 800;
     final bottomNavEnabled =
         Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue;

@@ -271,8 +271,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                   );
                 },
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.sizeOf(context).height,
+                  width: MediaQuery.sizeOf(context).width,
                   child: widget.body,
                 ),
               )
@@ -299,8 +299,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                     animation: _ac,
                     builder: (context, _) {
                       return Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.sizeOf(context).height,
+                        width: MediaQuery.sizeOf(context).width,
 
                         //set color to null so that touch events pass through
                         //to the body when the panel is closed, otherwise,
@@ -347,7 +347,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                           bottom: widget.slideDirection == SlideDirection.DOWN
                               ? 0.0
                               : null,
-                          width: MediaQuery.of(context).size.width -
+                          width: MediaQuery.sizeOf(context).width -
                               (widget.margin != null
                                   ? widget.margin!.horizontal
                                   : 0) -
@@ -396,7 +396,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                         bottom: widget.slideDirection == SlideDirection.DOWN
                             ? 0.0
                             : null,
-                        width: MediaQuery.of(context).size.width -
+                        width: MediaQuery.sizeOf(context).width -
                             (widget.margin != null
                                 ? widget.margin!.horizontal
                                 : 0) -

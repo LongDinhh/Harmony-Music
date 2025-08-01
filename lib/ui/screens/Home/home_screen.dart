@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Search/components/desktop_search_bar.dart';
-import '/ui/screens/Search/search_screen_controller.dart';
 import '/ui/widgets/animated_screen_transition.dart';
 import '../Library/library_combined.dart';
 import '../../widgets/side_nav_bar.dart';
@@ -32,12 +30,13 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
         floatingActionButton: _buildFloatingActionButton(
-            homeScreenController, settingsScreenController, playerController),
+            context, homeScreenController, settingsScreenController, playerController),
         body: _buildBody(settingsScreenController, homeScreenController));
   }
 }
 
 Widget _buildFloatingActionButton(
+    BuildContext context,
     HomeScreenController homeScreenController,
     SettingsScreenController settingsScreenController,
     PlayerController playerController) {
@@ -52,9 +51,9 @@ Widget _buildFloatingActionButton(
     return Padding(
       padding: EdgeInsets.only(
           bottom: playerController.playerPanelMinHeight.value >
-                  Get.mediaQuery.padding.bottom
+                  MediaQuery.paddingOf(context).bottom
               ? playerController.playerPanelMinHeight.value -
-                  Get.mediaQuery.padding.bottom
+                  MediaQuery.paddingOf(context).bottom
               : playerController.playerPanelMinHeight.value),
       child: SizedBox(
         height: 60,
@@ -144,7 +143,7 @@ class Body extends StatelessWidget {
                 child: Obx(
                   () => homeScreenController.networkError.isTrue
                       ? SizedBox(
-                          height: MediaQuery.of(context).size.height - 180,
+                          height: MediaQuery.sizeOf(context).height - 180,
                           child: Column(
                             children: [
                               Align(

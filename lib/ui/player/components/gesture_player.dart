@@ -77,8 +77,8 @@ class GesturePlayer extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: EdgeInsets.only(
-                bottom: Get.mediaQuery.padding.bottom != 0
-                    ? Get.mediaQuery.padding.bottom + 10
+                bottom: MediaQuery.paddingOf(context).bottom != 0
+                    ? MediaQuery.paddingOf(context).bottom + 10
                     : 20,
                 left: 20,
                 right: 20),
@@ -272,7 +272,7 @@ class GesturePlayer extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: AbsorbPointer(
             child: SizedBox(
-              height: Get.mediaQuery.padding.bottom + 20,
+              height: MediaQuery.paddingOf(context).bottom + 20,
               child: Container(),
             ),
           ),

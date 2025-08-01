@@ -27,16 +27,16 @@ class Home extends StatelessWidget {
     final PlayerController playerController = Get.put(PlayerController(), permanent: true);
     final settingsScreenController = Get.put(SettingsScreenController(), permanent: true);
     final homeScreenController = Get.put(HomeScreenController(), permanent: true);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final isWideScreen = size.width > 800;
     if (!playerController.initFlagForPlayer &&
         settingsScreenController.isBottomNavBarEnabled.isFalse) {
       if (isWideScreen) {
         playerController.playerPanelMinHeight.value =
-            105 + Get.mediaQuery.padding.bottom;
+            105 + MediaQuery.paddingOf(context).bottom;
       } else {
         playerController.playerPanelMinHeight.value =
-            75 + Get.mediaQuery.padding.bottom;
+            75 + MediaQuery.paddingOf(context).bottom;
       }
     }
     return PopScope(

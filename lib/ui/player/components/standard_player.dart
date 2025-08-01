@@ -21,14 +21,14 @@ class StandardPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final PlayerController playerController = Get.find<PlayerController>();
 
     double playerArtImageSize =
         size.width - 60; //((size.height < 750) ? 90 : 60);
     //playerArtImageSize = playerArtImageSize > 350 ? 350 : playerArtImageSize;
     final spaceAvailableForArtImage =
-        size.height - (70 + Get.mediaQuery.padding.bottom + 330);
+        size.height - (70 + MediaQuery.paddingOf(context).bottom + 330);
     playerArtImageSize = playerArtImageSize > spaceAvailableForArtImage
         ? spaceAvailableForArtImage
         : playerArtImageSize;
@@ -62,7 +62,7 @@ class StandardPlayer extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 55 + Get.mediaQuery.padding.bottom + 120,
+                  height: 55 + MediaQuery.paddingOf(context).bottom + 120,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -115,7 +115,7 @@ class StandardPlayer extends StatelessWidget {
                           padding: EdgeInsets.only(
                               left: 10.0,
                               right: 10,
-                              bottom: Get.mediaQuery.padding.bottom),
+                              bottom: MediaQuery.paddingOf(context).bottom),
                           child: const PlayerControlWidget(),
                         ))
                   ],
@@ -154,7 +154,7 @@ class StandardPlayer extends StatelessWidget {
                     /// Contains the player controls
                     Padding(
                       padding: EdgeInsets.only(
-                          bottom: 80 + Get.mediaQuery.padding.bottom),
+                          bottom: 80 + MediaQuery.paddingOf(context).bottom),
                       child: Container(
                           constraints: const BoxConstraints(maxWidth: 500),
                           child: const PlayerControlWidget()),
@@ -169,7 +169,7 @@ class StandardPlayer extends StatelessWidget {
         if (!(context.isLandscape && GetPlatform.isMobile))
           Padding(
             padding: EdgeInsets.only(
-                top: Get.mediaQuery.padding.top + 20, left: 10, right: 10),
+                top: MediaQuery.paddingOf(context).top + 20, left: 10, right: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
