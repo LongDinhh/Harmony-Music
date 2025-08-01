@@ -149,7 +149,7 @@ class Body extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  "home".tr,
+                                  "music".tr,
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
                               ),
