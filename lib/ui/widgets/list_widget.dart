@@ -11,6 +11,7 @@ import '../player/player_controller.dart';
 import 'image_widget.dart';
 import 'song_list_tile.dart';
 import 'songinfo_bottom_sheet.dart';
+import '../../utils/haptic_utils.dart';
 
 class ListWidget extends StatelessWidget with RemoveSongFromPlaylistMixin {
   const ListWidget(this.items, this.title, this.isCompleteList,
@@ -154,7 +155,7 @@ class ListWidget extends StatelessWidget with RemoveSongFromPlaylistMixin {
               for (dynamic items in (albums[index].artists).sublist(1)) {
                 artistName = "${artistName + items['name']},";
               }
-            // ignore: empty_catches
+              // ignore: empty_catches
             } catch (e) {}
             artistName = artistName.length > 16
                 ? artistName.substring(0, 16)

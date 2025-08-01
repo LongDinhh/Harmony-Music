@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import '../../utils/haptic_utils.dart';
 
 import '../../models/playling_from.dart';
 import '../../services/downloader.dart';
@@ -337,7 +338,8 @@ class PlayerController extends GetxController
         if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
           // Lưu recentSongId ngay khi gọi pushSongToQueue
           Hive.box("AppPrefs").put("recentSongId", mediaItem!.id);
-          printINFO("BOLI - Saved recentSongId in pushSongToQueue: ${mediaItem.id}");
+          printINFO(
+              "BOLI - Saved recentSongId in pushSongToQueue: ${mediaItem.id}");
           Get.find<HomeScreenController>()
               .changeDiscoverContent("BOLI", songId: mediaItem.id);
         }
@@ -371,19 +373,19 @@ class PlayerController extends GetxController
     playinfrom.value =
         playfrom ?? PlaylingFrom(type: PlaylingFromType.SELECTION);
 
-        //for changing home content based on last interation
-        // Lưu recentSongId ngay khi phát nhạc
-        if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
-          Hive.box("AppPrefs").put("recentSongId", mediaItems[index].id);
-          printINFO("BOLI - Saved recentSongId: ${mediaItems[index].id}");
-        }
-        
-        Future.delayed(const Duration(seconds: 3), () {
-          if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
-            Get.find<HomeScreenController>()
-                .changeDiscoverContent("BOLI", songId: mediaItems[index].id);
-          }
-        });
+    //for changing home content based on last interation
+    // Lưu recentSongId ngay khi phát nhạc
+    if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+      Hive.box("AppPrefs").put("recentSongId", mediaItems[index].id);
+      printINFO("BOLI - Saved recentSongId: ${mediaItems[index].id}");
+    }
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+        Get.find<HomeScreenController>()
+            .changeDiscoverContent("BOLI", songId: mediaItems[index].id);
+      }
+    });
 
     _playerPanelCheck();
     await _audioHandler.updateQueue(mediaItems);
@@ -521,6 +523,7 @@ class PlayerController extends GetxController
   }
 
   Future<void> toggleShuffleMode() async {
+    HapticUtils.actionHaptic();
     final shuffleModeEnabled = isShuffleModeEnabled.value;
     shuffleModeEnabled
         ? _audioHandler.setShuffleMode(AudioServiceShuffleMode.none)
@@ -550,15 +553,18 @@ class PlayerController extends GetxController
   }
 
   void play() {
+    HapticUtils.actionHaptic();
     _audioHandler.play();
   }
 
   void pause() {
+    HapticUtils.actionHaptic();
     _audioHandler.pause();
   }
 
   void playPause() {
     if (initFlagForPlayer) return;
+    HapticUtils.actionHaptic();
     _audioHandler.playbackState.value.playing ? pause() : play();
     // for gesture player
     if (Get.find<SettingsScreenController>().playerUi.value == 1) {
@@ -570,10 +576,12 @@ class PlayerController extends GetxController
   }
 
   void prev() {
+    HapticUtils.actionHaptic();
     _audioHandler.skipToPrevious();
   }
 
   Future<void> next() async {
+    HapticUtils.actionHaptic();
     await _audioHandler.skipToNext();
   }
 
@@ -595,6 +603,7 @@ class PlayerController extends GetxController
   }
 
   Future<void> toggleLoopMode() async {
+    HapticUtils.actionHaptic();
     isLoopModeEnabled.isFalse
         ? _audioHandler.setRepeatMode(AudioServiceRepeatMode.one)
         : _audioHandler.setRepeatMode(AudioServiceRepeatMode.none);

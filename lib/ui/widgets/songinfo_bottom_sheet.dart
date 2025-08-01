@@ -21,6 +21,7 @@ import '../navigator.dart';
 import 'song_download_btn.dart';
 import 'image_widget.dart';
 import 'song_info_dialog.dart';
+import '../../utils/haptic_utils.dart';
 
 class SongInfoBottomSheet extends StatelessWidget {
   const SongInfoBottomSheet(this.song,
@@ -166,6 +167,7 @@ class SongInfoBottomSheet extends StatelessWidget {
                       if (calledFromQueue) {
                         playerController.playerPanelController.close();
                       }
+                      HapticUtils.screenNavigationHaptic();
                       Get.toNamed(ScreenNavigationSetup.albumScreen,
                           id: ScreenNavigationSetup.id,
                           arguments: (null, song.extras!['album']['id']));

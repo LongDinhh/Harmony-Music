@@ -6,14 +6,17 @@ import '/ui/screens/Settings/settings_screen_controller.dart';
 import '../../widgets/modified_text_field.dart';
 import '/ui/navigator.dart';
 import 'search_screen_controller.dart';
+import '../../../utils/haptic_utils.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final searchScreenController = Get.put(SearchScreenController(), permanent: true);
-    final settingsScreenController = Get.put(SettingsScreenController(), permanent: true);
+    final searchScreenController =
+        Get.put(SearchScreenController(), permanent: true);
+    final settingsScreenController =
+        Get.put(SettingsScreenController(), permanent: true);
     final topPadding = context.isLandscape ? 50.0 : 80.0;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -76,6 +79,7 @@ class SearchScreen extends StatelessWidget {
                           searchScreenController.reset();
                           return;
                         }
+                        HapticUtils.screenNavigationHaptic();
                         Get.toNamed(ScreenNavigationSetup.searchResultScreen,
                             id: ScreenNavigationSetup.id, arguments: val);
                         searchScreenController.addToHistryQueryList(val);

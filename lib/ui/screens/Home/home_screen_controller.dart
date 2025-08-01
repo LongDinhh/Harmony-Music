@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import '../../../utils/haptic_utils.dart';
 
 import '/models/media_Item_builder.dart';
 import '/ui/player/player_controller.dart';
@@ -111,11 +112,10 @@ class HomeScreenController extends GetxController {
 
   Future<void> loadContentFromNetwork({bool silent = false}) async {
     final box = Hive.box("AppPrefs");
-    String contentType = box.get("discoverContentType") ?? "BOLI";
 
     // Clean up scroll controllers when loading new content
     disposeDetachedScrollControllers();
-    
+
     networkError.value = false;
     try {
       List middleContentTemp = [];
@@ -123,64 +123,22 @@ class HomeScreenController extends GetxController {
           Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
       final homeContentListMap =
           await _musicServices.getHome(limit: limitContent);
-      if (contentType == "TR") {
-        final index = homeContentListMap
-            .indexWhere((element) => element['title'] == "Trending");
-        if (index != -1 && index != 0) {
-          quickPicks.value = QuickPicks(
-              List<MediaItem>.from(homeContentListMap[index]["contents"]),
-              title: "Trending");
-        } else if (index == -1) {
-          List charts = await _musicServices.getCharts();
-          final con =
-              charts.length == 4 ? charts.removeAt(3) : charts.removeAt(2);
-          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
-              title: con['title']);
-          middleContentTemp.addAll(charts);
-        }
-      } else if (contentType == "TMV") {
-        final index = homeContentListMap
-            .indexWhere((element) => element['title'] == "Top music videos");
-        if (index != -1 && index != 0) {
-          final con = homeContentListMap.removeAt(index);
-          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
-              title: con["title"]);
-        } else if (index == -1) {
-          List charts = await _musicServices.getCharts();
-          quickPicks.value = QuickPicks(
-              List<MediaItem>.from(charts[0]["contents"]),
-              title: charts[0]["title"]);
-          middleContentTemp.addAll(charts.sublist(1));
-        }
-      } else if (contentType == "BOLI") {
-        try {
-          final songId = box.get("recentSongId");
-          if (songId != null) {
-            final rel = (await _musicServices.getContentRelatedToSong(
-                songId, getContentHlCode()));
-            final con = rel.removeAt(0);
-            quickPicks.value =
-                QuickPicks(List<MediaItem>.from(con["contents"]));
-            middleContentTemp.addAll(rel);
-            printINFO("BOLI - Successfully loaded content for songId: $songId");
-          } else {
-            printERROR("BOLI - recentSongId is null, cannot load BOLI content");
-          }
-        } catch (e) {
-          printERROR(
-              "Seems Based on last interaction content currently not available! Error: $e");
-        }
-      }
 
-      // Chỉ fallback về Quick Picks nếu không phải BOLI
-      if (quickPicks.value.songList.isEmpty && contentType != "BOLI") {
-        final index = homeContentListMap
-            .indexWhere((element) => element['title'] == "Quick picks");
-        if (index != -1) {
-          final con = homeContentListMap.removeAt(index);
-          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]),
-              title: "Quick picks");
+      try {
+        final songId = box.get("recentSongId");
+        if (songId != null) {
+          final rel = (await _musicServices.getContentRelatedToSong(
+              songId, getContentHlCode()));
+          final con = rel.removeAt(0);
+          quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]));
+          middleContentTemp.addAll(rel);
+          printINFO("BOLI - Successfully loaded content for songId: $songId");
+        } else {
+          printERROR("BOLI - recentSongId is null, cannot load BOLI content");
         }
+      } catch (e) {
+        printERROR(
+            "Seems Based on last interaction content currently not available! Error: $e");
       }
 
       middleContent.value = _setContentList(middleContentTemp);
@@ -283,40 +241,19 @@ class HomeScreenController extends GetxController {
 
   Future<void> changeDiscoverContent(dynamic val, {String? songId}) async {
     QuickPicks? quickPicks_;
-    if (val == 'QP') {
-      final homeContentListMap = await _musicServices.getHome(limit: 3);
-      quickPicks_ = QuickPicks(
-          List<MediaItem>.from(homeContentListMap[0]["contents"]),
-          title: homeContentListMap[0]["title"]);
-    } else if (val == "TMV" || val == 'TR') {
+
+    songId ??= Hive.box("AppPrefs").get("recentSongId");
+    if (songId != null) {
       try {
-        final charts = await _musicServices.getCharts();
-        final index = val == "TMV"
-            ? 0
-            : charts.length == 4
-                ? 3
-                : 2;
-        quickPicks_ = QuickPicks(
-            List<MediaItem>.from(charts[index]["contents"]),
-            title: charts[index]["title"]);
+        final value = await _musicServices.getContentRelatedToSong(
+            songId, getContentHlCode());
+        middleContent.value = _setContentList(value);
+        if (value.isNotEmpty && (value[0]['title']).contains("like")) {
+          quickPicks_ = QuickPicks(List<MediaItem>.from(value[0]["contents"]));
+          Hive.box("AppPrefs").put("recentSongId", songId);
+        }
       } catch (e) {
-        printERROR(
-            "Seems ${val == "TMV" ? "Top music videos" : "Trending songs"} currently not available!");
-      }
-    } else {
-      songId ??= Hive.box("AppPrefs").get("recentSongId");
-      if (songId != null) {
-        try {
-          final value = await _musicServices.getContentRelatedToSong(
-              songId, getContentHlCode());
-          middleContent.value = _setContentList(value);
-          if (value.isNotEmpty && (value[0]['title']).contains("like")) {
-            quickPicks_ =
-                QuickPicks(List<MediaItem>.from(value[0]["contents"]));
-            Hive.box("AppPrefs").put("recentSongId", songId);
-          }
-          // ignore: empty_catches
-        } catch (e) {}
+        printERROR("Error loading content related to song: $e");
       }
     }
     if (quickPicks_ == null) return;
@@ -337,11 +274,15 @@ class HomeScreenController extends GetxController {
   }
 
   void onSideBarTabSelected(int index) {
+    // Thêm haptic feedback khi chuyển menu
+    HapticUtils.navigationHaptic();
     reverseAnimationtransiton = index > tabIndex.value;
     tabIndex.value = index;
   }
 
   void onBottonBarTabSelected(int index) {
+    // Thêm haptic feedback khi chuyển menu
+    HapticUtils.navigationHaptic();
     reverseAnimationtransiton = index > tabIndex.value;
     tabIndex.value = index;
   }
@@ -448,7 +389,7 @@ class HomeScreenController extends GetxController {
   void disposeDetachedScrollControllers({bool disposeAll = false}) {
     final scrollControllersCopy = contentScrollControllers.toList();
     final keysToRemove = <String>[];
-    
+
     for (final controller in scrollControllersCopy) {
       if (!controller.hasClients || disposeAll) {
         // Tìm key tương ứng với controller này
@@ -458,12 +399,12 @@ class HomeScreenController extends GetxController {
             break;
           }
         }
-        
+
         contentScrollControllers.remove(controller);
         controller.dispose();
       }
     }
-    
+
     // Remove keys từ _managedScrollControllers
     for (final key in keysToRemove) {
       _managedScrollControllers.remove(key);

@@ -14,6 +14,7 @@ import '../../widgets/song_download_btn.dart';
 import '../../widgets/image_widget.dart';
 import '../../widgets/mini_player_progress_bar.dart';
 import 'animated_play_button.dart';
+import '../../../utils/haptic_utils.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -182,8 +183,10 @@ class MiniPlayer extends StatelessWidget {
                                   children: [
                                     IconButton(
                                         iconSize: 20,
-                                        onPressed:
-                                            playerController.toggleFavourite,
+                                        onPressed: () {
+                                          HapticUtils.actionHaptic();
+                                          playerController.toggleFavourite();
+                                        },
                                         icon: Obx(() => Icon(
                                               playerController
                                                       .isCurrentSongFav.isFalse
@@ -196,8 +199,10 @@ class MiniPlayer extends StatelessWidget {
                                             ))),
                                     IconButton(
                                         iconSize: 20,
-                                        onPressed:
-                                            playerController.toggleShuffleMode,
+                                        onPressed: () {
+                                          HapticUtils.actionHaptic();
+                                          playerController.toggleShuffleMode();
+                                        },
                                         icon: Obx(() => Icon(
                                               Ionicons.shuffle,
                                               color: playerController
@@ -226,7 +231,10 @@ class MiniPlayer extends StatelessWidget {
                                                   playerController
                                                       .currentSong.value?.id))
                                           ? null
-                                          : playerController.prev,
+                                          : () {
+                                              HapticUtils.actionHaptic();
+                                              playerController.prev();
+                                            },
                                       child: Icon(
                                         Icons.skip_previous,
                                         color: Theme.of(context)
@@ -274,7 +282,10 @@ class MiniPlayer extends StatelessWidget {
                                     return InkWell(
                                       onTap: isLastSong
                                           ? null
-                                          : playerController.next,
+                                          : () {
+                                              HapticUtils.actionHaptic();
+                                              playerController.next();
+                                            },
                                       child: Icon(
                                         Icons.skip_next,
                                         color: isLastSong

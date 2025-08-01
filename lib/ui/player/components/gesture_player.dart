@@ -11,6 +11,7 @@ import 'package:widget_marquee/widget_marquee.dart';
 import '../../widgets/songinfo_bottom_sheet.dart';
 import '../../utils/theme_controller.dart';
 import '../player_controller.dart';
+import '../../../utils/haptic_utils.dart';
 
 class GesturePlayer extends StatelessWidget {
   const GesturePlayer({super.key});
@@ -25,12 +26,15 @@ class GesturePlayer extends StatelessWidget {
           child: const BackgroudImage(),
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity! < 0) {
+              HapticUtils.actionHaptic();
               playerController.next();
             } else if (details.primaryVelocity! > 0) {
+              HapticUtils.actionHaptic();
               playerController.prev();
             }
           },
           onDoubleTap: () {
+            HapticUtils.actionHaptic();
             playerController.playPause();
           },
           onLongPress: () {
