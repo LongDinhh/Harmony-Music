@@ -193,8 +193,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         //     _player.play();
         //   }
         // });
+        // Dừng player trước khi thử lại để tránh phát lại bài hát cũ
+        await _player.stop();
         customAction("playByIndex", {'index': currentIndex, 'newUrl': true});
-        await _player.seek(curPos, index: 0);
       }
     });
   }
@@ -362,6 +363,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         (GetPlatform.isDesktop &&
             (_player.duration == null ||
                 _player.duration?.inMilliseconds == 0))) {
+      // Dừng player trước khi load bài hát mới
+      await _player.stop();
       await customAction("playByIndex", {'index': currentIndex});
       return;
     }
@@ -388,6 +391,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= queue.value.length) return;
+    // Dừng player trước khi chuyển bài để tránh phát lại bài hát cũ
+    await _player.stop();
     await customAction("playByIndex", {'index': index});
   }
 
@@ -435,7 +440,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> skipToNext() async {
     final index = _getNextSongIndex();
     if (index != currentIndex) {
-      if (_player.position != Duration.zero) _player.seek(Duration.zero);
+      // Dừng player trước khi chuyển bài để tránh phát lại bài hát cũ
+      await _player.stop();
       await customAction("playByIndex", {'index': index});
     } else {
       _player.seek(Duration.zero);
@@ -449,10 +455,13 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       _player.seek(Duration.zero);
       return;
     }
-    _player.seek(Duration.zero);
     final index = _getPrevSongIndex();
     if (index != currentIndex) {
+      // Dừng player trước khi chuyển bài để tránh phát lại bài hát cũ
+      await _player.stop();
       await customAction("playByIndex", {'index': index});
+    } else {
+      _player.seek(Duration.zero);
     }
   }
 
@@ -492,10 +501,15 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         final futureStreamInfo =
             checkNGetUrl(currentSong.id, generateNewUrl: isNewUrlReq);
         final bool restoreSession = extras['restoreSession'] ?? false;
+
+        // Dừng player ngay lập tức để tránh phát lại bài hát cũ
+        await _player.stop();
+
         isSongLoading = true;
         playbackState.add(playbackState.value
             .copyWith(processingState: AudioProcessingState.loading));
         mediaItem.add(currentSong);
+
         final streamInfo = await futureStreamInfo;
         if (songIndex != currentIndex) {
           return;
@@ -577,6 +591,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       case 'setSourceNPlay':
         final currMed = (extras!['mediaItem'] as MediaItem);
         final futureStreamInfo = checkNGetUrl(currMed.id);
+
+        // Dừng player ngay lập tức để tránh phát lại bài hát cũ
+        await _player.stop();
+
         isSongLoading = true;
         currentIndex = 0;
         mediaItem.add(currMed);
