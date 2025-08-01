@@ -193,7 +193,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         //     _player.play();
         //   }
         // });
-        // Dừng player trước khi thử lại để tránh phát lại bài hát cũ
+        // Set thời gian về 0 rồi dừng player trước khi thử lại
+        await _player.seek(Duration.zero);
         await _player.stop();
         customAction("playByIndex", {'index': currentIndex, 'newUrl': true});
       }
@@ -363,7 +364,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         (GetPlatform.isDesktop &&
             (_player.duration == null ||
                 _player.duration?.inMilliseconds == 0))) {
-      // Dừng player trước khi load bài hát mới
+      // Set thời gian về 0 rồi dừng player trước khi load bài hát mới
+      await _player.seek(Duration.zero);
       await _player.stop();
       await customAction("playByIndex", {'index': currentIndex});
       return;
@@ -391,7 +393,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= queue.value.length) return;
-    // Dừng player trước khi chuyển bài để tránh phát lại bài hát cũ
+    // Set thời gian về 0 rồi dừng player trước khi chuyển bài
+    await _player.seek(Duration.zero);
     await _player.stop();
     await customAction("playByIndex", {'index': index});
   }
@@ -440,7 +443,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> skipToNext() async {
     final index = _getNextSongIndex();
     if (index != currentIndex) {
-      // Dừng player trước khi chuyển bài để tránh phát lại bài hát cũ
+      // Set thời gian về 0 rồi dừng player trước khi chuyển bài
+      await _player.seek(Duration.zero);
       await _player.stop();
       await customAction("playByIndex", {'index': index});
     } else {
@@ -457,7 +461,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     }
     final index = _getPrevSongIndex();
     if (index != currentIndex) {
-      // Dừng player trước khi chuyển bài để tránh phát lại bài hát cũ
+      // Set thời gian về 0 rồi dừng player trước khi chuyển bài
+      await _player.seek(Duration.zero);
       await _player.stop();
       await customAction("playByIndex", {'index': index});
     } else {
@@ -502,7 +507,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
             checkNGetUrl(currentSong.id, generateNewUrl: isNewUrlReq);
         final bool restoreSession = extras['restoreSession'] ?? false;
 
-        // Dừng player ngay lập tức để tránh phát lại bài hát cũ
+        // Set thời gian về 0 rồi dừng player để tránh phát lại bài hát cũ
+        await _player.seek(Duration.zero);
         await _player.stop();
 
         isSongLoading = true;
@@ -592,7 +598,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         final currMed = (extras!['mediaItem'] as MediaItem);
         final futureStreamInfo = checkNGetUrl(currMed.id);
 
-        // Dừng player ngay lập tức để tránh phát lại bài hát cũ
+        // Set thời gian về 0 rồi dừng player để tránh phát lại bài hát cũ
+        await _player.seek(Duration.zero);
         await _player.stop();
 
         isSongLoading = true;
@@ -899,7 +906,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         if (streamInfoJson.runtimeType.toString().contains("Map") &&
             !isExpired(url: (streamInfoJson['lowQualityAudio']['url']))) {
           printINFO("Got cached Url ($songId)");
-          streamInfo = HMStreamingData.fromJson(streamInfoJson);
+          // Cast to Map<String, dynamic> to fix type error
+          streamInfo = HMStreamingData.fromJson(
+              Map<String, dynamic>.from(streamInfoJson));
         }
       }
 
