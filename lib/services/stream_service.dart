@@ -19,7 +19,8 @@ class StreamProvider {
     final yt = YoutubeExplode(CookieYT());
 
     try {
-      final res = await yt.videos.streamsClient.getManifest(videoId, ytClients: [
+      final res =
+          await yt.videos.streamsClient.getManifest(videoId, ytClients: [
         YoutubeApiClient.androidVr,
       ]);
       final audio = res.audioOnly;
@@ -125,7 +126,7 @@ class Audio {
         "size": size
       };
 
-  factory Audio.fromJson(json) => Audio(
+  factory Audio.fromJson(Map<String, dynamic> json) => Audio(
       audioCodec: (json["audioCodec"] as String).contains("mp4a")
           ? Codec.mp4a
           : Codec.opus,

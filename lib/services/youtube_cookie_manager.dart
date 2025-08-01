@@ -1,58 +1,56 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import '../utils/helper.dart';
 
 class YouTubeCookieManager {
   static const String _ytbCookieBoxName = 'YTBCookies';
-  static const String _encryptionKey = 'HarmonyMusic_CookieEncryption';
+  // static const String _encryptionKey = 'HarmonyMusic_CookieEncryption';
 
   /// Mã hóa cookie để bảo mật
-  static String _encryptCookie(String value) {
-    if (value.isEmpty) return value;
-    try {
-      final key = utf8.encode(_encryptionKey);
-      final bytes = utf8.encode(value);
-      final hmac = Hmac(sha256, key);
-      final digest = hmac.convert(bytes);
-      final encoded = base64Encode(bytes);
-      return '$encoded.${digest.toString()}';
-    } catch (e) {
-      printERROR('Error encrypting cookie: $e');
-      return value;
-    }
-  }
+  // static String _encryptCookie(String value) {
+  //   if (value.isEmpty) return value;
+  //   try {
+  //     final key = utf8.encode(_encryptionKey);
+  //     final bytes = utf8.encode(value);
+  //     final hmac = Hmac(sha256, key);
+  //     final digest = hmac.convert(bytes);
+  //     final encoded = base64Encode(bytes);
+  //     return '$encoded.${digest.toString()}';
+  //   } catch (e) {
+  //     printERROR('Error encrypting cookie: $e');
+  //     return value;
+  //   }
+  // }
 
   /// Giải mã cookie
-  static String _decryptCookie(String encryptedValue) {
-    if (encryptedValue.isEmpty || !encryptedValue.contains('.')) {
-      return encryptedValue;
-    }
-    try {
-      final parts = encryptedValue.split('.');
-      if (parts.length != 2) return encryptedValue;
-      
-      final encoded = parts[0];
-      final expectedDigest = parts[1];
-      
-      final bytes = base64Decode(encoded);
-      final key = utf8.encode(_encryptionKey);
-      final hmac = Hmac(sha256, key);
-      final actualDigest = hmac.convert(bytes).toString();
-      
-      if (expectedDigest == actualDigest) {
-        return utf8.decode(bytes);
-      } else {
-        printERROR('Cookie integrity check failed');
-        return encryptedValue;
-      }
-    } catch (e) {
-      printERROR('Error decrypting cookie: $e');
-      return encryptedValue;
-    }
-  }
+  // static String _decryptCookie(String encryptedValue) {
+  //   if (encryptedValue.isEmpty || !encryptedValue.contains('.')) {
+  //     return encryptedValue;
+  //   }
+  //   try {
+  //     final parts = encryptedValue.split('.');
+  //     if (parts.length != 2) return encryptedValue;
+  //
+  //     final encoded = parts[0];
+  //     final expectedDigest = parts[1];
+  //
+  //     final bytes = base64Decode(encoded);
+  //     final key = utf8.encode(_encryptionKey);
+  //     final hmac = Hmac(sha256, key);
+  //     final actualDigest = hmac.convert(bytes).toString();
+  //
+  //     if (expectedDigest == actualDigest) {
+  //       return utf8.decode(bytes);
+  //     } else {
+  //       printERROR('Cookie integrity check failed');
+  //       return encryptedValue;
+  //     }
+  //   } catch (e) {
+  //     printERROR('Error decrypting cookie: $e');
+  //     return encryptedValue;
+  //   }
+  // }
 
   /// Khởi tạo Hive box cho YouTube cookies
   static Future<void> init() async {
@@ -143,7 +141,7 @@ class YouTubeCookieManager {
 
         // Mã hóa giá trị cookie để bảo mật
         final cookieValue = cookieData['value']?.toString() ?? '';
-        final encryptedValue = _encryptCookie(cookieValue);
+        // final encryptedValue = _encryptCookie(cookieValue);
 
         // Lưu thông tin cookie đầy đủ
         final cookieInfo = {
@@ -330,7 +328,7 @@ class YouTubeCookieManager {
   static Future<void> syncCookiesFromWebView() async {
     // Commented out due to webview_manager removal
     printINFO('WebView cookie sync is disabled - CookieManager was removed');
-    
+
     /* Original implementation commented out:
     try {
       final cookieManager = webview_manager.WebviewCookieManager();
@@ -451,7 +449,7 @@ class YouTubeCookieManager {
 
       // Cache the result for performance
       _cachedCookieString = cookiePairs.join('; ');
-      _lastCacheTime = DateTime.now().millisecondsSinceEpoch;
+      // _lastCacheTime = DateTime.now().millisecondsSinceEpoch;
 
       return _cachedCookieString ?? '';
     } catch (e) {
@@ -461,8 +459,8 @@ class YouTubeCookieManager {
   }
 
   static String? _cachedCookieString;
-  static int _lastCacheTime = 0;
-  static const int _cacheDuration = 30000; // 30 seconds cache
+  // static int _lastCacheTime = 0;
+  // static const int _cacheDuration = 30000; // 30 seconds cache
 
   /// Lấy cookie string với cache để tối ưu hiệu suất
   static Future<String> getCachedCookieString(
@@ -473,7 +471,8 @@ class YouTubeCookieManager {
   }
 
   /// Lưu cookies từ response headers (thay thế CookieManager.updateCookiesFromResponse)
-  static Future<void> saveFromResponseHeaders(List<String> responseCookies) async {
+  static Future<void> saveFromResponseHeaders(
+      List<String> responseCookies) async {
     try {
       final cookieMap = <String, dynamic>{};
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -493,7 +492,8 @@ class YouTubeCookieManager {
             'value': value,
             'domain': domain ?? '.youtube.com',
             'path': path ?? '/',
-            'expires': expires ?? (now + (7 * 24 * 60 * 60 * 1000)), // 7 days default
+            'expires':
+                expires ?? (now + (7 * 24 * 60 * 60 * 1000)), // 7 days default
             'secure': secure ?? true,
             'httpOnly': httpOnly ?? true,
             'source': 'response_headers',
@@ -532,7 +532,7 @@ class YouTubeCookieManager {
       // Parse attributes
       for (int i = 1; i < parts.length; i++) {
         final attribute = parts[i].trim().toLowerCase();
-        
+
         if (attribute.startsWith('domain=')) {
           domain = attribute.substring(7);
         } else if (attribute.startsWith('path=')) {

@@ -514,8 +514,12 @@ class PlaylistScreen extends StatelessWidget {
                                                     playlistController
                                                         .playlist.value;
                                                 if (content.isPipedPlaylist) {
-                                                  Share.share(
-                                                      "https://piped.video/playlist?list=${content.playlistId}");
+                                                  SharePlus.instance.share(
+                                                    ShareParams(
+                                                      text:
+                                                          "https://piped.video/playlist?list=${content.playlistId}",
+                                                    ),
+                                                  );
                                                 } else {
                                                   final isPlaylistIdPrefixAvlbl =
                                                       content.playlistId
@@ -531,7 +535,11 @@ class PlaylistScreen extends StatelessWidget {
                                                               .substring(2)
                                                       : url +
                                                           content.playlistId;
-                                                  Share.share(url);
+                                                  SharePlus.instance.share(
+                                                    ShareParams(
+                                                      text: url,
+                                                    ),
+                                                  );
                                                 }
                                               },
                                               icon: const Icon(

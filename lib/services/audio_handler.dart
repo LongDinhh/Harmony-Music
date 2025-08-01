@@ -43,7 +43,7 @@ Future<AudioHandler> initAudioService() async {
 
 class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   // ignore: prefer_typing_uninitialized_variables
-  late final _cacheDir;
+  late final String _cacheDir;
   late AudioPlayer _player;
   late MediaLibrary _mediaLibrary;
   // ignore: prefer_typing_uninitialized_variables

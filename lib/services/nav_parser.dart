@@ -986,8 +986,8 @@ Map<String, dynamic> parseArtistContents(List results) {
   return navigationEndpointsNContent;
 }
 
-dynamic parseContentList(results, Function parseFunc) {
-  var contents = [];
+dynamic parseContentList(List<dynamic> results, Function parseFunc) {
+  List<dynamic> contents = [];
   for (dynamic result in results) {
     contents.add(parseFunc(result['musicTwoRowItemRenderer']));
   }

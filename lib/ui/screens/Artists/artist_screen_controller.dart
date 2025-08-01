@@ -134,31 +134,32 @@ class ArtistScreenController extends GetxController
 
     // observered - continuation available only for song & vid
     if (val != 0) {
-    final scrollController = val == 1
-        ? songScrollController
-        : val == 2
-            ? videoScrollController
-            : val == 3
-                ? albumScrollController
-                : singlesScrollController;
+      final scrollController = val == 1
+          ? songScrollController
+          : val == 2
+              ? videoScrollController
+              : val == 3
+                  ? albumScrollController
+                  : singlesScrollController;
 
-    scrollController.addListener(() {
-      double maxScroll = scrollController.position.maxScrollExtent;
-      double currentScroll = scrollController.position.pixels;
-      if (currentScroll >= maxScroll / 2 &&
-          sepataredContent[tabName]['additionalParams'] !=
-              '&ctoken=null&continuation=null') {
-        if (!continuationInProgress) {
-          continuationInProgress = true;
-          getContinuationContents(artistData[tabName], tabName);
+      scrollController.addListener(() {
+        double maxScroll = scrollController.position.maxScrollExtent;
+        double currentScroll = scrollController.position.pixels;
+        if (currentScroll >= maxScroll / 2 &&
+            sepataredContent[tabName]['additionalParams'] !=
+                '&ctoken=null&continuation=null') {
+          if (!continuationInProgress) {
+            continuationInProgress = true;
+            getContinuationContents(artistData[tabName], tabName);
+          }
         }
-      }
-    });
-   }
+      });
+    }
     isSeparatedArtistContentFetced.value = true;
   }
 
-  Future<void> getContinuationContents(browseEndpoint, tabName) async {
+  Future<void> getContinuationContents(
+      Map<String, dynamic> browseEndpoint, String tabName) async {
     final x = await musicServices.getArtistRealtedContent(
         browseEndpoint, tabName,
         additionalParams: sepataredContent[tabName]['additionalParams']);

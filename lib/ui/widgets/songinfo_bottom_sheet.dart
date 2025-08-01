@@ -306,8 +306,11 @@ class SongInfoBottomSheet extends StatelessWidget {
               visualDensity: const VisualDensity(vertical: -1),
               leading: const Icon(Icons.share),
               title: Text("shareSong".tr),
-              onTap: () =>
-                  Share.share("https://youtube.com/watch?v=${song.id}"),
+              onTap: () => SharePlus.instance.share(
+                ShareParams(
+                  text: "https://youtube.com/watch?v=${song.id}",
+                ),
+              ),
             ),
           ],
         ),

@@ -11,7 +11,6 @@ import '../player/player_controller.dart';
 import 'image_widget.dart';
 import 'song_list_tile.dart';
 import 'songinfo_bottom_sheet.dart';
-import '../../utils/haptic_utils.dart';
 
 class ListWidget extends StatelessWidget with RemoveSongFromPlaylistMixin {
   const ListWidget(this.items, this.title, this.isCompleteList,

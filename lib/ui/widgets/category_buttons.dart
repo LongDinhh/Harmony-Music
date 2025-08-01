@@ -13,7 +13,7 @@ class CategoryButtons extends StatefulWidget {
 class _CategoryButtonsState extends State<CategoryButtons>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  // late Animation<double> _scaleAnimation;
 
   // Danh sách các danh mục
   final List<String> _categories = [
@@ -36,13 +36,13 @@ class _CategoryButtonsState extends State<CategoryButtons>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    // _scaleAnimation = Tween<double>(
+    //   begin: 1.0,
+    //   end: 0.95,
+    // ).animate(CurvedAnimation(
+    //   parent: _animationController,
+    //   curve: Curves.easeInOut,
+    // ));
   }
 
   @override

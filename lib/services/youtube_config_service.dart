@@ -166,7 +166,7 @@ class YouTubeConfigService {
                 rawValue.replaceAll('|', '').replaceAll('||', '').trim();
             await extractor.processor(cleanValue, prefsBox);
             extractedValue = cleanValue;
-            printINFO("Extracted $key from key '${configKey}': $cleanValue");
+            printINFO("Extracted $key from key '$configKey': $cleanValue");
             break;
           }
         }
@@ -370,7 +370,7 @@ class YouTubeConfigService {
   static Future<Map<String, dynamic>> getInnerTubeContext() async {
     final visitorData = await getVisitorData();
     final clientVersion = await getClientVersion();
-    final isUserLoggedIn = await isLoggedIn();
+    // final isUserLoggedIn = await isLoggedIn();
 
     return {
       'client': {

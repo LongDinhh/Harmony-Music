@@ -241,7 +241,7 @@ class Downloader extends GetxService {
 
         final trackDetails = (song.extras?['trackDetails'])?.split("/");
         final int? trackNumber = int.tryParse(trackDetails?[0] ?? "");
-        final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
+        // final int? totalTracks = int.tryParse(trackDetails?[1] ?? "");
 
         try {
           final file = File(filePath);

@@ -34,14 +34,16 @@ class MusicServices extends getx.GetxService {
   final Map<String, dynamic> _context = {
     'context': {
       'client': {
-        "acceptHeader": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "acceptHeader":
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "browserName": "Chrome",
         "browserVersion": "140.0.0.0",
         "clientFormFactor": "UNKNOWN_FORM_FACTOR",
         "clientName": "WEB_REMIX",
         "clientVersion": "1.20250707.03.00",
         "deviceMake": "Apple",
-        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36,gzip(gfe)",
+        "userAgent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36,gzip(gfe)",
         "userInterfaceTheme": "USER_INTERFACE_THEME_DARK",
         "hl": "vi",
         "gl": "VN",
@@ -207,7 +209,7 @@ class MusicServices extends getx.GetxService {
         if (visitorId != null) {
           _headers['X-Goog-Visitor-Id'] = visitorId;
           // Create temp config for visitor data
-          final tempConfig = {'VISITOR_DATA': visitorId};
+          // final tempConfig = {'VISITOR_DATA': visitorId};
           await _saveConfigValueDirectly('VISITOR_DATA', visitorId);
           printINFO('Saved VISITOR_DATA to YTBPrefs box: $visitorId');
         }

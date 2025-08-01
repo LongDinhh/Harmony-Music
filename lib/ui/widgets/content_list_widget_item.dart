@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../navigator.dart';
 import 'image_widget.dart';
-import '../../utils/haptic_utils.dart';
 
 class ContentListItem extends StatelessWidget {
   const ContentListItem(

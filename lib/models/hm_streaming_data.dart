@@ -1,4 +1,4 @@
-import 'package:harmonymusic/services/stream_service.dart'show Audio;
+import 'package:harmonymusic/services/stream_service.dart' show Audio;
 
 class HMStreamingData {
   final bool playable;
@@ -19,8 +19,8 @@ class HMStreamingData {
 
   Audio? get audio => qualityIndex == 0 ? lowQualityAudio : highQualityAudio;
 
-  factory HMStreamingData.fromJson(json) {
-    if(!json['playable']) {
+  factory HMStreamingData.fromJson(Map<String, dynamic> json) {
+    if (!json['playable']) {
       return HMStreamingData(
         playable: false,
         statusMSG: json['statusMSG'],

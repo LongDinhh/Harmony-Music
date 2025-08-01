@@ -159,13 +159,11 @@ class AlbumScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 4.0),
+                                      padding: const EdgeInsets.only(top: 4.0),
                                       child: Text(
                                         albumController
                                                 .album.value.description ??
-                                            albumController
-                                                .album.value.artists
+                                            albumController.album.value.artists
                                                 ?.map((e) => e['name'])
                                                 .join(", ") ??
                                             "",
@@ -405,8 +403,12 @@ class AlbumScreen extends StatelessWidget {
                                                       vertical: -3),
                                               splashRadius: 10,
                                               onPressed: () {
-                                                Share.share(
-                                                    "https://youtube.com/playlist?list=${albumController.album.value.audioPlaylistId}");
+                                                SharePlus.instance.share(
+                                                  ShareParams(
+                                                    text:
+                                                        "https://youtube.com/playlist?list=${albumController.album.value.audioPlaylistId}",
+                                                  ),
+                                                );
                                               },
                                               icon: const Icon(
                                                 Icons.share,

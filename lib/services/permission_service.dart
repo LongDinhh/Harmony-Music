@@ -54,7 +54,7 @@ class PermissionService {
 
       return status.isGranted;
     } catch (e) {
-      print('Error getting iOS storage permission: $e');
+      // print('Error getting iOS storage permission: $e');
       return true; // Allow access if permission check fails
     }
   }
@@ -78,7 +78,7 @@ class PermissionService {
 
       return status.isGranted;
     } catch (e) {
-      print('Error getting iOS media library permission: $e');
+      // print('Error getting iOS media library permission: $e');
       return true;
     }
   }
@@ -97,7 +97,7 @@ class PermissionService {
 
       return status.isGranted;
     } catch (e) {
-      print('Error getting notification permission: $e');
+      // print('Error getting notification permission: $e');
       return false;
     }
   }

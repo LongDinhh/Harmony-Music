@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmonymusic/utils/helper.dart';
 import 'package:harmonymusic/utils/lang_mapping.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/common_dialog_widget.dart';
 import '../../widgets/cust_switch.dart';
@@ -843,9 +842,11 @@ Widget radioWidget(
         },
         leading: Radio(
             value: value,
+            // ignore: deprecated_member_use
             groupValue: value.runtimeType == ThemeType
                 ? controller.themeModetype.value
                 : controller.discoverContentType.value,
+            // ignore: deprecated_member_use
             onChanged: value.runtimeType == ThemeType
                 ? controller.onThemeChange
                 : controller.onContentChange),
