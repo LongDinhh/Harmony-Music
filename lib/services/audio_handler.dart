@@ -62,20 +62,18 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   List<String> shuffledQueue = [];
 
   MyAudioHandler() {
-    // Initialize JustAudioMediaKit only for mobile platforms (iOS & Android)
-    if (GetPlatform.isAndroid || GetPlatform.isIOS) {
-      JustAudioMediaKit.ensureInitialized(
-        linux: false,
-        windows: false,
-        android: GetPlatform.isAndroid,
-        iOS: GetPlatform.isIOS,
-        macOS: false,
-      );
+    JustAudioMediaKit.ensureInitialized(
+      linux: false,
+      windows: false,
+      android: GetPlatform.isAndroid,
+      iOS: GetPlatform.isIOS,
+      macOS: false,
+    );
 
-      // Configure after initialization
-      JustAudioMediaKit.title = 'Harmony music';
-      JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
-    }
+    // Configure after initialization
+    JustAudioMediaKit.title = 'Harmony music';
+    JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
+
     _mediaLibrary = MediaLibrary();
     _player = AudioPlayer(
         audioLoadConfiguration: const AudioLoadConfiguration(
