@@ -15,6 +15,8 @@ import '../../navigator.dart';
 import '../../widgets/content_list_widget.dart';
 import '../../widgets/quickpickswidget.dart';
 import '../../widgets/shimmer_widgets/home_shimmer.dart';
+import '../../widgets/home_search_bar.dart';
+import '../../widgets/category_buttons.dart';
 import 'home_screen_controller.dart';
 import '../Settings/settings_screen.dart';
 
@@ -35,87 +37,89 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-  Widget _buildFloatingActionButton(HomeScreenController homeScreenController,
-      SettingsScreenController settingsScreenController, PlayerController playerController) {
-    return Obx(() {
-      final showFAB = ((homeScreenController.tabIndex.value == 0 &&
-                  !GetPlatform.isDesktop) ||
-              homeScreenController.tabIndex.value == 2) &&
-          settingsScreenController.isBottomNavBarEnabled.isFalse;
-      
-      if (!showFAB) return const SizedBox.shrink();
-      
-      return Padding(
-        padding: EdgeInsets.only(
-            bottom: playerController.playerPanelMinHeight.value >
-                    Get.mediaQuery.padding.bottom
-                ? playerController.playerPanelMinHeight.value -
-                    Get.mediaQuery.padding.bottom
-                : playerController.playerPanelMinHeight.value),
-        child: SizedBox(
-          height: 60,
-          width: 60,
-          child: FittedBox(
-            child: FloatingActionButton(
-                focusElevation: 0,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(14))),
-                elevation: 0,
-                onPressed: () async {
-                  if (homeScreenController.tabIndex.value == 2) {
-                    showDialog(
-                        context: Get.context!,
-                        builder: (context) => const CreateNRenamePlaylistPopup());
-                  } else {
-                    Get.toNamed(ScreenNavigationSetup.searchScreen,
-                        id: ScreenNavigationSetup.id);
-                  }
-                },
-                child: Icon(homeScreenController.tabIndex.value == 2
-                    ? Icons.add
-                    : Icons.search)),
-          ),
+Widget _buildFloatingActionButton(
+    HomeScreenController homeScreenController,
+    SettingsScreenController settingsScreenController,
+    PlayerController playerController) {
+  return Obx(() {
+    final showFAB =
+        ((homeScreenController.tabIndex.value == 0 && !GetPlatform.isDesktop) ||
+                homeScreenController.tabIndex.value == 2) &&
+            settingsScreenController.isBottomNavBarEnabled.isFalse;
+
+    if (!showFAB) return const SizedBox.shrink();
+
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: playerController.playerPanelMinHeight.value >
+                  Get.mediaQuery.padding.bottom
+              ? playerController.playerPanelMinHeight.value -
+                  Get.mediaQuery.padding.bottom
+              : playerController.playerPanelMinHeight.value),
+      child: SizedBox(
+        height: 60,
+        width: 60,
+        child: FittedBox(
+          child: FloatingActionButton(
+              focusElevation: 0,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(14))),
+              elevation: 0,
+              onPressed: () async {
+                if (homeScreenController.tabIndex.value == 2) {
+                  showDialog(
+                      context: Get.context!,
+                      builder: (context) => const CreateNRenamePlaylistPopup());
+                } else {
+                  Get.toNamed(ScreenNavigationSetup.searchScreen,
+                      id: ScreenNavigationSetup.id);
+                }
+              },
+              child: Icon(homeScreenController.tabIndex.value == 2
+                  ? Icons.add
+                  : Icons.search)),
         ),
-      );
-    });
-  }
+      ),
+    );
+  });
+}
 
-  Widget _buildBody(SettingsScreenController settingsScreenController,
-      HomeScreenController homeScreenController) {
-    return Obx(() => Row(
-          children: <Widget>[
-            settingsScreenController.isBottomNavBarEnabled.isFalse
-                ? const SideNavBar()
-                : const SizedBox(width: 0),
-            Expanded(
-              child: AnimatedScreenTransition(
-                  enabled: settingsScreenController
-                      .isTransitionAnimationDisabled.isFalse,
-                  resverse: homeScreenController.reverseAnimationtransiton,
-                  horizontalTransition:
-                      settingsScreenController.isBottomNavBarEnabled.isTrue,
-                  child: Center(
-                    key: ValueKey<int>(homeScreenController.tabIndex.value),
-                    child: const Body(),
-                  )),
-            ),
-          ],
-        ));
-  }
+Widget _buildBody(SettingsScreenController settingsScreenController,
+    HomeScreenController homeScreenController) {
+  return Obx(() => Row(
+        children: <Widget>[
+          settingsScreenController.isBottomNavBarEnabled.isFalse
+              ? const SideNavBar()
+              : const SizedBox(width: 0),
+          Expanded(
+            child: AnimatedScreenTransition(
+                enabled: settingsScreenController
+                    .isTransitionAnimationDisabled.isFalse,
+                resverse: homeScreenController.reverseAnimationtransiton,
+                horizontalTransition:
+                    settingsScreenController.isBottomNavBarEnabled.isTrue,
+                child: Center(
+                  key: ValueKey<int>(homeScreenController.tabIndex.value),
+                  child: const Body(),
+                )),
+          ),
+        ],
+      ));
+}
 
-
-
-  List<Widget> getWidgetList(
-      dynamic list, HomeScreenController homeScreenController) {
-    return list
-        .map((content) {
-          final scrollController = homeScreenController.getOrCreateScrollController('content_${content.runtimeType}_${content.hashCode}');
-          return ContentListWidget(
-              content: content, scrollController: scrollController);
-        })
-        .whereType<Widget>()
-        .toList();
-  }
+List<Widget> getWidgetList(
+    dynamic list, HomeScreenController homeScreenController) {
+  return list
+      .map((content) {
+        final scrollController =
+            homeScreenController.getOrCreateScrollController(
+                'content_${content.runtimeType}_${content.hashCode}');
+        return ContentListWidget(
+            content: content, scrollController: scrollController);
+      })
+      .whereType<Widget>()
+      .toList();
+}
 
 class Body extends StatelessWidget {
   const Body({
@@ -127,13 +131,11 @@ class Body extends StatelessWidget {
     final homeScreenController = Get.find<HomeScreenController>();
     final settingsScreenController = Get.find<SettingsScreenController>();
     final size = MediaQuery.of(context).size;
-    final topPadding = GetPlatform.isDesktop
-        ? 85.0
-        : context.isLandscape
-            ? 50.0
-            : size.height < 750
-                ? 80.0
-                : 85.0;
+    final topPadding = context.isLandscape
+        ? 50.0
+        : size.height < 750
+            ? 60.0
+            : 65.0;
     final leftPadding =
         settingsScreenController.isBottomNavBarEnabled.isTrue ? 20.0 : 5.0;
     if (homeScreenController.tabIndex.value == 0) {
@@ -142,15 +144,6 @@ class Body extends StatelessWidget {
         child: Stack(
           children: [
             GestureDetector(
-              onTap: () {
-                // for Desktop search bar
-                if (GetPlatform.isDesktop) {
-                  final sscontroller = Get.find<SearchScreenController>();
-                  if (sscontroller.focusNode.hasFocus) {
-                    sscontroller.focusNode.unfocus();
-                  }
-                }
-              },
               child: Obx(
                 () => homeScreenController.networkError.isTrue
                     ? SizedBox(
@@ -209,16 +202,20 @@ class Body extends StatelessWidget {
                       )
                     : Obx(() {
                         final List<Widget> items = [];
-                        
+                        // Thêm CategoryButtons vào đầu danh sách
+                        items.add(const CategoryButtons());
+
                         if (homeScreenController.isContentFetched.value) {
                           // Chỉ thêm QuickPicksWidget nếu có dữ liệu
-                          if (homeScreenController.quickPicks.value.songList.isNotEmpty) {
-                            final scrollController = homeScreenController.getOrCreateScrollController('quick_picks');
+                          if (homeScreenController
+                              .quickPicks.value.songList.isNotEmpty) {
+                            final scrollController = homeScreenController
+                                .getOrCreateScrollController('quick_picks');
                             items.add(QuickPicksWidget(
                                 content: homeScreenController.quickPicks.value,
                                 scrollController: scrollController));
                           }
-                          
+
                           // Thêm các widget khác
                           items.addAll(getWidgetList(
                               homeScreenController.middleContent,
@@ -241,8 +238,12 @@ class Body extends StatelessWidget {
                                     alpha: 0.8), // Background có màu primary
                             strokeWidth: 3.0, // Làm dày icon để dễ nhìn hơn
                             child: ListView.builder(
-                              padding:
-                                  EdgeInsets.only(bottom: 200, top: topPadding),
+                              padding: EdgeInsets.only(
+                                bottom: 200,
+                                top: GetPlatform.isDesktop
+                                    ? topPadding
+                                    : topPadding,
+                              ),
                               itemCount: items.length,
                               itemBuilder: (context, index) => items[index],
                             ),
@@ -251,20 +252,6 @@ class Body extends StatelessWidget {
                       }),
               ),
             ),
-            if (GetPlatform.isDesktop)
-              Align(
-                alignment: Alignment.topCenter,
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return SizedBox(
-                    width: constraints.maxWidth > 800
-                        ? 800
-                        : constraints.maxWidth - 40,
-                    child: const Padding(
-                        padding: EdgeInsets.only(top: 15.0),
-                        child: DesktopSearchBar()),
-                  );
-                }),
-              )
           ],
         ),
       );
@@ -295,7 +282,9 @@ class Body extends StatelessWidget {
       dynamic list, HomeScreenController homeScreenController) {
     return list
         .map((content) {
-          final scrollController = homeScreenController.getOrCreateScrollController('content_${content.runtimeType}_${content.hashCode}');
+          final scrollController =
+              homeScreenController.getOrCreateScrollController(
+                  'content_${content.runtimeType}_${content.hashCode}');
           return ContentListWidget(
               content: content, scrollController: scrollController);
         })

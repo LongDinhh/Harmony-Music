@@ -34,10 +34,18 @@ class MusicServices extends getx.GetxService {
   final Map<String, dynamic> _context = {
     'context': {
       'client': {
+        "acceptHeader": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "browserName": "Chrome",
+        "browserVersion": "140.0.0.0",
+        "clientFormFactor": "UNKNOWN_FORM_FACTOR",
         "clientName": "WEB_REMIX",
         "clientVersion": "1.20250707.03.00",
+        "deviceMake": "Apple",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36,gzip(gfe)",
+        "userInterfaceTheme": "USER_INTERFACE_THEME_DARK",
         "hl": "vi",
         "gl": "VN",
+        "originalUrl": "https://music.youtube.com/",
       },
       'user': {}
     }
@@ -77,9 +85,10 @@ class MusicServices extends getx.GetxService {
             options.headers['cookie'] = cookies;
 
             // Lấy SAPISID và dataSyncId song song để tối ưu
-            final sapisid = await YouTubeCookieManager.getYouTubeCookie('SAPISID');
+            final sapisid =
+                await YouTubeCookieManager.getYouTubeCookie('SAPISID');
             final dataSyncId = await YouTubeConfigService.getDatasyncId();
-            
+
             if (sapisid != null && dataSyncId != null) {
               // Tạo SAPISIDHASH với datasyncId từ storage
               final sapisidHash = await getSApiSidHash(
@@ -192,7 +201,7 @@ class MusicServices extends getx.GetxService {
       try {
         // Initialize YouTubeConfigService
         await YouTubeConfigService.init();
-        
+
         // Save values using the extractAndSaveConfig method by temporarily modifying the config
         // This is a bit of a workaround since we already extracted the values
         if (visitorId != null) {
@@ -202,7 +211,7 @@ class MusicServices extends getx.GetxService {
           await _saveConfigValueDirectly('VISITOR_DATA', visitorId);
           printINFO('Saved VISITOR_DATA to YTBPrefs box: $visitorId');
         }
-        
+
         if (datasyncId != null) {
           await _saveConfigValueDirectly('DATASYNC_ID', datasyncId);
           printINFO('Saved DATASYNC_ID to YTBPrefs box: $datasyncId');
@@ -212,7 +221,7 @@ class MusicServices extends getx.GetxService {
       }
     }
   }
-  
+
   /// Helper method to save config values directly to YTBPrefs box
   Future<void> _saveConfigValueDirectly(String key, String value) async {
     try {
@@ -232,32 +241,33 @@ class MusicServices extends getx.GetxService {
   String? _extractDatasyncId(Map<String, dynamic> config) {
     // Thử các key có thể chứa datasyncId theo thứ tự ưu tiên
     final possibleKeys = ['USER_SESSION_ID', 'DATASYNC_ID', 'datasyncId'];
-    
+
     for (final key in possibleKeys) {
       final value = config[key]?.toString();
       if (value != null && value.isNotEmpty) {
         // Xóa ký tự | và validate format
-        final cleanValue = value.replaceAll('|', '').replaceAll('||', '').trim();
+        final cleanValue =
+            value.replaceAll('|', '').replaceAll('||', '').trim();
         if (_isValidDatasyncId(cleanValue)) {
           printINFO("Extracted datasyncId from key '$key': $cleanValue");
           return cleanValue;
         }
       }
     }
-    
+
     printWARN("No valid datasyncId found in config: ${config.keys.toList()}");
     return null;
   }
-  
+
   /// Validate datasyncId format
   bool _isValidDatasyncId(String? datasyncId) {
     if (datasyncId == null || datasyncId.isEmpty) return false;
-    
+
     // Basic validation: should not contain pipes, should have reasonable length
     if (datasyncId.contains('|') || datasyncId.length < 10) {
       return false;
     }
-    
+
     // Should contain alphanumeric characters and common special chars
     final validPattern = RegExp(r'^[a-zA-Z0-9_\-\.\+\=]+$');
     return validPattern.hasMatch(datasyncId);
@@ -553,23 +563,22 @@ class MusicServices extends getx.GetxService {
                 "musicResponsiveHeaderRenderer"
               ]);
 
-      final dynamic resultsData =
-          nav(response, musicPlaylistShelfRenderer) ??
-              nav(
-                response,
-                [
-                  'contents',
-                  "singleColumnBrowseResultsRenderer",
-                  "tabs",
-                  0,
-                  "tabRenderer",
-                  "content",
-                  'sectionListRenderer',
-                  'contents',
-                  0,
-                  "musicPlaylistShelfRenderer"
-                ],
-              );
+      final dynamic resultsData = nav(response, musicPlaylistShelfRenderer) ??
+          nav(
+            response,
+            [
+              'contents',
+              "singleColumnBrowseResultsRenderer",
+              "tabs",
+              0,
+              "tabRenderer",
+              "content",
+              'sectionListRenderer',
+              'contents',
+              0,
+              "musicPlaylistShelfRenderer"
+            ],
+          );
 
       // Return empty playlist if essential data is missing
       if (headerData == null || resultsData == null) {
@@ -584,7 +593,9 @@ class MusicServices extends getx.GetxService {
 
       final Map<String, dynamic> header = headerData as Map<String, dynamic>;
       final Map<String, dynamic> results = resultsData as Map<String, dynamic>;
-      final Map<String, dynamic> playlist = {'id': results['playlistId'] ?? playlistId};
+      final Map<String, dynamic> playlist = {
+        'id': results['playlistId'] ?? playlistId
+      };
 
       playlist['title'] = nav(header, title_text) ?? 'Unknown Playlist';
       playlist['thumbnails'] = nav(header, thumnail_cropped) ??
@@ -595,7 +606,7 @@ class MusicServices extends getx.GetxService {
             "thumbnails"
           ]);
       playlist["description"] = nav(header, description);
-      
+
       // Safely check subtitle data
       int runCount = 0;
       if (header['subtitle'] != null && header['subtitle']['runs'] != null) {
@@ -612,7 +623,8 @@ class MusicServices extends getx.GetxService {
       }
 
       int songCount = 0;
-      if (header['secondSubtitle'] != null && header['secondSubtitle']['runs'] != null) {
+      if (header['secondSubtitle'] != null &&
+          header['secondSubtitle']['runs'] != null) {
         final int secondSubtitleRunCount =
             header['secondSubtitle']['runs'].length;
         final String count = (((header['secondSubtitle']['runs']

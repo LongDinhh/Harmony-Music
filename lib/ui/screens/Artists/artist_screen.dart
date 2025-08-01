@@ -176,7 +176,7 @@ class Body extends StatelessWidget {
               ? separatedContent[currentTabName]['results']
               : [],
           title: currentTabName,
-          topPadding: context.isLandscape ? 50.0 : 80.0,
+          topPadding: context.isLandscape ? 50.0 : 60.0,
           scrollController: currentTabName == "Songs"
               ? artistScreenController.songScrollController
               : currentTabName == "Videos"

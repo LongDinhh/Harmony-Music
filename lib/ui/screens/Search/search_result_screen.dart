@@ -143,7 +143,7 @@ class Body extends StatelessWidget {
       });
     } else {
       if (searchResScrController.isResultContentFetced.isTrue) {
-        final topPadding = context.isLandscape ? 50.0 : 80.0;
+        final topPadding = context.isLandscape ? 50.0 : 60.0;
         final name = searchResScrController.railItems[
             searchResScrController.navigationRailCurrentIndex.value - 1];
         return SeparateTabItemWidget(
