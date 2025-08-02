@@ -175,11 +175,16 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       } else {
         printERROR('An error occurred: $e');
         Duration curPos = _player.position;
-        await _player.stop();
+        // Use gentle approach for error handling
+        if (_player.playing) {
+          await _player.pause();
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        await _player.seek(Duration.zero);
 
         if (isPlayingUsingLockCachingSource &&
             e.toString().contains("Connection closed while receiving data")) {
-          await _player.seek(curPos, index: 0);
+          await _player.seek(curPos);
           await _player.play();
           return;
         }
@@ -194,9 +199,12 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         //     _player.play();
         //   }
         // });
-        // Set thời gian về 0 rồi dừng player trước khi thử lại
+        // Use gentle approach for error retry
+        if (_player.playing) {
+          await _player.pause();
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
         await _player.seek(Duration.zero);
-        await _player.stop();
         customAction("playByIndex", {'index': currentIndex, 'newUrl': true});
       }
     });
@@ -365,9 +373,12 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         (GetPlatform.isDesktop &&
             (_player.duration == null ||
                 _player.duration?.inMilliseconds == 0))) {
-      // Set thời gian về 0 rồi dừng player trước khi load bài hát mới
+      // Use gentle approach before loading new song
+      if (_player.playing) {
+        await _player.pause();
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
       await _player.seek(Duration.zero);
-      await _player.stop();
       await customAction("playByIndex", {'index': currentIndex});
       return;
     }
@@ -394,9 +405,12 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= queue.value.length) return;
-    // Set thời gian về 0 rồi dừng player trước khi chuyển bài
+    // Use gentle approach before skipping to queue item
+    if (_player.playing) {
+      await _player.pause();
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
     await _player.seek(Duration.zero);
-    await _player.stop();
     await customAction("playByIndex", {'index': index});
   }
 
@@ -444,9 +458,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> skipToNext() async {
     final index = _getNextSongIndex();
     if (index != currentIndex) {
-      // Set thời gian về 0 rồi dừng player trước khi chuyển bài
-      await _player.seek(Duration.zero);
-      await _player.stop();
+      // Pause immediately to stop current song, then proceed
+      if (_player.playing) {
+        await _player.pause();
+      }
       await customAction("playByIndex", {'index': index});
     } else {
       _player.seek(Duration.zero);
@@ -462,9 +477,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     }
     final index = _getPrevSongIndex();
     if (index != currentIndex) {
-      // Set thời gian về 0 rồi dừng player trước khi chuyển bài
-      await _player.seek(Duration.zero);
-      await _player.stop();
+      // Pause immediately to stop current song, then proceed
+      if (_player.playing) {
+        await _player.pause();
+      }
       await customAction("playByIndex", {'index': index});
     } else {
       _player.seek(Duration.zero);
@@ -508,9 +524,11 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
             checkNGetUrl(currentSong.id, generateNewUrl: isNewUrlReq);
         final bool restoreSession = extras['restoreSession'] ?? false;
 
-        // Set thời gian về 0 rồi dừng player để tránh phát lại bài hát cũ
-        await _player.seek(Duration.zero);
-        await _player.stop();
+        // Stop current playback immediately to prevent old song playing during load
+        if (_player.playing) {
+          await _player.pause(); // Pause first to stop audio immediately
+        }
+        await _player.seek(Duration.zero); // Reset position
 
         isSongLoading = true;
         playbackState.add(playbackState.value
@@ -599,9 +617,12 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         final currMed = (extras!['mediaItem'] as MediaItem);
         final futureStreamInfo = checkNGetUrl(currMed.id);
 
-        // Set thời gian về 0 rồi dừng player để tránh phát lại bài hát cũ
+        // Use gentle approach for setSourceNPlay
+        if (_player.playing) {
+          await _player.pause();
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
         await _player.seek(Duration.zero);
-        await _player.stop();
 
         isSongLoading = true;
         currentIndex = 0;
