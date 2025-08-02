@@ -9,10 +9,8 @@ import '/ui/screens/Settings/settings_screen_controller.dart';
 import '../utils/helper.dart';
 import '../ui/navigator.dart';
 import '../ui/player/player.dart';
-import 'player/components/mini_player.dart';
 import 'player/player_controller.dart';
-import 'widgets/bottom_nav_bar.dart';
-import 'widgets/scroll_to_hide.dart';
+import 'widgets/combined_bottom_container.dart';
 import 'widgets/sliding_up_panel.dart';
 import 'widgets/snackbar.dart';
 import 'widgets/up_next_queue.dart';
@@ -24,9 +22,12 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     printINFO("Home");
     // Initialize UI controllers only when Home widget is built
-    final PlayerController playerController = Get.put(PlayerController(), permanent: true);
-    final settingsScreenController = Get.put(SettingsScreenController(), permanent: true);
-    final homeScreenController = Get.put(HomeScreenController(), permanent: true);
+    final PlayerController playerController =
+        Get.put(PlayerController(), permanent: true);
+    final settingsScreenController =
+        Get.put(SettingsScreenController(), permanent: true);
+    final homeScreenController =
+        Get.put(HomeScreenController(), permanent: true);
     final size = MediaQuery.sizeOf(context);
     final isWideScreen = size.width > 800;
     if (!playerController.initFlagForPlayer &&
@@ -68,28 +69,27 @@ class Home extends StatelessWidget {
           LogicalKeySet(LogicalKeyboardKey.space): playerController.playPause
         },
         child: Scaffold(
-            bottomNavigationBar: _buildBottomNavBar(settingsScreenController, homeScreenController, playerController),
             key: playerController.homeScaffoldkey,
             endDrawer: GetPlatform.isDesktop || isWideScreen
                 ? _buildEndDrawer(context, playerController)
                 : null,
             drawerScrimColor: Colors.transparent,
-            body: _buildSlidingPanel(context, playerController, size, isWideScreen)),
+            body: Stack(
+              children: [
+                _buildSlidingPanel(
+                    context, playerController, size, isWideScreen),
+                // Combined bottom container with blur effect
+                const CombinedBottomContainer(),
+              ],
+            )),
       ),
     );
   }
 
-  Widget _buildBottomNavBar(SettingsScreenController settingsScreenController, 
-      HomeScreenController homeScreenController, PlayerController playerController) {
-    return Obx(() => settingsScreenController.isBottomNavBarEnabled.isTrue
-        ? ScrollToHideWidget(
-            isVisible: homeScreenController.isHomeSreenOnTop.isTrue &&
-                playerController.isPanelGTHOpened.isFalse,
-            child: const BottomNavBar())
-        : const SizedBox.shrink());
-  }
+// _buildFloatingBottomNavBar removed - now using CombinedBottomContainer
 
-  Widget _buildEndDrawer(BuildContext context, PlayerController playerController) {
+  Widget _buildEndDrawer(
+      BuildContext context, PlayerController playerController) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 600),
       decoration: BoxDecoration(
@@ -113,7 +113,8 @@ class Home extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(() => Text("${playerController.currentQueue.length} ${"songs".tr}")),
+                      Obx(() => Text(
+                          "${playerController.currentQueue.length} ${"songs".tr}")),
                       Text(
                         "upNext".tr,
                         style: Theme.of(context).textTheme.titleLarge,
@@ -175,25 +176,20 @@ class Home extends StatelessWidget {
     });
   }
 
-  Widget _buildSlidingPanel(BuildContext context, PlayerController playerController, 
-      Size size, bool isWideScreen) {
-    return Obx(() => SlidingUpPanel(
-          onPanelSlide: playerController.panellistener,
-          controller: playerController.playerPanelController,
-          minHeight: playerController.playerPanelMinHeight.value,
-          maxHeight: size.height,
-          isDraggable: !isWideScreen,
-          onSwipeUp: () {
-            playerController.queuePanelController.open();
-          },
-          panel: const Player(),
-          body: const ScreenNavigation(),
-          header: !isWideScreen
-              ? InkWell(
-                  onTap: playerController.playerPanelController.open,
-                  child: const MiniPlayer(),
-                )
-              : const MiniPlayer(),
-        ));
+  Widget _buildSlidingPanel(BuildContext context,
+      PlayerController playerController, Size size, bool isWideScreen) {
+    return SlidingUpPanel(
+      onPanelSlide: playerController.panellistener,
+      controller: playerController.playerPanelController,
+      minHeight: 0, // No minimum height since mini player is now separate
+      maxHeight: size.height,
+      isDraggable: !isWideScreen,
+      onSwipeUp: () {
+        playerController.queuePanelController.open();
+      },
+      panel: const Player(),
+      body: const ScreenNavigation(),
+      // No header anymore - handled by CombinedBottomContainer
+    );
   }
 }

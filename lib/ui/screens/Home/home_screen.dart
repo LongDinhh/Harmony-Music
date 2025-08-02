@@ -29,8 +29,8 @@ class HomeScreen extends StatelessWidget {
         Get.find<SettingsScreenController>();
 
     return Scaffold(
-        floatingActionButton: _buildFloatingActionButton(
-            context, homeScreenController, settingsScreenController, playerController),
+        floatingActionButton: _buildFloatingActionButton(context,
+            homeScreenController, settingsScreenController, playerController),
         body: _buildBody(settingsScreenController, homeScreenController));
   }
 }
@@ -132,6 +132,15 @@ class Body extends StatelessWidget {
     final topPadding = context.isLandscape ? 50.0 : 15.0;
     final leftPadding =
         settingsScreenController.isBottomNavBarEnabled.isTrue ? 20.0 : 5.0;
+    // Calculate bottom padding based on what's showing in combined container
+    final playerController = Get.find<PlayerController>();
+    final hasActiveSong = playerController.currentSong.value != null;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final miniPlayerHeight =
+        hasActiveSong ? (screenWidth > 800 ? 105.0 : 75.0) : 0.0;
+    final navBarHeight =
+        settingsScreenController.isBottomNavBarEnabled.isTrue ? 52.0 : 0.0;
+    final bottomPadding = 200.0 + miniPlayerHeight + navBarHeight;
     if (homeScreenController.tabIndex.value == 0) {
       return Padding(
         padding: EdgeInsets.only(left: leftPadding),
@@ -238,7 +247,7 @@ class Body extends StatelessWidget {
                               strokeWidth: 3.0, // Làm dày icon để dễ nhìn hơn
                               child: ListView.builder(
                                 padding: EdgeInsets.only(
-                                  bottom: 200,
+                                  bottom: bottomPadding,
                                   top: GetPlatform.isDesktop
                                       ? topPadding
                                       : topPadding,
@@ -256,17 +265,17 @@ class Body extends StatelessWidget {
         ),
       );
     } else if (homeScreenController.tabIndex.value == 1) {
-      return settingsScreenController.isBottomNavBarEnabled.isTrue
-          ? const SearchScreen()
-          : const SongsLibraryWidget();
+      // Search screen - không có nav bar, chỉ có mini player padding
+      return _wrapWithBottomPaddingForMiniPlayerOnly(
+          const SearchScreen(), context);
     } else if (homeScreenController.tabIndex.value == 2) {
-      return settingsScreenController.isBottomNavBarEnabled.isTrue
-          ? const CombinedLibrary()
-          : const PlaylistNAlbumLibraryWidget(isAlbumContent: false);
+      // Library screen - có nav bar từ CombinedBottomContainer
+      return _wrapWithBottomPaddingForMiniPlayerOnly(
+          const CombinedLibrary(), context);
     } else if (homeScreenController.tabIndex.value == 3) {
-      return settingsScreenController.isBottomNavBarEnabled.isTrue
-          ? const SettingsScreen(isBottomNavActive: true)
-          : const PlaylistNAlbumLibraryWidget();
+      // Settings screen - có nav bar từ CombinedBottomContainer
+      return _wrapWithBottomPaddingForMiniPlayerOnly(
+          const SettingsScreen(isBottomNavActive: true), context);
     } else if (homeScreenController.tabIndex.value == 4) {
       return const LibraryArtistWidget();
     } else if (homeScreenController.tabIndex.value == 5) {
@@ -290,5 +299,23 @@ class Body extends StatelessWidget {
         })
         .whereType<Widget>()
         .toList();
+  }
+
+  Widget _wrapWithBottomPaddingForMiniPlayerOnly(
+      Widget child, BuildContext context) {
+    // Calculate padding chỉ cho mini player, không có nav bar
+    final playerController = Get.find<PlayerController>();
+    final hasActiveSong = playerController.currentSong.value != null;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final miniPlayerHeight =
+        hasActiveSong ? (screenWidth > 800 ? 105.0 : 75.0) : 0.0;
+
+    return Container(
+      color: Colors.transparent,
+      padding: EdgeInsets.only(
+        bottom: miniPlayerHeight,
+      ),
+      child: child,
+    );
   }
 }

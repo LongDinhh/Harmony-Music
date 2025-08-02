@@ -26,8 +26,8 @@ class HomeScreenController extends GetxController {
   final fixedContent = [].obs;
   final showVersionDialog = true.obs;
   final isRefreshing = false.obs; // Thêm biến để track trạng thái refresh
-  //isHomeScreenOnTop var only useful if bottom nav enabled
-  final isHomeSreenOnTop = true.obs;
+  //Track current route để CombinedBottomContainer có thể reactive
+  final currentRoute = '/homeScreen'.obs;
   final List<ScrollController> contentScrollControllers = [];
   final Map<String, ScrollController> _managedScrollControllers = {};
   bool reverseAnimationtransiton = false;
@@ -37,6 +37,8 @@ class HomeScreenController extends GetxController {
   @override
   onInit() {
     super.onInit();
+    // Initialize current route
+    currentRoute.value = getCurrentRouteName() ?? '/homeScreen';
     loadContent();
     if (updateCheckFlag) _checkNewVersion();
   }
@@ -307,7 +309,7 @@ class HomeScreenController extends GetxController {
     showVersionDialog.value = !val;
   }
 
-  ///This is used to minimized bottom navigation bar by setting [isHomeSreenOnTop.value] to `true` and set mini player height.
+  ///This is used to set mini player height based on current route.
   ///
   ///and applicable/useful if bottom nav enabled
   void whenHomeScreenOnTop() {
@@ -317,7 +319,8 @@ class HomeScreenController extends GetxController {
       final isResultScreenOnTop = currentRoute == '/searchResultScreen';
       final playerCon = Get.find<PlayerController>();
 
-      isHomeSreenOnTop.value = isHomeOnTop;
+      // Update observable current route để trigger CombinedBottomContainer rebuild
+      this.currentRoute.value = currentRoute ?? '/homeScreen';
 
       // Set miniplayer height accordingly
       if (!playerCon.initFlagForPlayer) {

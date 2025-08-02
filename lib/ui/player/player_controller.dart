@@ -46,6 +46,7 @@ class PlayerController extends GetxController
   final isSleepTimerActive = false.obs;
   final isSleepEndOfSongActive = false.obs;
   final volume = 100.obs;
+  final isKeyboardVisible = false.obs; // Track keyboard visibility
 
   final progressBarStatus = ProgressBarState(
           buffered: Duration.zero, current: Duration.zero, total: Duration.zero)
@@ -156,6 +157,7 @@ class PlayerController extends GetxController
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
+      isKeyboardVisible.value = visible; // Update keyboard state
       visible ? playerPanelController.hide() : playerPanelController.show();
     });
   }

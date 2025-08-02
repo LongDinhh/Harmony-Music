@@ -31,15 +31,15 @@ class ProgressBarPainter extends CustomPainter {
   final Color progressBarColor;
   @override
   void paint(Canvas canvas, Size size) {
-    const p1 = Offset(0, 1.5);
+    const p1 = Offset(0, 1.0); // Thay đổi từ 1.5 xuống 1.0
     final p2 = Offset(
         total.inSeconds == 0
             ? 0
             : size.width * (current.inSeconds / total.inSeconds),
-        1.5);
+        1.0); // Thay đổi từ 1.5 xuống 1.0
     final paint = Paint()
       ..color = progressBarColor
-      ..strokeWidth = 3
+      ..strokeWidth = 2 // Thay đổi từ 3 xuống 2 để khớp với barHeight
       ..strokeCap = StrokeCap.round;
     canvas.drawLine(p1, p2, paint);
   }
