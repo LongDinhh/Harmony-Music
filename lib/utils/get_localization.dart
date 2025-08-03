@@ -9224,7 +9224,6 @@ Map<String, Map<String, String>> get keys => {
     "skipSilenceDes": "El silencio se omitirá en la reproducción de la música",
     "playNext": "Siguiente",
     "errorOccuredAlert": "¡Ha ocurrido un error!",
-    "songs": "Canciones",
     "high": "Alta",
     "searchDes": "Canciones, Lista de reproducción, Álbum o Artista",
     "results": "Resultados",
