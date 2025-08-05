@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '/ui/widgets/animated_screen_transition.dart';
 import '../Library/library_combined.dart';
-import '../../widgets/side_nav_bar.dart';
 import '../Library/library.dart';
 import '../Search/search_screen.dart';
 import '../Settings/settings_screen_controller.dart';
@@ -87,9 +86,7 @@ Widget _buildBody(SettingsScreenController settingsScreenController,
     HomeScreenController homeScreenController) {
   return Obx(() => Row(
         children: <Widget>[
-          settingsScreenController.isBottomNavBarEnabled.isFalse
-              ? const SideNavBar()
-              : const SizedBox(width: 0),
+          const SizedBox(width: 0),
           Expanded(
             child: AnimatedScreenTransition(
                 enabled: settingsScreenController

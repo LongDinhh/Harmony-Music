@@ -82,8 +82,7 @@ class UpNextQueue extends StatelessWidget {
                     },
                     contentPadding: EdgeInsets.only(
                         top: 0,
-                        left:
-                            GetPlatform.isAndroid || GetPlatform.isIOS ? 30 : 0,
+                        left: 30,
                         right: 25),
                     tileColor: playerController.currentSongIndex.value == index
                         ? Theme.of(homeScaffoldContext).colorScheme.secondary
@@ -93,21 +92,6 @@ class UpNextQueue extends StatelessWidget {
                     leading: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (GetPlatform.isDesktop)
-                          IconButton(
-                              onPressed: () {
-                                if (playerController.currentSongIndex.value ==
-                                    index) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      snackbar(context,
-                                          "songRemovedfromQueueCurrSong".tr,
-                                          size: SanckBarSize.BIG));
-                                } else {
-                                  playerController.removeFromQueue(
-                                      playerController.currentQueue[index]);
-                                }
-                              },
-                              icon: const Icon(Icons.close)),
                         ImageWidget(
                           size: 50,
                           song: playerController.currentQueue[index],
@@ -137,18 +121,17 @@ class UpNextQueue extends StatelessWidget {
                           : Theme.of(homeScaffoldContext).textTheme.titleSmall,
                     ),
                     trailing: ReorderableDragStartListener(
-                      enabled: !GetPlatform.isDesktop,
+                      enabled: true,
                       index: index,
                       child: Container(
                         padding: EdgeInsets.only(
-                            right: (GetPlatform.isDesktop) ? 20 : 5, left: 20),
+                            right: 5, left: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            if (!GetPlatform.isDesktop)
-                              const Icon(
-                                Icons.drag_handle,
-                              ),
+                            const Icon(
+                              Icons.drag_handle,
+                            ),
                             playerController.currentSongIndex.value == index
                                 ? const Icon(
                                     Icons.equalizer,

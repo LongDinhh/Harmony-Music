@@ -25,7 +25,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsController = Get.find<SettingsScreenController>();
     final topPadding = context.isLandscape ? 50.0 : 90.0;
-    final isDesktop = GetPlatform.isDesktop;
     return Padding(
       padding: isBottomNavActive
           ? EdgeInsets.only(left: 20, top: topPadding, right: 15)
@@ -197,29 +196,28 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (!isDesktop)
-                    ListTile(
-                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                      title: Text("playerUi".tr),
-                      subtitle: Text("playerUiDes".tr,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      trailing: Obx(
-                        () => DropdownButton(
-                          dropdownColor: Theme.of(context).cardColor,
-                          underline: const SizedBox.shrink(),
-                          value: settingsController.playerUi.value,
-                          items: [
-                            DropdownMenuItem(
-                                value: 0, child: Text("standard".tr)),
-                            DropdownMenuItem(
-                              value: 1,
-                              child: Text("gesture".tr),
-                            ),
-                          ],
-                          onChanged: settingsController.setPlayerUi,
-                        ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                    title: Text("playerUi".tr),
+                    subtitle: Text("playerUiDes".tr,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    trailing: Obx(
+                      () => DropdownButton(
+                        dropdownColor: Theme.of(context).cardColor,
+                        underline: const SizedBox.shrink(),
+                        value: settingsController.playerUi.value,
+                        items: [
+                          DropdownMenuItem(
+                              value: 0, child: Text("standard".tr)),
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text("gesture".tr),
+                          ),
+                        ],
+                        onChanged: settingsController.setPlayerUi,
                       ),
                     ),
+                  ),
                   ListTile(
                       contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("enableBottomNav".tr),
@@ -424,46 +422,43 @@ class SettingsScreen extends StatelessWidget {
                               onChanged: settingsController
                                   .toggleLoudnessNormalization),
                         )),
-                  if (!isDesktop)
-                    ListTile(
-                        contentPadding:
-                            const EdgeInsets.only(left: 5, right: 10),
-                        title: Text("cacheSongs".tr),
-                        subtitle: Text("cacheSongsDes".tr,
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        trailing: Obx(
-                          () => CustSwitch(
-                              value: settingsController.cacheSongs.value,
-                              onChanged:
-                                  settingsController.toggleCachingSongsValue),
-                        )),
-                  if (!isDesktop)
-                    ListTile(
-                        contentPadding:
-                            const EdgeInsets.only(left: 5, right: 10),
-                        title: Text("skipSilence".tr),
-                        subtitle: Text("skipSilenceDes".tr,
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        trailing: Obx(
-                          () => CustSwitch(
-                              value:
-                                  settingsController.skipSilenceEnabled.value,
-                              onChanged: settingsController.toggleSkipSilence),
-                        )),
-                  if (isDesktop)
-                    ListTile(
-                        contentPadding:
-                            const EdgeInsets.only(left: 5, right: 10),
-                        title: Text("backgroundPlay".tr),
-                        subtitle: Text("backgroundPlayDes".tr,
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        trailing: Obx(
-                          () => CustSwitch(
-                              value: settingsController
-                                  .backgroundPlayEnabled.value,
-                              onChanged:
-                                  settingsController.toggleBackgroundPlay),
-                        )),
+                  ListTile(
+                      contentPadding:
+                          const EdgeInsets.only(left: 5, right: 10),
+                      title: Text("cacheSongs".tr),
+                      subtitle: Text("cacheSongsDes".tr,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      trailing: Obx(
+                        () => CustSwitch(
+                            value: settingsController.cacheSongs.value,
+                            onChanged:
+                                settingsController.toggleCachingSongsValue),
+                      )),
+                  ListTile(
+                      contentPadding:
+                          const EdgeInsets.only(left: 5, right: 10),
+                      title: Text("skipSilence".tr),
+                      subtitle: Text("skipSilenceDes".tr,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      trailing: Obx(
+                        () => CustSwitch(
+                            value:
+                                settingsController.skipSilenceEnabled.value,
+                            onChanged: settingsController.toggleSkipSilence),
+                      )),
+                  ListTile(
+                      contentPadding:
+                          const EdgeInsets.only(left: 5, right: 10),
+                      title: Text("backgroundPlay".tr),
+                      subtitle: Text("backgroundPlayDes".tr,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      trailing: Obx(
+                        () => CustSwitch(
+                            value: settingsController
+                                .backgroundPlayEnabled.value,
+                            onChanged:
+                                settingsController.toggleBackgroundPlay),
+                      )),
                   ListTile(
                       contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("restoreLastPlaybackSession".tr),
@@ -502,20 +497,19 @@ class SettingsScreen extends StatelessWidget {
                         }
                       },
                     ),
-                  if (!isDesktop)
-                    ListTile(
-                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                      title: Text("stopMusicOnTaskClear".tr),
-                      subtitle: Text("stopMusicOnTaskClearDes".tr,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      trailing: Obx(
-                        () => CustSwitch(
-                            value: settingsController
-                                .stopPlyabackOnSwipeAway.value,
-                            onChanged: settingsController
-                                .toggleStopPlyabackOnSwipeAway),
-                      ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                    title: Text("stopMusicOnTaskClear".tr),
+                    subtitle: Text("stopMusicOnTaskClearDes".tr,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    trailing: Obx(
+                      () => CustSwitch(
+                          value: settingsController
+                              .stopPlyabackOnSwipeAway.value,
+                          onChanged: settingsController
+                              .toggleStopPlyabackOnSwipeAway),
                     ),
+                  ),
                   GetPlatform.isAndroid
                       ? Obx(
                           () => ListTile(
@@ -588,61 +582,31 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Obx(() => settingsController.hideDloc.isFalse || isDesktop
-                      ? ListTile(
-                          trailing: TextButton(
-                            child: Text(
-                              "reset".tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(fontSize: 15),
-                            ),
-                            onPressed: () {
-                              settingsController.resetDownloadLocation();
-                            },
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 5, right: 10, top: 0),
-                          title: Text("downloadLocation".tr),
-                          subtitle: Obx(() => Text(
-                              settingsController.isCurrentPathsupportDownDir
-                                  ? "In App storage directory"
-                                  : settingsController
-                                      .downloadLocationPath.value,
-                              style: Theme.of(context).textTheme.bodyMedium)),
-                          onTap: () async {
-                            settingsController.setDownloadLocation();
-                          },
-                        )
-                      : const SizedBox.shrink()),
-                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
-                    ListTile(
-                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                      title: Text("exportDowloadedFiles".tr),
-                      subtitle: Text(
-                        "exportDowloadedFilesDes".tr,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      isThreeLine: true,
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => const ExportFileDialog(),
-                      ).whenComplete(
-                          () => Get.delete<ExportFileDialogController>()),
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                    title: Text("exportDowloadedFiles".tr),
+                    subtitle: Text(
+                      "exportDowloadedFilesDes".tr,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
-                    ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 5, right: 10, top: 0),
-                      title: Text("exportedFileLocation".tr),
-                      subtitle: Obx(() => Text(
-                          settingsController.exportLocationPath.value,
-                          style: Theme.of(context).textTheme.bodyMedium)),
-                      onTap: () async {
-                        settingsController.setExportedLocation();
-                      },
-                    ),
+                    isThreeLine: true,
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => const ExportFileDialog(),
+                    ).whenComplete(
+                        () => Get.delete<ExportFileDialogController>()),
+                  ),
+                  ListTile(
+                    contentPadding:
+                        const EdgeInsets.only(left: 5, right: 10, top: 0),
+                    title: Text("exportedFileLocation".tr),
+                    subtitle: Obx(() => Text(
+                        settingsController.exportLocationPath.value,
+                        style: Theme.of(context).textTheme.bodyMedium)),
+                    onTap: () async {
+                      settingsController.setExportedLocation();
+                    },
+                  ),
                 ],
               ),
               CustomExpansionTile(

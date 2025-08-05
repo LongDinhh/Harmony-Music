@@ -33,7 +33,7 @@ class SettingsScreenController extends GetxController {
   final playerUi = 0.obs;
   final slidableActionEnabled = true.obs;
   final isIgnoringBatteryOptimizations = false.obs;
-  final autoOpenPlayer = true.obs;
+  final autoOpenPlayer = false.obs;
   final discoverContentType = "BOLI".obs;
   final isNewVersionAvailable = false.obs;
   final isLinkedWithPiped = false.obs;
@@ -45,9 +45,9 @@ class SettingsScreenController extends GetxController {
   final hideDloc = true.obs;
   final autoDownloadFavoriteSongEnabled = false.obs;
   final isTransitionAnimationDisabled = false.obs;
-  final isBottomNavBarEnabled = false.obs;
+  final isBottomNavBarEnabled = true.obs;
   final backgroundPlayEnabled = true.obs;
-  final restorePlaybackSession = false.obs;
+  final restorePlaybackSession = true.obs;
   final cacheHomeScreenData = true.obs;
   final currentVersion = "V1.12.0";
   final RxBool isGoogleLoggedIn = false.obs;
@@ -82,52 +82,148 @@ class SettingsScreenController extends GetxController {
 
   Future<void> _setInitValue() async {
     final isDesktop = GetPlatform.isDesktop;
+
+    // Set default app language if not exists
+    if (!setBox.containsKey('currentAppLanguageCode')) {
+      await setBox.put('currentAppLanguageCode', 'vi');
+    }
     final appLang = setBox.get('currentAppLanguageCode') ?? "vi";
     currentAppLanguageCode.value = appLang == "zh_Hant"
         ? "zh-TW"
         : appLang == "zh_Hans"
             ? "zh-CN"
             : appLang;
-    isBottomNavBarEnabled.value =
-        isDesktop ? false : (setBox.get("isBottomNavBarEnabled") ?? true);
+
+    // Set default bottom nav bar enabled
+    if (!setBox.containsKey('isBottomNavBarEnabled')) {
+      await setBox.put('isBottomNavBarEnabled', true);
+    }
+    isBottomNavBarEnabled.value = true;
+
+    // Set default home screen content count
+    if (!setBox.containsKey('noOfHomeScreenContent')) {
+      await setBox.put('noOfHomeScreenContent', 7);
+    }
     noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 7;
+
+    // Set default transition animation
+    if (!setBox.containsKey('isTransitionAnimationDisabled')) {
+      await setBox.put('isTransitionAnimationDisabled', false);
+    }
     isTransitionAnimationDisabled.value =
         setBox.get("isTransitionAnimationDisabled") ?? false;
+
+    // Set default cache songs
+    if (!setBox.containsKey('cacheSongs')) {
+      await setBox.put('cacheSongs', false);
+    }
     cacheSongs.value = setBox.get('cacheSongs') ?? false;
+
+    // Set default theme mode
+    if (!setBox.containsKey('themeModeType')) {
+      await setBox.put('themeModeType', 0);
+    }
     themeModetype.value = ThemeType.values[setBox.get('themeModeType') ?? 0];
-    skipSilenceEnabled.value =
-        isDesktop ? false : setBox.get("skipSilenceEnabled");
-    loudnessNormalizationEnabled.value = isDesktop
-        ? false
-        : (setBox.get("loudnessNormalizationEnabled") ?? false);
-    autoOpenPlayer.value = (setBox.get("autoOpenPlayer") ?? true);
+
+    // Set default skip silence and loudness normalization
+    skipSilenceEnabled.value = false;
+    loudnessNormalizationEnabled.value = false;
+
+    // Set default auto open player
+    if (!setBox.containsKey('autoOpenPlayer')) {
+      await setBox.put('autoOpenPlayer', false);
+    }
+    autoOpenPlayer.value = (setBox.get("autoOpenPlayer") ?? false);
+
+    // Set default restore playback session
+    if (!setBox.containsKey('restrorePlaybackSession')) {
+      await setBox.put('restrorePlaybackSession', true);
+    }
     restorePlaybackSession.value =
         setBox.get("restrorePlaybackSession") ?? true;
+
+    // Set default cache home screen data
+    if (!setBox.containsKey('cacheHomeScreenData')) {
+      await setBox.put('cacheHomeScreenData', true);
+    }
     cacheHomeScreenData.value = setBox.get("cacheHomeScreenData") ?? true;
+
+    // Set default streaming quality
+    if (!setBox.containsKey('streamingQuality')) {
+      await setBox.put('streamingQuality', AudioQuality.High.index);
+    }
     streamingQuality.value =
         AudioQuality.values[setBox.get('streamingQuality')];
+
+    // Set default player UI
+    if (!setBox.containsKey('playerUi')) {
+      await setBox.put('playerUi', 0);
+    }
     playerUi.value = isDesktop ? 0 : (setBox.get('playerUi') ?? 0);
+
+    // Set default background play
+    if (!setBox.containsKey('backgroundPlayEnabled')) {
+      await setBox.put('backgroundPlayEnabled', true);
+    }
     backgroundPlayEnabled.value = setBox.get("backgroundPlayEnabled") ?? true;
+
+    // Set default download location
     final downloadPath =
         setBox.get('downloadLocationPath') ?? await _createInAppSongDownDir();
+    if (!setBox.containsKey('downloadLocationPath')) {
+      await setBox.put('downloadLocationPath', downloadPath);
+    }
     downloadLocationPath.value =
         (isDesktop && downloadPath.contains("emulated"))
             ? await _createInAppSongDownDir()
             : downloadPath;
 
+    // Set default export location
+    if (!setBox.containsKey('exportLocationPath')) {
+      await setBox.put('exportLocationPath', "/storage/emulated/0/Music");
+    }
     exportLocationPath.value =
         setBox.get("exportLocationPath") ?? "/storage/emulated/0/Music";
+
+    // Set default downloading format
+    if (!setBox.containsKey('downloadingFormat')) {
+      await setBox.put('downloadingFormat', "m4a");
+    }
     downloadingFormat.value = setBox.get('downloadingFormat') ?? "m4a";
+
+    // Set default discover content type
+    if (!setBox.containsKey('discoverContentType')) {
+      await setBox.put('discoverContentType', "BOLI");
+    }
     discoverContentType.value = setBox.get('discoverContentType') ?? "BOLI";
+
+    // Set default slidable action
+    if (!setBox.containsKey('slidableActionEnabled')) {
+      await setBox.put('slidableActionEnabled', true);
+    }
     slidableActionEnabled.value = setBox.get('slidableActionEnabled') ?? true;
+
+    // Piped login status (không set default vì liên quan đến login)
     if (setBox.containsKey("piped")) {
       isLinkedWithPiped.value = setBox.get("piped")['isLoggedIn'];
     }
+
+    // Set default stop playback on swipe away
+    if (!setBox.containsKey('stopPlyabackOnSwipeAway')) {
+      await setBox.put('stopPlyabackOnSwipeAway', false);
+    }
     stopPlyabackOnSwipeAway.value =
         setBox.get('stopPlyabackOnSwipeAway') ?? false;
+
+    // Check battery optimization (Android only)
     if (GetPlatform.isAndroid) {
       isIgnoringBatteryOptimizations.value =
           (await Permission.ignoreBatteryOptimizations.isGranted);
+    }
+
+    // Set default auto download favorite songs
+    if (!setBox.containsKey('autoDownloadFavoriteSongEnabled')) {
+      await setBox.put('autoDownloadFavoriteSongEnabled', false);
     }
     autoDownloadFavoriteSongEnabled.value =
         setBox.get("autoDownloadFavoriteSongEnabled") ?? false;
@@ -383,5 +479,4 @@ class SettingsScreenController extends GetxController {
       printERROR('Error during Google logout: $e');
     }
   }
-
 }

@@ -70,9 +70,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       macOS: false,
     );
 
-    print("GetPlatform.isAndroid: ${GetPlatform.isAndroid}");
-    print("GetPlatform.isIOS: ${GetPlatform.isIOS}");
-
     // Configure after initialization
     JustAudioMediaKit.title = 'Harmony music';
     JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
