@@ -138,7 +138,7 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
-                (settingscrnController.isBottomNavBarEnabled.isTrue ||
+                (true ||
                         isAlbumContent ||
                         settingscrnController.isLinkedWithPiped.isFalse)
                     ? const SizedBox.shrink()

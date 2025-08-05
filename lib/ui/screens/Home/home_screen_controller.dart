@@ -275,12 +275,6 @@ class HomeScreenController extends GetxController {
     return unsupportedLangIds.contains(userLangId) ? "vi" : userLangId;
   }
 
-  void onSideBarTabSelected(int index) {
-    // Thêm haptic feedback khi chuyển menu
-    HapticUtils.navigationHaptic();
-    reverseAnimationtransiton = index > tabIndex.value;
-    tabIndex.value = index;
-  }
 
   void onBottonBarTabSelected(int index) {
     // Thêm haptic feedback khi chuyển menu
@@ -310,31 +304,28 @@ class HomeScreenController extends GetxController {
   }
 
   ///This is used to set mini player height based on current route.
-  ///
-  ///and applicable/useful if bottom nav enabled
+  ///Mobile-only app always uses bottom navigation
   void whenHomeScreenOnTop() {
-    if (Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue) {
-      final currentRoute = getCurrentRouteName();
-      final isHomeOnTop = currentRoute == '/homeScreen';
-      final isResultScreenOnTop = currentRoute == '/searchResultScreen';
-      final playerCon = Get.find<PlayerController>();
+    final currentRoute = getCurrentRouteName();
+    final isHomeOnTop = currentRoute == '/homeScreen';
+    final isResultScreenOnTop = currentRoute == '/searchResultScreen';
+    final playerCon = Get.find<PlayerController>();
 
-      // Update observable current route để trigger CombinedBottomContainer rebuild
-      this.currentRoute.value = currentRoute ?? '/homeScreen';
+    // Update observable current route để trigger CombinedBottomContainer rebuild
+    this.currentRoute.value = currentRoute ?? '/homeScreen';
 
-      // Set miniplayer height accordingly
-      if (!playerCon.initFlagForPlayer) {
-        if (isHomeOnTop) {
-          playerCon.playerPanelMinHeight.value = 65.0;
-        } else {
-          Future.delayed(
-              isResultScreenOnTop
-                  ? const Duration(milliseconds: 300)
-                  : Duration.zero, () {
-            playerCon.playerPanelMinHeight.value =
-                65.0 + Get.mediaQuery.viewPadding.bottom;
-          });
-        }
+    // Set miniplayer height accordingly
+    if (!playerCon.initFlagForPlayer) {
+      if (isHomeOnTop) {
+        playerCon.playerPanelMinHeight.value = 65.0;
+      } else {
+        Future.delayed(
+            isResultScreenOnTop
+                ? const Duration(milliseconds: 300)
+                : Duration.zero, () {
+          playerCon.playerPanelMinHeight.value =
+              65.0 + Get.mediaQuery.viewPadding.bottom;
+        });
       }
     }
   }

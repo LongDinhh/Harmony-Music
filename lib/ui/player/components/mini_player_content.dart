@@ -1,7 +1,6 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:harmonymusic/ui/screens/Settings/settings_screen_controller.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:widget_marquee/widget_marquee.dart';
 
@@ -23,8 +22,7 @@ class MiniPlayerContent extends StatelessWidget {
     final playerController = Get.find<PlayerController>();
     final size = MediaQuery.sizeOf(context);
     final isWideScreen = size.width > 800;
-    final bottomNavEnabled =
-        Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue;
+    final bottomNavEnabled = true; // Always enabled for mobile-only app
 
     return Obx(() {
       // Kiểm tra xem có đang ở màn hình có bottom nav bar không

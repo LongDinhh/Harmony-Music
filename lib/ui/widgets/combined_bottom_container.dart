@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmonymusic/ui/screens/Home/home_screen_controller.dart';
-import 'package:harmonymusic/ui/screens/Settings/settings_screen_controller.dart';
 import 'package:harmonymusic/ui/player/player_controller.dart';
 // import 'package:harmonymusic/utils/helper.dart'; // Không còn cần thiết
 import 'glass_wrapper.dart';
@@ -15,7 +14,6 @@ class CombinedBottomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsController = Get.find<SettingsScreenController>();
     final homeController = Get.find<HomeScreenController>();
     final playerController = Get.find<PlayerController>();
 
@@ -32,9 +30,7 @@ class CombinedBottomContainer extends StatelessWidget {
               .isPlayerpanelTopVisible.value &&
           !isKeyboardOpen; // Ẩn mini player khi keyboard mở để tránh che khuất nội dung
 
-      final shouldShowBottomNav = settingsController
-              .isBottomNavBarEnabled.isTrue &&
-          isInHomeScreenContext && // Chỉ hiện khi ở trong HomeScreen context (không phải album/playlist)
+      final shouldShowBottomNav = isInHomeScreenContext && // Chỉ hiện khi ở trong HomeScreen context (không phải album/playlist)
           homeController.tabIndex.value !=
               1 && // Ẩn nav bar ở tab Search (index 1)
           playerController.isPanelGTHOpened.isFalse &&
@@ -75,8 +71,7 @@ class CombinedBottomContainer extends StatelessWidget {
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 300),
                     opacity: shouldShowBottomNav ? 1.0 : 0.0,
-                    child: shouldShowBottomNav ||
-                            settingsController.isBottomNavBarEnabled.isTrue
+                    child: shouldShowBottomNav
                         ? const BottomNavBarContent()
                         : const SizedBox.shrink(),
                   ),

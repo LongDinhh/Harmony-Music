@@ -15,8 +15,7 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final searchScreenController =
         Get.put(SearchScreenController(), permanent: true);
-    final settingsScreenController =
-        Get.put(SettingsScreenController(), permanent: true);
+    Get.put(SettingsScreenController(), permanent: true);
     final topPadding = context.isLandscape ? 50.0 : 60.0;
 
     // Kiểm tra xem có cần focus vào input không
@@ -95,7 +94,7 @@ class SearchScreen extends StatelessWidget {
                   searchScreenController.addToHistryQueryList(val);
                 },
                 autofocus:
-                    settingsScreenController.isBottomNavBarEnabled.isFalse,
+                    false,
                 cursorColor: Theme.of(context).textTheme.bodySmall!.color,
                 decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 15),

@@ -45,7 +45,6 @@ class SettingsScreenController extends GetxController {
   final hideDloc = true.obs;
   final autoDownloadFavoriteSongEnabled = false.obs;
   final isTransitionAnimationDisabled = false.obs;
-  final isBottomNavBarEnabled = true.obs;
   final backgroundPlayEnabled = true.obs;
   final restorePlaybackSession = true.obs;
   final cacheHomeScreenData = true.obs;
@@ -92,11 +91,6 @@ class SettingsScreenController extends GetxController {
             ? "zh-CN"
             : appLang;
 
-    // Set default bottom nav bar enabled
-    if (!setBox.containsKey('isBottomNavBarEnabled')) {
-      await setBox.put('isBottomNavBarEnabled', true);
-    }
-    isBottomNavBarEnabled.value = true;
 
     // Set default home screen content count
     if (!setBox.containsKey('noOfHomeScreenContent')) {
@@ -252,22 +246,6 @@ class SettingsScreenController extends GetxController {
     playerUi.value = val;
   }
 
-  void enableBottomNavBar(bool val) {
-    final homeScrCon = Get.find<HomeScreenController>();
-    final playerCon = Get.find<PlayerController>();
-    if (val) {
-      homeScrCon.onSideBarTabSelected(3);
-      isBottomNavBarEnabled.value = true;
-    } else {
-      isBottomNavBarEnabled.value = false;
-      homeScrCon.onSideBarTabSelected(5);
-    }
-    if (!Get.find<PlayerController>().initFlagForPlayer) {
-      playerCon.playerPanelMinHeight.value =
-          val ? 65.0 : 65.0 + Get.mediaQuery.viewPadding.bottom;
-    }
-    setBox.put("isBottomNavBarEnabled", val);
-  }
 
   void toggleSlidableAction(bool val) {
     setBox.put("slidableActionEnabled", val);

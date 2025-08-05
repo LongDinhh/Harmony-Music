@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:harmonymusic/ui/screens/Settings/settings_screen_controller.dart';
+
 
 import '../../../utils/helper.dart';
 import '../Home/home_screen_controller.dart';
@@ -118,7 +118,7 @@ class SearchResultScreenController extends GetxController
       }
 
       //Case if bottom nav used
-      if (Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue) {
+      if (true) {
         // assiging init val
         for (var element in railItems) {
           separatedResultContent[element] = [];

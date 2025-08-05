@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '/ui/widgets/animated_screen_transition.dart';
 import '../Library/library_combined.dart';
-import '../Library/library.dart';
 import '../Search/search_screen.dart';
 import '../Settings/settings_screen_controller.dart';
 import '/ui/player/player_controller.dart';
@@ -42,7 +41,7 @@ Widget _buildFloatingActionButton(
   return Obx(() {
     final showFAB = (homeScreenController.tabIndex.value == 0 ||
             homeScreenController.tabIndex.value == 2) &&
-        settingsScreenController.isBottomNavBarEnabled.isFalse;
+        false;
 
     if (!showFAB) return const SizedBox.shrink();
 
@@ -87,7 +86,7 @@ Widget _buildBody(SettingsScreenController settingsScreenController,
         enabled: settingsScreenController.isTransitionAnimationDisabled.isFalse,
         resverse: homeScreenController.reverseAnimationtransiton,
         horizontalTransition:
-            settingsScreenController.isBottomNavBarEnabled.isTrue,
+            true,
         child: Center(
           key: ValueKey<int>(homeScreenController.tabIndex.value),
           child: const Body(),
@@ -117,18 +116,15 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeScreenController = Get.find<HomeScreenController>();
-    final settingsScreenController = Get.find<SettingsScreenController>();
     final topPadding = context.isLandscape ? 50.0 : 15.0;
-    final leftPadding =
-        settingsScreenController.isBottomNavBarEnabled.isTrue ? 20.0 : 5.0;
+    final leftPadding = 20.0;
     // Calculate bottom padding based on what's showing in combined container
     final playerController = Get.find<PlayerController>();
     final hasActiveSong = playerController.currentSong.value != null;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final miniPlayerHeight =
         hasActiveSong ? (screenWidth > 800 ? 105.0 : 75.0) : 0.0;
-    final navBarHeight =
-        settingsScreenController.isBottomNavBarEnabled.isTrue ? 52.0 : 0.0;
+    final navBarHeight = 52.0;
     final bottomPadding = 200.0 + miniPlayerHeight + navBarHeight;
     if (homeScreenController.tabIndex.value == 0) {
       return Padding(
@@ -263,10 +259,6 @@ class Body extends StatelessWidget {
       // Settings screen - có nav bar từ CombinedBottomContainer
       return _wrapWithBottomPaddingForMiniPlayerOnly(
           const SettingsScreen(isBottomNavActive: true), context);
-    } else if (homeScreenController.tabIndex.value == 4) {
-      return const LibraryArtistWidget();
-    } else if (homeScreenController.tabIndex.value == 5) {
-      return const SettingsScreen();
     } else {
       return Center(
         child: Text("${homeScreenController.tabIndex.value}"),

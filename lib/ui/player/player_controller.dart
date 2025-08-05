@@ -497,8 +497,7 @@ class PlayerController extends GetxController
 
     if (initFlagForPlayer) {
       final miniPlayerHeight = isWideScreen ? 95.0 : 65.0;
-      if (Get.find<SettingsScreenController>().isBottomNavBarEnabled.isFalse ||
-          getCurrentRouteName() != '/homeScreen') {
+      if (getCurrentRouteName() != '/homeScreen') {
         playerPanelMinHeight.value =
             miniPlayerHeight + Get.mediaQuery.viewPadding.bottom;
       } else {

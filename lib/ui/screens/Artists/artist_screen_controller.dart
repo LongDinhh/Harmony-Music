@@ -10,7 +10,7 @@ import '../../../utils/helper.dart';
 import '../Library/library_controller.dart';
 import '/services/music_service.dart';
 import '/ui/screens/Home/home_screen_controller.dart';
-import '/ui/screens/Settings/settings_screen_controller.dart';
+
 
 class ArtistScreenController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -38,7 +38,7 @@ class ArtistScreenController extends GetxController
   void onInit() {
     final args = Get.arguments;
     _init(args[0], args[1]);
-    if (Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue) {
+    if (true) {
       tabController = TabController(vsync: this, length: 5);
       tabController?.animation?.addListener(() {
         int indexChange = tabController!.offset.round();
