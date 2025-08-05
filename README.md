@@ -27,7 +27,7 @@
 
 ## Detailed Description
 
-Harmony Music is a free, open-source music streaming application that provides
+Harmony Music is a free, open-source, mobile-only (Android & iOS) music streaming application that provides
 seamless access to YouTube and YouTube Music content without advertisements or
 login requirements. Built with Flutter, it offers a beautiful, native experience
 across Android and iOS platforms.
@@ -285,9 +285,7 @@ Harmony-Music/
 
 ## Contributing
 
-We welcome contributions from the community! Whether you're fixing bugs,
-adding features, improving documentation, or translating the app, your help is
-appreciated.
+We welcome contributions from the community! This is a **mobile-only (Android & iOS)** project, so contributions should focus on mobile development and features. Whether you're fixing bugs, adding features, improving documentation, or translating the app, your help is appreciated.
 
 ### How to Contribute
 
