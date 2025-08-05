@@ -15,7 +15,7 @@ class SearchResultScreenBN extends StatelessWidget {
   Widget build(BuildContext context) {
     final SearchResultScreenController searchResScrController =
         Get.find<SearchResultScreenController>();
-    final topPadding = context.isLandscape ? 50.0 : 80.0;
+    final topPadding = context.isLandscape ? 50.0 : 60.0;
     return Scaffold(
       body: Padding(
           padding: EdgeInsets.only(
@@ -24,11 +24,14 @@ class SearchResultScreenBN extends StatelessWidget {
           child: Column(
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 55,
+                    height: 55,
                     child: Center(
                       child: IconButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
                           Get.nestedKey(ScreenNavigationSetup.id)!
                               .currentState!

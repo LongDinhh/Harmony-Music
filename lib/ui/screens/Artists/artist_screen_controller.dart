@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import '../../../utils/scroll_controller_manager.dart';
 
 import '../../widgets/add_to_playlist.dart';
 import '/ui/widgets/sort_widget.dart';
@@ -13,7 +14,7 @@ import '/ui/screens/Home/home_screen_controller.dart';
 import '/ui/screens/Settings/settings_screen_controller.dart';
 
 class ArtistScreenController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+    with GetSingleTickerProviderStateMixin, ScrollControllerManagerMixin {
   final isArtistContentFetced = false.obs;
   final navigationRailCurrentIndex = 0.obs;
   final musicServices = Get.find<MusicServices>();
@@ -22,10 +23,16 @@ class ArtistScreenController extends GetxController
   final sepataredContent = <String, dynamic>{}.obs;
   final isSeparatedArtistContentFetced = false.obs;
   final isAddedToLibrary = false.obs;
-  final songScrollController = ScrollController();
-  final videoScrollController = ScrollController();
-  final albumScrollController = ScrollController();
-  final singlesScrollController = ScrollController();
+
+  // ScrollControllers managed by ScrollControllerManagerMixin - provide getter methods for backward compatibility
+  ScrollController get songScrollController =>
+      getOrCreateScrollController('songs');
+  ScrollController get videoScrollController =>
+      getOrCreateScrollController('videos');
+  ScrollController get albumScrollController =>
+      getOrCreateScrollController('albums');
+  ScrollController get singlesScrollController =>
+      getOrCreateScrollController('singles');
   SortWidgetController? sortWidgetController;
   final additionalOperationMode = OperationMode.none.obs;
   bool continuationInProgress = false;
@@ -60,7 +67,7 @@ class ArtistScreenController extends GetxController
     super.onReady();
   }
 
-  _init(bool isIdOnly, dynamic artist) {
+  void _init(bool isIdOnly, dynamic artist) {
     if (!isIdOnly) artist_ = artist as Artist;
     _fetchArtistContent(isIdOnly ? artist as String : artist.browseId);
     _checkIfAddedToLibrary(isIdOnly ? artist as String : artist.browseId);
@@ -134,31 +141,32 @@ class ArtistScreenController extends GetxController
 
     // observered - continuation available only for song & vid
     if (val != 0) {
-    final scrollController = val == 1
-        ? songScrollController
-        : val == 2
-            ? videoScrollController
-            : val == 3
-                ? albumScrollController
-                : singlesScrollController;
+      final scrollController = val == 1
+          ? songScrollController
+          : val == 2
+              ? videoScrollController
+              : val == 3
+                  ? albumScrollController
+                  : singlesScrollController;
 
-    scrollController.addListener(() {
-      double maxScroll = scrollController.position.maxScrollExtent;
-      double currentScroll = scrollController.position.pixels;
-      if (currentScroll >= maxScroll / 2 &&
-          sepataredContent[tabName]['additionalParams'] !=
-              '&ctoken=null&continuation=null') {
-        if (!continuationInProgress) {
-          continuationInProgress = true;
-          getContinuationContents(artistData[tabName], tabName);
+      scrollController.addListener(() {
+        double maxScroll = scrollController.position.maxScrollExtent;
+        double currentScroll = scrollController.position.pixels;
+        if (currentScroll >= maxScroll / 2 &&
+            sepataredContent[tabName]['additionalParams'] !=
+                '&ctoken=null&continuation=null') {
+          if (!continuationInProgress) {
+            continuationInProgress = true;
+            getContinuationContents(artistData[tabName], tabName);
+          }
         }
-      }
-    });
-   }
+      });
+    }
     isSeparatedArtistContentFetced.value = true;
   }
 
-  Future<void> getContinuationContents(browseEndpoint, tabName) async {
+  Future<void> getContinuationContents(
+      Map<String, dynamic> browseEndpoint, String tabName) async {
     final x = await musicServices.getArtistRealtedContent(
         browseEndpoint, tabName,
         additionalParams: sepataredContent[tabName]['additionalParams']);
@@ -278,10 +286,7 @@ class ArtistScreenController extends GetxController
   @override
   void onClose() {
     tempListContainer.clear();
-    songScrollController.dispose();
-    videoScrollController.dispose();
-    albumScrollController.dispose();
-    singlesScrollController.dispose();
+    // ScrollControllers are automatically disposed by ScrollControllerManagerMixin
     tabController?.dispose();
     Get.find<HomeScreenController>().whenHomeScreenOnTop();
     super.onClose();

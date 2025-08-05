@@ -279,7 +279,8 @@ void _compressFiles(Map<String, dynamic> params) {
 
   final encoder = ZipEncoder();
   final zipFile = File(zipFilePath);
-  zipFile.writeAsBytesSync(encoder.encode(archive)!);
+  final encodedData = encoder.encode(archive);
+  zipFile.writeAsBytesSync(encodedData);
 }
 
 // Example usage

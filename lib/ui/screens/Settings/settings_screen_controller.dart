@@ -8,6 +8,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../services/youtube_cookie_manager.dart';
+import 'google_login_webview.dart';
+
 import '../../../utils/update_check_flag_file.dart';
 import '/services/piped_service.dart';
 import '../Library/library_controller.dart';
@@ -25,17 +28,17 @@ class SettingsScreenController extends GetxController {
   final themeModetype = ThemeType.dynamic.obs;
   final skipSilenceEnabled = false.obs;
   final loudnessNormalizationEnabled = false.obs;
-  final noOfHomeScreenContent = 3.obs;
+  final noOfHomeScreenContent = 7.obs;
   final streamingQuality = AudioQuality.High.obs;
   final playerUi = 0.obs;
   final slidableActionEnabled = true.obs;
   final isIgnoringBatteryOptimizations = false.obs;
-  final autoOpenPlayer = false.obs;
-  final discoverContentType = "QP".obs;
+  final autoOpenPlayer = true.obs;
+  final discoverContentType = "BOLI".obs;
   final isNewVersionAvailable = false.obs;
   final isLinkedWithPiped = false.obs;
   final stopPlyabackOnSwipeAway = false.obs;
-  final currentAppLanguageCode = "en".obs;
+  final currentAppLanguageCode = "vi".obs;
   final downloadLocationPath = "".obs;
   final exportLocationPath = "".obs;
   final downloadingFormat = "".obs;
@@ -47,21 +50,23 @@ class SettingsScreenController extends GetxController {
   final restorePlaybackSession = false.obs;
   final cacheHomeScreenData = true.obs;
   final currentVersion = "V1.12.0";
+  final RxBool isGoogleLoggedIn = false.obs;
 
   @override
   void onInit() {
     _setInitValue();
+    _checkGoogleLogin();
     if (updateCheckFlag) _checkNewVersion();
     _createInAppSongDownDir();
     super.onInit();
   }
 
-  get currentVision => currentVersion;
-  get isCurrentPathsupportDownDir =>
+  String get currentVision => currentVersion;
+  bool get isCurrentPathsupportDownDir =>
       "$_supportDir/Music" == downloadLocationPath.toString();
   String get supportDirPath => _supportDir;
 
-  _checkNewVersion() {
+  void _checkNewVersion() {
     newVersionCheck(currentVersion)
         .then((value) => isNewVersionAvailable.value = value);
   }
@@ -77,15 +82,15 @@ class SettingsScreenController extends GetxController {
 
   Future<void> _setInitValue() async {
     final isDesktop = GetPlatform.isDesktop;
-    final appLang = setBox.get('currentAppLanguageCode') ?? "en";
+    final appLang = setBox.get('currentAppLanguageCode') ?? "vi";
     currentAppLanguageCode.value = appLang == "zh_Hant"
         ? "zh-TW"
         : appLang == "zh_Hans"
             ? "zh-CN"
             : appLang;
     isBottomNavBarEnabled.value =
-        isDesktop ? false : (setBox.get("isBottomNavBarEnabled") ?? false);
-    noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 3;
+        isDesktop ? false : (setBox.get("isBottomNavBarEnabled") ?? true);
+    noOfHomeScreenContent.value = setBox.get("noOfHomeScreenContent") ?? 7;
     isTransitionAnimationDisabled.value =
         setBox.get("isTransitionAnimationDisabled") ?? false;
     cacheSongs.value = setBox.get('cacheSongs') ?? false;
@@ -97,7 +102,7 @@ class SettingsScreenController extends GetxController {
         : (setBox.get("loudnessNormalizationEnabled") ?? false);
     autoOpenPlayer.value = (setBox.get("autoOpenPlayer") ?? true);
     restorePlaybackSession.value =
-        setBox.get("restrorePlaybackSession") ?? false;
+        setBox.get("restrorePlaybackSession") ?? true;
     cacheHomeScreenData.value = setBox.get("cacheHomeScreenData") ?? true;
     streamingQuality.value =
         AudioQuality.values[setBox.get('streamingQuality')];
@@ -113,7 +118,7 @@ class SettingsScreenController extends GetxController {
     exportLocationPath.value =
         setBox.get("exportLocationPath") ?? "/storage/emulated/0/Music";
     downloadingFormat.value = setBox.get('downloadingFormat') ?? "m4a";
-    discoverContentType.value = setBox.get('discoverContentType') ?? "QP";
+    discoverContentType.value = setBox.get('discoverContentType') ?? "BOLI";
     slidableActionEnabled.value = setBox.get('slidableActionEnabled') ?? true;
     if (setBox.containsKey("piped")) {
       isLinkedWithPiped.value = setBox.get("piped")['isLoggedIn'];
@@ -168,7 +173,7 @@ class SettingsScreenController extends GetxController {
     }
     if (!Get.find<PlayerController>().initFlagForPlayer) {
       playerCon.playerPanelMinHeight.value =
-          val ? 75.0 : 75.0 + Get.mediaQuery.viewPadding.bottom;
+          val ? 65.0 : 65.0 + Get.mediaQuery.viewPadding.bottom;
     }
     setBox.put("isBottomNavBarEnabled", val);
   }
@@ -340,4 +345,43 @@ class SettingsScreenController extends GetxController {
       return (await getApplicationDocumentsDirectory()).path;
     }
   }
+
+  /// Check if Google is logged in by querying YouTube cookies
+  Future<void> _checkGoogleLogin() async {
+    try {
+      final validCookies = await YouTubeCookieManager.getValidYouTubeCookies();
+      isGoogleLoggedIn.value = validCookies.isNotEmpty;
+    } catch (e) {
+      printERROR('Error checking Google login status: $e');
+      isGoogleLoggedIn.value = false;
+    }
+  }
+
+  /// Login with Google using WebView
+  Future<void> loginWithGoogle(BuildContext ctx) async {
+    try {
+      final result = await Get.to(() => const GoogleLoginWebView());
+      if (result == true) {
+        isGoogleLoggedIn.value = true;
+      }
+    } catch (e) {
+      printERROR('Error during Google login: $e');
+      if (ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          snackbar(ctx, 'Error during Google login: $e'),
+        );
+      }
+    }
+  }
+
+  /// Logout from Google by clearing YouTube cookies
+  Future<void> logoutGoogle() async {
+    try {
+      await YouTubeCookieManager.clearAll();
+      isGoogleLoggedIn.value = false;
+    } catch (e) {
+      printERROR('Error during Google logout: $e');
+    }
+  }
+
 }

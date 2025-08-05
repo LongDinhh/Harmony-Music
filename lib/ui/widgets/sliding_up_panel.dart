@@ -271,8 +271,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                   );
                 },
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.sizeOf(context).height,
+                  width: MediaQuery.sizeOf(context).width,
                   child: widget.body,
                 ),
               )
@@ -289,7 +289,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                                     ? 1
                                     : -1) *
                                 dets.velocity.pixelsPerSecond.dy >
-                            0) _close();
+                            0) {
+                          _close();
+                        }
                       }
                     : null,
                 onTap: widget.backdropTapClosesPanel ? () => _close() : null,
@@ -297,16 +299,16 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                     animation: _ac,
                     builder: (context, _) {
                       return Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.sizeOf(context).height,
+                        width: MediaQuery.sizeOf(context).width,
 
                         //set color to null so that touch events pass through
                         //to the body when the panel is closed, otherwise,
                         //if a color exists, then touch events won't go through
                         color: _ac.value == 0.0
                             ? null
-                            : widget.backdropColor.withOpacity(
-                                widget.backdropOpacity * _ac.value),
+                            : widget.backdropColor.withValues(
+                                alpha: widget.backdropOpacity * _ac.value),
                       );
                     }),
               ),
@@ -345,7 +347,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                           bottom: widget.slideDirection == SlideDirection.DOWN
                               ? 0.0
                               : null,
-                          width: MediaQuery.of(context).size.width -
+                          width: MediaQuery.sizeOf(context).width -
                               (widget.margin != null
                                   ? widget.margin!.horizontal
                                   : 0) -
@@ -394,7 +396,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
                         bottom: widget.slideDirection == SlideDirection.DOWN
                             ? 0.0
                             : null,
-                        width: MediaQuery.of(context).size.width -
+                        width: MediaQuery.sizeOf(context).width -
                             (widget.margin != null
                                 ? widget.margin!.horizontal
                                 : 0) -
@@ -428,6 +430,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
   @override
   void dispose() {
     _ac.dispose();
+    _sc.dispose();
     super.dispose();
   }
 

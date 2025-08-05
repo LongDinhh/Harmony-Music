@@ -63,7 +63,7 @@ class AlbumScreen extends StatelessWidget {
                             opacity: opacityValue < 0 ||
                                     albumController.isSearchingOn.isTrue
                                 ? 0
-                                : opacityValue,
+                                : opacityValue.clamp(0.0, 1.0),
                             child: DecoratedBox(
                                 position: DecorationPosition.foreground,
                                 decoration: BoxDecoration(
@@ -117,43 +117,76 @@ class AlbumScreen extends StatelessWidget {
                     ),
             ),
             Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 10,
+                      top: MediaQuery.of(context).padding.top,
                       left: 10,
                       right: 10),
-                  height: 80,
-                  child: Center(
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          child: IconButton(
-                              tooltip: "back".tr,
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              icon: const Icon(Icons.arrow_back_ios)),
+                  height: 100,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: IconButton(
+                            tooltip: "back".tr,
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.arrow_back_ios)),
+                      ),
+                      Expanded(
+                        child: Obx(
+                          () => albumController.appBarTitleVisible.isTrue
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Marquee(
+                                      delay: const Duration(milliseconds: 300),
+                                      duration: const Duration(seconds: 5),
+                                      id: "${albumController.album.value.title.hashCode.toString()}_appbar",
+                                      child: Text(
+                                        albumController.album.value.title,
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: Text(
+                                        albumController
+                                                .album.value.description ??
+                                            albumController.album.value.artists
+                                                ?.map((e) => e['name'])
+                                                .join(", ") ??
+                                            "",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge
+                                                  ?.color
+                                                  ?.withValues(alpha: 0.7),
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
                         ),
-                        Expanded(
-                          child: Obx(
-                            () => Marquee(
-                              delay: const Duration(milliseconds: 300),
-                              duration: const Duration(seconds: 5),
-                              id: "${albumController.album.value.title.hashCode.toString()}_appbar",
-                              child: Text(
-                                albumController.appBarTitleVisible.isTrue
-                                    ? albumController.album.value.title
-                                    : "",
-                                maxLines: 1,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -172,7 +205,8 @@ class AlbumScreen extends StatelessWidget {
                                   ? 0
                                   : landscape
                                       ? 150
-                                      : 200,
+                                      : MediaQuery.of(context).padding.top +
+                                          120,
                               bottom: 200,
                             ),
                             itemCount: albumController.songList.isEmpty
@@ -190,7 +224,7 @@ class AlbumScreen extends StatelessWidget {
                                         children: [
                                           // Bookmark button
                                           Obx(() => IconButton(
-                                            tooltip: albumController
+                                              tooltip: albumController
                                                       .isAddedToLibrary.isFalse
                                                   ? "addToLibrary".tr
                                                   : "removeFromLibrary".tr,
@@ -227,7 +261,7 @@ class AlbumScreen extends StatelessWidget {
                                                   : Icons.bookmark_added))),
                                           // Play button
                                           IconButton(
-                                            tooltip: "play".tr,
+                                              tooltip: "play".tr,
                                               onPressed: () {
                                                 playerController
                                                     .playPlayListSong(
@@ -254,7 +288,7 @@ class AlbumScreen extends StatelessWidget {
                                               )),
                                           // Enqueue button
                                           IconButton(
-                                            tooltip: "enqueueAlbumSongs".tr,
+                                              tooltip: "enqueueAlbumSongs".tr,
                                               onPressed: () {
                                                 Get.find<PlayerController>()
                                                     .enqueueSongList(
@@ -363,14 +397,18 @@ class AlbumScreen extends StatelessWidget {
                                           //           Icons.cloud_sync)),
 
                                           IconButton(
-                                            tooltip: "shareAlbum".tr,
+                                              tooltip: "shareAlbum".tr,
                                               visualDensity:
                                                   const VisualDensity(
                                                       vertical: -3),
                                               splashRadius: 10,
                                               onPressed: () {
-                                                Share.share(
-                                                    "https://youtube.com/playlist?list=${albumController.album.value.audioPlaylistId}");
+                                                SharePlus.instance.share(
+                                                  ShareParams(
+                                                    text:
+                                                        "https://youtube.com/playlist?list=${albumController.album.value.audioPlaylistId}",
+                                                  ),
+                                                );
                                               },
                                               icon: const Icon(
                                                 Icons.share,
@@ -484,15 +522,18 @@ class AlbumScreen extends StatelessWidget {
     return AnimatedBuilder(
       animation: albumController.animationController,
       builder: (context, child) {
-        return SizedBox(
-          height: albumController.heightAnimation.value,
-          child: Transform.scale(
-              scale: albumController.scaleAnimation.value, child: child),
+        return ClipRect(
+          child: SizedBox(
+            height: albumController.heightAnimation.value,
+            child: Transform.scale(
+                scale: albumController.scaleAnimation.value, child: child),
+          ),
         );
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 25.0, bottom: 10, right: 30),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Marquee(

@@ -2,9 +2,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:widget_marquee/widget_marquee.dart';
 
 import '../../services/downloader.dart';
 import '../screens/Playlist/playlist_screen_controller.dart';
@@ -22,6 +21,7 @@ import '../navigator.dart';
 import 'song_download_btn.dart';
 import 'image_widget.dart';
 import 'song_info_dialog.dart';
+import '../../utils/haptic_utils.dart';
 
 class SongInfoBottomSheet extends StatelessWidget {
   const SongInfoBottomSheet(this.song,
@@ -52,9 +52,14 @@ class SongInfoBottomSheet extends StatelessWidget {
                 song: song,
                 size: 50,
               ),
-              title: Text(
-                song.title,
-                maxLines: 1,
+              title: Marquee(
+                delay: const Duration(milliseconds: 500),
+                duration: const Duration(seconds: 6),
+                id: "songinfo${song.title.hashCode}",
+                child: Text(
+                  song.title,
+                  maxLines: 1,
+                ),
               ),
               subtitle: Text(song.artist!),
               trailing: SizedBox(
@@ -162,6 +167,7 @@ class SongInfoBottomSheet extends StatelessWidget {
                       if (calledFromQueue) {
                         playerController.playerPanelController.close();
                       }
+                      HapticUtils.screenNavigationHaptic();
                       Get.toNamed(ScreenNavigationSetup.albumScreen,
                           id: ScreenNavigationSetup.id,
                           arguments: (null, song.extras!['album']['id']));
@@ -245,34 +251,34 @@ class SongInfoBottomSheet extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
             ),
-            ListTile(
-              leading: const Icon(Icons.open_with),
-              title: Text("openIn".tr),
-              trailing: SizedBox(
-                width: 200,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      splashRadius: 10,
-                      onPressed: () {
-                        launchUrl(Uri.parse(
-                            "https://youtube.com/watch?v=${song.id}"));
-                      },
-                      icon: const Icon(Ionicons.logo_youtube),
-                    ),
-                    IconButton(
-                      splashRadius: 10,
-                      onPressed: () {
-                        launchUrl(Uri.parse(
-                            "https://music.youtube.com/watch?v=${song.id}"));
-                      },
-                      icon: const Icon(Ionicons.play_circle),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.open_with),
+            //   title: Text("openIn".tr),
+            //   trailing: SizedBox(
+            //     width: 200,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: [
+            //         IconButton(
+            //           splashRadius: 10,
+            //           onPressed: () {
+            //             launchUrl(Uri.parse(
+            //                 "https://youtube.com/watch?v=${song.id}"));
+            //           },
+            //           icon: const Icon(Ionicons.logo_youtube),
+            //         ),
+            //         IconButton(
+            //           splashRadius: 10,
+            //           onPressed: () {
+            //             launchUrl(Uri.parse(
+            //                 "https://music.youtube.com/watch?v=${song.id}"));
+            //           },
+            //           icon: const Icon(Ionicons.play_circle),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
             if (calledFromPlayer)
               ListTile(
                 contentPadding: const EdgeInsets.only(left: 15),
@@ -300,8 +306,11 @@ class SongInfoBottomSheet extends StatelessWidget {
               visualDensity: const VisualDensity(vertical: -1),
               leading: const Icon(Icons.share),
               title: Text("shareSong".tr),
-              onTap: () =>
-                  Share.share("https://youtube.com/watch?v=${song.id}"),
+              onTap: () => SharePlus.instance.share(
+                ShareParams(
+                  text: "https://youtube.com/watch?v=${song.id}",
+                ),
+              ),
             ),
           ],
         ),
@@ -314,7 +323,9 @@ class SongInfoBottomSheet extends StatelessWidget {
     final artists = song.extras!['artists'];
     if (artists != null) {
       for (dynamic each in artists) {
-        if (each.containsKey("id") && each['id'] != null) artistList.add(each);
+        if (each.containsKey("id") && each['id'] != null) {
+          artistList.add(each);
+        }
       }
     }
     return artistList.isNotEmpty
@@ -355,14 +366,16 @@ class SongInfoController extends GetxController
   SongInfoController(this.song, this.calledFromPlayer) {
     _setInitStatus(song);
   }
-  _setInitStatus(MediaItem song) async {
+  Future<void> _setInitStatus(MediaItem song) async {
     isDownloaded.value = Hive.box("SongDownloads").containsKey(song.id);
     isCurrentSongFav.value =
         (await Hive.openBox("LIBFAV")).containsKey(song.id);
     final artists = song.extras!['artists'];
     if (artists != null) {
       for (dynamic each in artists) {
-        if (each.containsKey("id") && each['id'] != null) artistList.add(each);
+        if (each.containsKey("id") && each['id'] != null) {
+          artistList.add(each);
+        }
       }
     }
   }
@@ -446,7 +459,9 @@ mixin RemoveSongFromPlaylistMixin {
     }
 
     if (playlist.playlistId == "SongDownloads" ||
-        playlist.playlistId == "SongsCache") return;
+        playlist.playlistId == "SongsCache") {
+      return;
+    }
     box.close();
   }
 }

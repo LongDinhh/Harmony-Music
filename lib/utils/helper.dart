@@ -10,6 +10,11 @@ void printERROR(dynamic text, {String tag = "Harmony Music"}) {
   debugPrint("\x1B[31m[$tag]: $text\x1B[0m");
 }
 
+void printWARN(dynamic text, {String tag = 'Harmony Music'}) {
+  if (kReleaseMode) return;
+  debugPrint("\x1B[33m[$tag]: $text\x1B[34m");
+}
+
 void printWarning(dynamic text, {String tag = 'Harmony Music'}) {
   if (kReleaseMode) return;
   debugPrint("\x1B[33m[$tag]: $text\x1B[34m");
@@ -73,17 +78,17 @@ void sortAlbumNSingles(
 
   switch (sortType) {
     case SortType.Date:
-      compareFunction =
-          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase());
-      break;
-    case SortType.Name:
-    default:
       compareFunction = (a, b) {
         if (a.year == null || b.year == null) {
           return 0.compareTo(0);
         }
         return a.year!.compareTo(b.year!);
       };
+      break;
+    case SortType.Name:
+    default:
+      compareFunction =
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase());
       break;
   }
 

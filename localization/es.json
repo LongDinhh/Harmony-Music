@@ -92,6 +92,8 @@
     "favorites": "Favoritos",
     "dark": "Oscuro",
     "home": "Inicio",
+    "songs": "Canciones",
+    "music": "Música",
     "cancel": "Cancelar",
     "by": "por",
     "streamingQuality": "Calidad del streaming",
@@ -105,7 +107,6 @@
     "skipSilenceDes": "El silencio se omitirá en la reproducción de la música",
     "playNext": "Siguiente",
     "errorOccuredAlert": "¡Ha ocurrido un error!",
-    "songs": "Canciones",
     "high": "Alta",
     "searchDes": "Canciones, Lista de reproducción, Álbum o Artista",
     "results": "Resultados",
@@ -266,5 +267,10 @@
     "exportingPlaylist": "Exportando lista de reproducción..",
     "exportPlaylist": "Exportar Lista de Reproducción",
     "importPlaylistDesc": "Seleccione un archivo JSON de lista de reproducción previamente exportado para importarlo",
-    "importLargeFileNote": "Nota: Las listas de reproducción grandes pueden tardar más en importarse"
+    "importLargeFileNote": "Nota: Las listas de reproducción grandes pueden tardar más en importarse",
+    "googleAccount": "Cuenta de Google",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "loggedIn": "Sesión iniciada",
+    "notLoggedIn": "Sin sesión iniciada"
 }

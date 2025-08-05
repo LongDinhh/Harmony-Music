@@ -160,52 +160,72 @@ class SongListTile extends StatelessWidget with RemoveSongFromPlaylistMixin {
               maxLines: 1,
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            trailing: SizedBox(
-              width: Get.size.width > 800 ? 80 : 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Column(
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight:
+                        MediaQuery.of(context).size.width > 800 ? 65 : 55,
+                    maxWidth: 80,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (isPlaylistOrAlbum)
                         Obx(() =>
                             playerController.currentSong.value?.id == song.id
-                                ? const Icon(
+                                ? Icon(
                                     Icons.equalizer,
+                                    size:
+                                        MediaQuery.of(context).size.width > 800
+                                            ? 18
+                                            : 14,
                                   )
                                 : const SizedBox.shrink()),
-                      Text(
-                        song.extras!['length'] ?? "",
-                        style: Theme.of(context).textTheme.titleSmall,
+                      if (isPlaylistOrAlbum &&
+                          playerController.currentSong.value?.id == song.id)
+                        const SizedBox(height: 1),
+                      Flexible(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            song.extras!['length'] ?? "",
+                            style: Theme.of(context).textTheme.titleSmall,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  if (GetPlatform.isDesktop)
-                    IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          showModalBottomSheet(
-                            constraints: const BoxConstraints(maxWidth: 500),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(10.0)),
-                            ),
-                            isScrollControlled: true,
-                            context: playerController
-                                .homeScaffoldkey.currentState!.context,
-                            //constraints: BoxConstraints(maxHeight:Get.height),
-                            barrierColor: Colors.transparent.withAlpha(100),
-                            builder: (context) => SongInfoBottomSheet(
-                              song,
-                              playlist: playlist,
-                            ),
-                          ).whenComplete(
-                              () => Get.delete<SongInfoController>());
-                        },
-                        icon: const Icon(Icons.more_vert))
-                ],
-              ),
+                ),
+                if (GetPlatform.isDesktop)
+                  IconButton(
+                      splashRadius: 20,
+                      onPressed: () {
+                        showModalBottomSheet(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(10.0)),
+                          ),
+                          isScrollControlled: true,
+                          context: playerController
+                              .homeScaffoldkey.currentState!.context,
+                          //constraints: BoxConstraints(maxHeight:Get.height),
+                          barrierColor: Colors.transparent.withAlpha(100),
+                          builder: (context) => SongInfoBottomSheet(
+                            song,
+                            playlist: playlist,
+                          ),
+                        ).whenComplete(() => Get.delete<SongInfoController>());
+                      },
+                      icon: const Icon(Icons.more_vert))
+              ],
             ),
           ),
         ));

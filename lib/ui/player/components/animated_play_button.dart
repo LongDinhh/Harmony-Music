@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:harmonymusic/ui/player/player_controller.dart';
 
 import '../../widgets/loader.dart';
+import '../../../utils/haptic_utils.dart';
 
 /// A button that animates between a play and pause icon.
 ///
@@ -20,7 +21,7 @@ class AnimatedPlayButton extends StatefulWidget {
 class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +53,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
       return IconButton(
         iconSize: widget.iconSize,
         onPressed: () {
+          HapticUtils.actionHaptic();
           isPlaying ? controller.pause() : controller.play();
         },
         icon: isLoading

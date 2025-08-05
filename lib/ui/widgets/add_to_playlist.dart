@@ -36,7 +36,7 @@ class AddToPlaylist extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Marquee(
-                          id:"createNewPlaylistx",
+                          id: "createNewPlaylistx",
                           delay: const Duration(milliseconds: 300),
                           child: Text(
                             "CreateNewPlaylist".tr,
@@ -45,7 +45,9 @@ class AddToPlaylist extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     InkWell(
                       child: const Icon(Icons.playlist_add),
                       onTap: () {
@@ -69,8 +71,10 @@ class AddToPlaylist extends StatelessWidget {
                         children: [
                           Radio(
                               value: "piped",
+                              // ignore: deprecated_member_use
                               groupValue:
                                   addToPlaylistController.playlistType.value,
+                              // ignore: deprecated_member_use
                               onChanged:
                                   addToPlaylistController.changePlaylistType),
                           Text("Piped".tr),
@@ -83,8 +87,10 @@ class AddToPlaylist extends StatelessWidget {
                         children: [
                           Radio(
                               value: "local",
+                              // ignore: deprecated_member_use
                               groupValue:
                                   addToPlaylistController.playlistType.value,
+                              // ignore: deprecated_member_use
                               onChanged:
                                   addToPlaylistController.changePlaylistType),
                           Text("local".tr),
@@ -194,9 +200,11 @@ class AddToPlaylistController extends GetxController {
     }
   }
 
-  void changePlaylistType(val) {
-    playlistType.value = val;
-    playlists.value = val == "piped" ? pipedPlaylists : localPlaylists;
+  void changePlaylistType(String? val) {
+    if (val != null) {
+      playlistType.value = val;
+      playlists.value = val == "piped" ? pipedPlaylists : localPlaylists;
+    }
   }
 
   Future<bool> addSongsToPlaylist(

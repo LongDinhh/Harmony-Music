@@ -27,15 +27,23 @@ class AppLinksController extends GetxController with ProcessLink {
     _appLinks = AppLinks();
 
     // Check initial link if app was in cold state (terminated)
-    final appLink = await _appLinks.getInitialAppLink();
-    if (appLink != null) {
-      await filterLinks(appLink);
+    try {
+      final appLink = await _appLinks.getInitialLink();
+      if (appLink != null) {
+        await filterLinks(appLink);
+      }
+    } catch (e) {
+      printERROR('Error getting initial app link: $e');
     }
 
     // Handle link when app is in warm state (front or background)
-    _linkSubscription = _appLinks.uriLinkStream.listen((uri) async {
-      await filterLinks(uri);
-    });
+    try {
+      _linkSubscription = _appLinks.uriLinkStream.listen((uri) async {
+        await filterLinks(uri);
+      });
+    } catch (e) {
+      printERROR('Error listening to app links: $e');
+    }
   }
 
   @override

@@ -176,7 +176,7 @@ class Body extends StatelessWidget {
               ? separatedContent[currentTabName]['results']
               : [],
           title: currentTabName,
-          topPadding: context.isLandscape ? 50.0 : 80.0,
+          topPadding: context.isLandscape ? 50.0 : 60.0,
           scrollController: currentTabName == "Songs"
               ? artistScreenController.songScrollController
               : currentTabName == "Videos"
@@ -264,8 +264,12 @@ class AboutArtist extends StatelessWidget {
                                       size: 20,
                                     ),
                                     splashRadius: 18,
-                                    onPressed: () => Share.share(
-                                        "https://music.youtube.com/channel/${artistScreenController.artist_.browseId}")),
+                                    onPressed: () => SharePlus.instance.share(
+                                          ShareParams(
+                                            text:
+                                                "https://music.youtube.com/channel/${artistScreenController.artist_.browseId}",
+                                          ),
+                                        )),
                               ],
                             ),
                           )

@@ -1,6 +1,7 @@
 {
     "home": "Start",
     "songs": "Lieder",
+    "music": "Musik",
     "playlists": "Wiedergabelisten",
     "albums": "Alben",
     "settings": "Einstellungen",
@@ -268,5 +269,10 @@
     "importErrorFileAccess": "Auf die ausgewählte Datei konnte nicht zugegriffen werden",
     "invalidPlaylistFile": "Ungültige Playlist Dateistruktur",
     "fileNotFound": "Datei nicht gefunden",
-    "importLargeFileNote": "Hinweis: Der Import großer Playlisten kann länger dauern"
+    "importLargeFileNote": "Hinweis: Der Import großer Playlisten kann länger dauern",
+    "googleAccount": "Google-Konto",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "loggedIn": "Angemeldet",
+    "notLoggedIn": "Nicht angemeldet"
 }

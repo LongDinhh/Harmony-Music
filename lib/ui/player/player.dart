@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '/ui/player/components/gesture_player.dart';
 import '/ui/player/components/standard_player.dart';
 import '/ui/screens/Settings/settings_screen_controller.dart';
-import '../../utils/helper.dart';
 import '../widgets/snackbar.dart';
 import '../widgets/up_next_queue.dart';
 import '/ui/player/player_controller.dart';
@@ -21,8 +20,7 @@ class Player extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    printINFO("player");
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final PlayerController playerController = Get.find<PlayerController>();
     final settingsScreenController = Get.find<SettingsScreenController>();
     return Scaffold(
@@ -32,7 +30,7 @@ class Player extends StatelessWidget {
         () => SlidingUpPanel(
           boxShadow: const [],
           minHeight: settingsScreenController.playerUi.value == 0
-              ? 65 + Get.mediaQuery.padding.bottom
+              ? 55 + MediaQuery.paddingOf(context).bottom
               : 0,
           maxHeight: size.height,
           isDraggable: !GetPlatform.isDesktop,
@@ -56,7 +54,7 @@ class Player extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 65,
+                      height: 55,
                       child: Center(
                           child: Icon(
                         color: Theme.of(context).textTheme.titleMedium!.color,
@@ -98,8 +96,8 @@ class Player extends StatelessWidget {
                             ],
                             color: Theme.of(context)
                                 .primaryColor
-                                .withOpacity(0.5)),
-                        height: 60 + Get.mediaQuery.padding.bottom,
+                                .withValues(alpha: 0.5)),
+                        height: 60 + MediaQuery.paddingOf(context).bottom,
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: Row(
@@ -134,7 +132,7 @@ class Player extends StatelessWidget {
                                       color: playerController
                                               .isQueueLoopModeEnabled.isFalse
                                           ? Colors.white24
-                                          : Colors.white.withOpacity(0.8),
+                                          : Colors.white.withValues(alpha: 0.8),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Center(child: Text("queueLoop".tr)),
@@ -160,7 +158,7 @@ class Player extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: const Center(
@@ -179,7 +177,7 @@ class Player extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: const Center(

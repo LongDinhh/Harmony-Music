@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '/ui/screens/Search/search_screen_controller.dart';
 
 import '../../../navigator.dart';
+import '../../../../utils/haptic_utils.dart';
 
 class SearchItem extends StatelessWidget {
   final String queryString;
@@ -16,6 +17,7 @@ class SearchItem extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 10, right: 20),
       onTap: () {
+        HapticUtils.screenNavigationHaptic();
         Get.toNamed(ScreenNavigationSetup.searchResultScreen,
             id: ScreenNavigationSetup.id, arguments: queryString);
         searchScreenController.addToHistryQueryList(queryString);

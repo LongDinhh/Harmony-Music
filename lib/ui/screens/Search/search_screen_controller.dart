@@ -23,9 +23,9 @@ class SearchScreenController extends GetxController with ProcessLink {
     super.onInit();
   }
 
-  _init() async {
-    if(GetPlatform.isDesktop){
-      focusNode.addListener((){
+  Future<void> _init() async {
+    if (GetPlatform.isDesktop) {
+      focusNode.addListener(() {
         isSearchBarInFocus.value = focusNode.hasFocus;
       });
     }
@@ -34,15 +34,27 @@ class SearchScreenController extends GetxController with ProcessLink {
   }
 
   Future<void> onChanged(String text) async {
-    if(text.contains("https://")){
-      urlPasted.value = true; 
+    if (text.contains("https://")) {
+      urlPasted.value = true;
       return;
     }
     urlPasted.value = false;
+
+    // Kiểm tra input có rỗng không
+    if (text.trim().isEmpty) {
+      suggestionList.clear();
+      return;
+    }
+
     suggestionList.value = await musicServices.getSearchSuggestion(text);
   }
 
   Future<void> suggestionInput(String txt) async {
+    // Kiểm tra input có rỗng không
+    if (txt.trim().isEmpty) {
+      return;
+    }
+
     textInputController.text = txt;
     textInputController.selection =
         TextSelection.collapsed(offset: textInputController.text.length);
@@ -50,6 +62,11 @@ class SearchScreenController extends GetxController with ProcessLink {
   }
 
   Future<void> addToHistryQueryList(String txt) async {
+    // Kiểm tra input có rỗng không
+    if (txt.trim().isEmpty) {
+      return;
+    }
+
     if (historyQuerylist.length > 9) {
       final queryForRemoval = queryBox.getAt(0);
       await queryBox.deleteAt(0);

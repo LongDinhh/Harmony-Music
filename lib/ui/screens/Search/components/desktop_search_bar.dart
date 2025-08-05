@@ -5,6 +5,7 @@ import 'search_item.dart';
 import '/ui/screens/Search/search_screen_controller.dart';
 
 import '../../../navigator.dart';
+import '../../../../utils/haptic_utils.dart';
 
 class DesktopSearchBar extends StatelessWidget {
   const DesktopSearchBar({super.key});
@@ -30,6 +31,7 @@ class DesktopSearchBar extends StatelessWidget {
                 searchScreenController.reset();
                 return;
               }
+              HapticUtils.screenNavigationHaptic();
               Get.toNamed(ScreenNavigationSetup.searchResultScreen,
                   id: ScreenNavigationSetup.id, arguments: val);
               searchScreenController.addToHistryQueryList(val);

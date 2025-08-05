@@ -1,6 +1,7 @@
 {
   "home": "Home",
   "songs": "Songs",
+  "music": "Music",
   "playlists": "Playlists",
   "albums": "Albums",
   "album": "Album",
@@ -155,7 +156,8 @@
   "by": "by",
   "urlSearchDes": "Url detected click on it to open/play associated content",
   "search": "Search",
-  "searchDes": "Songs, Playlist, Album or Artist",
+      "searchDes": "Songs, Playlist, Album or Artist",
+    "searchHint": "Search songs, artists...",
   "searchRes": "Search results",
   "for1": "for",
   "videos": "Videos",
@@ -263,5 +265,10 @@
   "invalidPlaylistFile": "Invalid playlist file structure",
   "importErrorDatabase": "Error saving to database",
   "fileNotFound": "File not found",
-  "importLargeFileNote": "Note: Large playlists may take longer to import"
+  "importLargeFileNote": "Note: Large playlists may take longer to import",
+  "googleAccount": "Google Account",
+  "login": "Login",
+  "logout": "Logout",
+  "loggedIn": "Logged in",
+  "notLoggedIn": "Not logged in"
 }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import '../../utils/haptic_utils.dart';
 
 import '../../models/playling_from.dart';
 import '../../services/downloader.dart';
@@ -12,7 +13,7 @@ import '../screens/Playlist/playlist_screen_controller.dart';
 import '../widgets/snackbar.dart';
 import '/services/synced_lyrics_service.dart';
 import '/ui/screens/Settings/settings_screen_controller.dart';
-import '../../services/windows_audio_service.dart';
+
 import '../../utils/helper.dart';
 import '/models/media_Item_builder.dart';
 import '../screens/Home/home_screen_controller.dart';
@@ -45,6 +46,7 @@ class PlayerController extends GetxController
   final isSleepTimerActive = false.obs;
   final isSleepEndOfSongActive = false.obs;
   final volume = 100.obs;
+  final isKeyboardVisible = false.obs; // Track keyboard visibility
 
   final progressBarStatus = ProgressBarState(
           buffered: Duration.zero, current: Duration.zero, total: Duration.zero)
@@ -87,9 +89,6 @@ class PlayerController extends GetxController
 
   @override
   void onReady() {
-    if (GetPlatform.isWindows) {
-      Get.put(WindowsAudioService());
-    }
     _restorePrevSession();
     super.onReady();
   }
@@ -158,6 +157,7 @@ class PlayerController extends GetxController
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
+      isKeyboardVisible.value = visible; // Update keyboard state
       visible ? playerPanelController.hide() : playerPanelController.show();
     });
   }
@@ -175,8 +175,9 @@ class PlayerController extends GetxController
       } else if (processingState != AudioProcessingState.completed) {
         buttonState.value = PlayButtonState.playing;
       } else {
-        _audioHandler.seek(Duration.zero);
-        _audioHandler.pause();
+        // Khi bài hát kết thúc, chỉ set button state thành paused
+        // Không seek về đầu và pause để cho audio handler xử lý auto-advance
+        buttonState.value = PlayButtonState.paused;
       }
     });
   }
@@ -229,26 +230,34 @@ class PlayerController extends GetxController
         val.buffered = oldState.buffered;
       });
       if (mediaItem != null) {
-        printINFO(mediaItem.title);
-        _newSongFlag = true;
-        isCurrentSongBuffered.value = false;
-        currentSong.value = mediaItem;
-        currentSongIndex.value = currentQueue
-            .indexWhere((element) => element.id == currentSong.value!.id);
-        await _checkFav();
-        await _addToRP(currentSong.value!);
-        if (isRadioModeOn && (currentSong.value!.id == currentQueue.last.id)) {
-          await _addRadioContinuation(radioInitiatorItem!);
-        }
-        lyrics.value = {"synced": "", "plainLyrics": ""};
-        showLyricsflag.value = false;
-        if (isDesktopLyricsDialogOpen) {
-          Navigator.pop(Get.context!);
-        }
+        // Chỉ xử lý khi thực sự là bài hát mới (khác ID)
+        final isNewSong = currentSong.value?.id != mediaItem.id;
+        if (isNewSong) {
+          printINFO(mediaItem.title);
+          _newSongFlag = true;
+          isCurrentSongBuffered.value = false;
+          currentSong.value = mediaItem;
+          currentSongIndex.value = currentQueue
+              .indexWhere((element) => element.id == currentSong.value!.id);
+          await _checkFav();
+          await _addToRP(currentSong.value!);
+          if (isRadioModeOn &&
+              (currentSong.value!.id == currentQueue.last.id)) {
+            await _addRadioContinuation(radioInitiatorItem!);
+          }
+          lyrics.value = {"synced": "", "plainLyrics": ""};
+          showLyricsflag.value = false;
+          if (isDesktopLyricsDialogOpen) {
+            Navigator.pop(Get.context!);
+          }
 
-        // reset player visible state when player is in gesture mode
-        if (Get.find<SettingsScreenController>().playerUi.value == 1) {
-          gesturePlayerVisibleState.value = 2;
+          // reset player visible state when player is in gesture mode
+          if (Get.find<SettingsScreenController>().playerUi.value == 1) {
+            gesturePlayerVisibleState.value = 2;
+          }
+        } else {
+          // Chỉ cập nhật currentSong nếu cùng ID để giữ metadata mới (như duration)
+          currentSong.value = mediaItem;
         }
       }
     });
@@ -287,8 +296,7 @@ class PlayerController extends GetxController
   void _listenForCustomEvents() {
     _audioHandler.customEvent.listen((event) {
       if (event['eventType'] == 'playFromMediaId') {
-        _playViaAndroidAuto(
-            event['songId'], event['libraryId']);
+        _playViaAndroidAuto(event['songId'], event['libraryId']);
       }
     });
   }
@@ -330,8 +338,12 @@ class PlayerController extends GetxController
         await _audioHandler.customAction("playByIndex", {"index": 0});
       } else {
         if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+          // Lưu recentSongId ngay khi gọi pushSongToQueue
+          Hive.box("AppPrefs").put("recentSongId", mediaItem!.id);
+          printINFO(
+              "BOLI - Saved recentSongId in pushSongToQueue: ${mediaItem.id}");
           Get.find<HomeScreenController>()
-              .changeDiscoverContent("BOLI", songId: mediaItem!.id);
+              .changeDiscoverContent("BOLI", songId: mediaItem.id);
         }
       }
     });
@@ -364,6 +376,12 @@ class PlayerController extends GetxController
         playfrom ?? PlaylingFrom(type: PlaylingFromType.SELECTION);
 
     //for changing home content based on last interation
+    // Lưu recentSongId ngay khi phát nhạc
+    if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
+      Hive.box("AppPrefs").put("recentSongId", mediaItems[index].id);
+      printINFO("BOLI - Saved recentSongId: ${mediaItems[index].id}");
+    }
+
     Future.delayed(const Duration(seconds: 3), () {
       if (Hive.box("AppPrefs").get("discoverContentType") == "BOLI") {
         Get.find<HomeScreenController>()
@@ -424,8 +442,7 @@ class PlayerController extends GetxController
     _audioHandler.addQueueItems(listToEnqueue);
   }
 
-  void _playViaAndroidAuto(
-      String songId, String libraryId) {
+  void _playViaAndroidAuto(String songId, String libraryId) {
     Hive.openBox(libraryId).then((box) {
       List<MediaItem> songList = [];
       final songJson = box.values.toList();
@@ -483,7 +500,7 @@ class PlayerController extends GetxController
     }
 
     if (initFlagForPlayer) {
-      final miniPlayerHeight = isWideScreen ? 105.0 : 75.0;
+      final miniPlayerHeight = isWideScreen ? 95.0 : 65.0;
       if (Get.find<SettingsScreenController>().isBottomNavBarEnabled.isFalse ||
           getCurrentRouteName() != '/homeScreen') {
         playerPanelMinHeight.value =
@@ -508,6 +525,7 @@ class PlayerController extends GetxController
   }
 
   Future<void> toggleShuffleMode() async {
+    HapticUtils.actionHaptic();
     final shuffleModeEnabled = isShuffleModeEnabled.value;
     shuffleModeEnabled
         ? _audioHandler.setShuffleMode(AudioServiceShuffleMode.none)
@@ -537,15 +555,18 @@ class PlayerController extends GetxController
   }
 
   void play() {
+    HapticUtils.actionHaptic();
     _audioHandler.play();
   }
 
   void pause() {
+    HapticUtils.actionHaptic();
     _audioHandler.pause();
   }
 
   void playPause() {
     if (initFlagForPlayer) return;
+    HapticUtils.actionHaptic();
     _audioHandler.playbackState.value.playing ? pause() : play();
     // for gesture player
     if (Get.find<SettingsScreenController>().playerUi.value == 1) {
@@ -557,10 +578,12 @@ class PlayerController extends GetxController
   }
 
   void prev() {
+    HapticUtils.actionHaptic();
     _audioHandler.skipToPrevious();
   }
 
   Future<void> next() async {
+    HapticUtils.actionHaptic();
     await _audioHandler.skipToNext();
   }
 
@@ -582,6 +605,7 @@ class PlayerController extends GetxController
   }
 
   Future<void> toggleLoopMode() async {
+    HapticUtils.actionHaptic();
     isLoopModeEnabled.isFalse
         ? _audioHandler.setRepeatMode(AudioServiceRepeatMode.one)
         : _audioHandler.setRepeatMode(AudioServiceRepeatMode.none);
@@ -667,7 +691,7 @@ class PlayerController extends GetxController
   }
 
   // ignore: prefer_typing_uninitialized_variables
-  var recentItem;
+  MediaItem? recentItem;
 
   /// This function is used to add a mediaItem/Song to Recently played playlist
   Future<void> _addToRP(MediaItem mediaItem) async {
@@ -796,9 +820,7 @@ class PlayerController extends GetxController
     scrollController.dispose();
     gesturePlayerStateAnimationController?.dispose();
     sleepTimer?.cancel();
-    if (GetPlatform.isWindows) {
-      Get.delete<WindowsAudioService>();
-    }
+
     super.dispose();
   }
 }

@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
+import '../../../utils/scroll_controller_manager.dart';
 
 import '../../../utils/house_keeping.dart';
 import '../../widgets/add_to_playlist.dart';
@@ -208,7 +209,7 @@ class LibrarySongsController extends GetxController {
 }
 
 class LibraryPlaylistsController extends GetxController
-    with GetTickerProviderStateMixin {
+    with GetTickerProviderStateMixin, ScrollControllerManagerMixin {
   late AnimationController controller;
 
   final playlistCreationMode = "local".obs;
@@ -239,6 +240,8 @@ class LibraryPlaylistsController extends GetxController
   final creationInProgress = false.obs;
   final textInputController = TextEditingController();
   List<Playlist> tempListContainer = [];
+  // ScrollController now managed by ScrollControllerManagerMixin
+  // Access via getOrCreateScrollController('grid') method
 
   // Add these RxBool to track import progress
   final isImporting = false.obs;
@@ -456,6 +459,7 @@ class LibraryPlaylistsController extends GetxController
   void dispose() {
     textInputController.dispose();
     controller.dispose();
+    // ScrollControllers are automatically disposed by ScrollControllerManagerMixin
     super.dispose();
   }
 

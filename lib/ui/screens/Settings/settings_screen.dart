@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmonymusic/utils/helper.dart';
 import 'package:harmonymusic/utils/lang_mapping.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/common_dialog_widget.dart';
 import '../../widgets/cust_switch.dart';
@@ -46,44 +45,99 @@ class SettingsScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 200, top: 20),
             children: [
-              Obx(
-                () => settingsController.isNewVersionAvailable.value
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                            top: 8.0, right: 10, bottom: 8.0),
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: ListTile(
-                            onTap: () {
-                              launchUrl(
-                                Uri.parse(
-                                  'https://github.com/anandnet/Harmony-Music/releases/latest',
-                                ),
-                                mode: LaunchMode.externalApplication,
-                              );
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            tileColor: Theme.of(context).colorScheme.secondary,
-                            contentPadding:
-                                const EdgeInsets.only(left: 8, right: 10),
-                            leading:
-                                const CircleAvatar(child: Icon(Icons.download)),
-                            title: Text("newVersionAvailable".tr),
-                            visualDensity: const VisualDensity(horizontal: -2),
-                            subtitle: Text(
-                              "goToDownloadPage".tr,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.white70, fontSize: 13),
+              // Google Account - Flat Block
+              Obx(() {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                      color: Theme.of(context).dividerColor.withAlpha(25),
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.account_circle,
+                          size: 24,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "googleAccount".tr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                settingsController.isGoogleLoggedIn.value
+                                    ? "Chúc bạn một ngày tốt lành"
+                                    : "Đăng nhập để lưu những bài hát yêu thích",
+                                style: Theme.of(context).textTheme.bodySmall,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (settingsController.isGoogleLoggedIn.value) {
+                              settingsController.logoutGoogle();
+                            } else {
+                              settingsController.loginWithGoogle(context);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                settingsController.isGoogleLoggedIn.value
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .error
+                                        .withAlpha(25)
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withAlpha(25),
+                            foregroundColor:
+                                settingsController.isGoogleLoggedIn.value
+                                    ? Theme.of(context).colorScheme.error
+                                    : Theme.of(context).colorScheme.primary,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 8.0,
+                            ),
+                          ),
+                          child: Text(
+                            settingsController.isGoogleLoggedIn.value
+                                ? "logout".tr
+                                : "login".tr,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                      )
-                    : const SizedBox.shrink(),
-              ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
               CustomExpansionTile(
                 title: "personalisation".tr,
                 icon: Icons.palette,
@@ -166,19 +220,17 @@ class SettingsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (!isDesktop)
-                    ListTile(
-                        contentPadding:
-                            const EdgeInsets.only(left: 5, right: 10),
-                        title: Text("enableBottomNav".tr),
-                        subtitle: Text("enableBottomNavDes".tr,
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        trailing: Obx(
-                          () => CustSwitch(
-                              value: settingsController
-                                  .isBottomNavBarEnabled.isTrue,
-                              onChanged: settingsController.enableBottomNavBar),
-                        )),
+                  ListTile(
+                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
+                      title: Text("enableBottomNav".tr),
+                      subtitle: Text("enableBottomNavDes".tr,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      trailing: Obx(
+                        () => CustSwitch(
+                            value:
+                                settingsController.isBottomNavBarEnabled.isTrue,
+                            onChanged: settingsController.enableBottomNavBar),
+                      )),
                   ListTile(
                       contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("disableTransitionAnimation".tr),
@@ -261,33 +313,33 @@ class SettingsScreen extends StatelessWidget {
                                   settingsController.toggleCacheHomeScreenData),
                         )),
                     ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 5, right: 10, top: 0),
-                      title: Text("Piped".tr),
-                      subtitle: Text("linkPipedDes".tr,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      trailing: TextButton(
-                          child: Obx(() => Text(
-                                settingsController.isLinkedWithPiped.value
-                                    ? "unLink".tr
-                                    : "link".tr,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(fontSize: 15),
-                              )),
-                          onPressed: () {
-                            if (settingsController.isLinkedWithPiped.isFalse) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => const LinkPiped(),
-                              ).whenComplete(
-                                  () => Get.delete<PipedLinkedController>());
-                            } else {
-                              settingsController.unlinkPiped();
-                            }
-                          }),
-                    ),
+                        contentPadding:
+                            const EdgeInsets.only(left: 5, right: 10, top: 0),
+                        title: Text("Piped".tr),
+                        subtitle: Text("linkPipedDes".tr,
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        trailing: TextButton(
+                            child: Obx(() => Text(
+                                  settingsController.isLinkedWithPiped.value
+                                      ? "unLink".tr
+                                      : "link".tr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(fontSize: 15),
+                                )),
+                            onPressed: () {
+                              if (settingsController
+                                  .isLinkedWithPiped.isFalse) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => const LinkPiped(),
+                                ).whenComplete(
+                                    () => Get.delete<PipedLinkedController>());
+                              } else {
+                                settingsController.unlinkPiped();
+                              }
+                            })),
                     Obx(() => (settingsController.isLinkedWithPiped.isTrue)
                         ? ListTile(
                             contentPadding: const EdgeInsets.only(
@@ -358,7 +410,7 @@ class SettingsScreen extends StatelessWidget {
                       settingsController.showDownLoc();
                     },
                   ),
-                  if (GetPlatform.isAndroid)
+                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
                     ListTile(
                         contentPadding:
                             const EdgeInsets.only(left: 5, right: 10),
@@ -435,7 +487,7 @@ class SettingsScreen extends StatelessWidget {
                           onChanged: settingsController.toggleAutoOpenPlayer),
                     ),
                   ),
-                  if (!isDesktop)
+                  if (GetPlatform.isAndroid)
                     ListTile(
                       contentPadding:
                           const EdgeInsets.only(left: 5, right: 10, top: 0),
@@ -564,7 +616,7 @@ class SettingsScreen extends StatelessWidget {
                           },
                         )
                       : const SizedBox.shrink()),
-                  if (GetPlatform.isAndroid)
+                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
                     ListTile(
                       contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("exportDowloadedFiles".tr),
@@ -579,7 +631,7 @@ class SettingsScreen extends StatelessWidget {
                       ).whenComplete(
                           () => Get.delete<ExportFileDialogController>()),
                     ),
-                  if (GetPlatform.isAndroid)
+                  if (GetPlatform.isAndroid || GetPlatform.isIOS)
                     ListTile(
                       contentPadding:
                           const EdgeInsets.only(left: 5, right: 10, top: 0),
@@ -648,52 +700,9 @@ class SettingsScreen extends StatelessWidget {
                         });
                       },
                     ),
-                  ]),
-              CustomExpansionTile(
-                icon: Icons.info,
-                title: "appInfo".tr,
-                children: [
-                  ListTile(
-                    contentPadding: const EdgeInsets.only(left: 5, right: 10),
-                    title: Text("github".tr),
-                    subtitle: Text(
-                      "${"githubDes".tr}${((Get.find<PlayerController>().playerPanelMinHeight.value) == 0 || !isBottomNavActive) ? "" : "\n\n${settingsController.currentVersion} ${"by".tr} anandnet"}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    isThreeLine: true,
-                    onTap: () {
-                      launchUrl(
-                        Uri.parse(
-                          'https://github.com/anandnet/Harmony-Music',
-                        ),
-                        mode: LaunchMode.externalApplication,
-                      );
-                    },
-                  ),
-                  const Divider(),
-                  SizedBox(
-                    child: Column(
-                      children: [
-                        Text(
-                          "Harmony Music",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        Text(settingsController.currentVersion,
-                            style: Theme.of(context).textTheme.titleMedium)
-                      ],
-                    ),
-                  ),
-                ],
-              )
+                  ])
             ],
           )),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              "${settingsController.currentVersion} ${"by".tr} anandnet",
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
         ],
       ),
     );
@@ -833,9 +842,11 @@ Widget radioWidget(
         },
         leading: Radio(
             value: value,
+            // ignore: deprecated_member_use
             groupValue: value.runtimeType == ThemeType
                 ? controller.themeModetype.value
                 : controller.discoverContentType.value,
+            // ignore: deprecated_member_use
             onChanged: value.runtimeType == ThemeType
                 ? controller.onThemeChange
                 : controller.onContentChange),

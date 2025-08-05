@@ -1,6 +1,13 @@
 import 'dart:io';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+class CookieYT extends YoutubeHttpClient {
+  @override
+  Map<String, String> get headers => {
+        ...super.headers,
+      };
+}
+
 class StreamProvider {
   final bool playable;
   final List<Audio>? audioFormats;
@@ -9,10 +16,13 @@ class StreamProvider {
       {required this.playable, this.audioFormats, this.statusMSG = ""});
 
   static Future<StreamProvider> fetch(String videoId) async {
-    final yt = YoutubeExplode();
-    
+    final yt = YoutubeExplode(CookieYT());
+
     try {
-      final res = await yt.videos.streamsClient.getManifest(videoId);
+      final res =
+          await yt.videos.streamsClient.getManifest(videoId, ytClients: [
+        YoutubeApiClient.androidVr,
+      ]);
       final audio = res.audioOnly;
       return StreamProvider(
           playable: true,
@@ -37,7 +47,7 @@ class StreamProvider {
       } else if (e is VideoUnplayableException) {
         return StreamProvider(
           playable: false,
-          statusMSG: e.reason ?? "Song is unplayable",
+          statusMSG: "Song is unplayable",
         );
       } else if (e is VideoRequiresPurchaseException) {
         return StreamProvider(
@@ -116,7 +126,7 @@ class Audio {
         "size": size
       };
 
-  factory Audio.fromJson(json) => Audio(
+  factory Audio.fromJson(Map<String, dynamic> json) => Audio(
       audioCodec: (json["audioCodec"] as String).contains("mp4a")
           ? Codec.mp4a
           : Codec.opus,

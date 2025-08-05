@@ -22,6 +22,7 @@ class SongsLibraryWidget extends StatelessWidget {
           ? const EdgeInsets.only(left: 15)
           : EdgeInsets.only(left: 5.0, top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           isBottomNavActive
@@ -35,59 +36,59 @@ class SongsLibraryWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-          Obx(() {
-            final libSongsController = Get.find<LibrarySongsController>();
-            return SortWidget(
-              tag: "LibSongSort",
-              screenController: libSongsController,
-              itemCountTitle: "${libSongsController.librarySongsList.length}",
-              itemIcon: Icons.music_note,
-              titleLeftPadding: 9,
-              requiredSortTypes: buildSortTypeSet(true, true),
-              isSearchFeatureRequired: true,
-              isSongDeletetioFeatureRequired: true,
-              onSort: (type, ascending) {
-                libSongsController.onSort(type, ascending);
-              },
-              onSearch: libSongsController.onSearch,
-              onSearchClose: libSongsController.onSearchClose,
-              onSearchStart: libSongsController.onSearchStart,
-              startAdditionalOperation:
-                  libSongsController.startAdditionalOperation,
-              selectAll: libSongsController.selectAll,
-              performAdditionalOperation:
-                  libSongsController.performAdditionalOperation,
-              cancelAdditionalOperation:
-                  libSongsController.cancelAdditionalOperation,
-            );
-          }),
-          GetX<LibrarySongsController>(builder: (controller) {
-            return controller.librarySongsList.isNotEmpty
-                ? (controller.additionalOperationMode.value ==
-                        OperationMode.none
-                    ? ListWidget(
-                        controller.librarySongsList,
-                        "library Songs",
-                        true,
-                        isPlaylistOrAlbum: true,
-                        playlist: Playlist(
-                            title: "Library Songs",
-                            playlistId: "SongsDownloads",
-                            thumbnailUrl: "",
-                            isCloudPlaylist: false),
-                      )
-                    : ModificationList(
-                        mode: controller.additionalOperationMode.value,
-                        screenController: controller,
-                      ))
-                : Expanded(
-                    child: Center(
-                        child: Text(
-                      "noOfflineSong".tr,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    )),
-                  );
-          })
+          GetBuilder<LibrarySongsController>(
+              init: LibrarySongsController(),
+              builder: (libSongsController) => Obx(() => SortWidget(
+                    tag: "LibSongSort",
+                    screenController: libSongsController,
+                    itemCountTitle:
+                        "${libSongsController.librarySongsList.length}",
+                    itemIcon: Icons.music_note,
+                    titleLeftPadding: 9,
+                    requiredSortTypes: buildSortTypeSet(true, true),
+                    isSearchFeatureRequired: true,
+                    isSongDeletetioFeatureRequired: true,
+                    onSort: (type, ascending) {
+                      libSongsController.onSort(type, ascending);
+                    },
+                    onSearch: libSongsController.onSearch,
+                    onSearchClose: libSongsController.onSearchClose,
+                    onSearchStart: libSongsController.onSearchStart,
+                    startAdditionalOperation:
+                        libSongsController.startAdditionalOperation,
+                    selectAll: libSongsController.selectAll,
+                    performAdditionalOperation:
+                        libSongsController.performAdditionalOperation,
+                    cancelAdditionalOperation:
+                        libSongsController.cancelAdditionalOperation,
+                  ))),
+          GetBuilder<LibrarySongsController>(
+              init: LibrarySongsController(),
+              builder: (controller) => controller.librarySongsList.isNotEmpty
+                  ? (controller.additionalOperationMode.value ==
+                          OperationMode.none
+                      ? ListWidget(
+                          controller.librarySongsList,
+                          "library Songs",
+                          true,
+                          isPlaylistOrAlbum: true,
+                          playlist: Playlist(
+                              title: "Library Songs",
+                              playlistId: "SongsDownloads",
+                              thumbnailUrl: "",
+                              isCloudPlaylist: false),
+                        )
+                      : ModificationList(
+                          mode: controller.additionalOperationMode.value,
+                          screenController: controller,
+                        ))
+                  : Expanded(
+                      child: Center(
+                          child: Text(
+                        "noOfflineSong".tr,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      )),
+                    ))
         ],
       ),
     );
@@ -102,9 +103,12 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final libralbumCntrller = Get.find<LibraryAlbumsController>();
-    final librplstCntrller = Get.find<LibraryPlaylistsController>();
-    final settingscrnController = Get.find<SettingsScreenController>();
+    final libralbumCntrller =
+        Get.put(LibraryAlbumsController(), permanent: true);
+    final librplstCntrller =
+        Get.put(LibraryPlaylistsController(), permanent: true);
+    final settingscrnController =
+        Get.put(SettingsScreenController(), permanent: true);
     final size = MediaQuery.of(context).size;
 
     const double itemHeight = 180;
@@ -116,6 +120,7 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
           ? const EdgeInsets.only(left: 15)
           : EdgeInsets.only(top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 5.0),
@@ -198,8 +203,8 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
                               crossAxisCount: columns,
                               childAspectRatio: (itemWidth / itemHeight),
                             ),
-                            controller:
-                                ScrollController(keepScrollOffset: false),
+                            controller: Get.find<LibraryPlaylistsController>()
+                                .getOrCreateScrollController('grid'),
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             padding:
@@ -237,13 +242,14 @@ class LibraryArtistWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cntrller = Get.find<LibraryArtistsController>();
+    final cntrller = Get.put(LibraryArtistsController(), permanent: true);
     final topPadding = context.isLandscape ? 50.0 : 90.0;
     return Padding(
       padding: isBottomNavActive
           ? const EdgeInsets.only(left: 15)
           : EdgeInsets.only(left: 5, top: topPadding),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           isBottomNavActive
               ? const SizedBox(

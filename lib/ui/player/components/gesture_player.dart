@@ -11,6 +11,7 @@ import 'package:widget_marquee/widget_marquee.dart';
 import '../../widgets/songinfo_bottom_sheet.dart';
 import '../../utils/theme_controller.dart';
 import '../player_controller.dart';
+import '../../../utils/haptic_utils.dart';
 
 class GesturePlayer extends StatelessWidget {
   const GesturePlayer({super.key});
@@ -25,12 +26,15 @@ class GesturePlayer extends StatelessWidget {
           child: const BackgroudImage(),
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity! < 0) {
+              HapticUtils.actionHaptic();
               playerController.next();
             } else if (details.primaryVelocity! > 0) {
+              HapticUtils.actionHaptic();
               playerController.prev();
             }
           },
           onDoubleTap: () {
+            HapticUtils.actionHaptic();
             playerController.playPause();
           },
           onLongPress: () {
@@ -73,14 +77,14 @@ class GesturePlayer extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: EdgeInsets.only(
-                bottom: Get.mediaQuery.padding.bottom != 0
-                    ? Get.mediaQuery.padding.bottom + 10
+                bottom: MediaQuery.paddingOf(context).bottom != 0
+                    ? MediaQuery.paddingOf(context).bottom + 10
                     : 20,
                 left: 20,
                 right: 20),
             child: Container(
               decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.3),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(10)),
               constraints: const BoxConstraints(maxWidth: 500),
               height: 142,
@@ -196,7 +200,7 @@ class GesturePlayer extends StatelessWidget {
                                                     .textTheme
                                                     .titleLarge!
                                                     .color!
-                                                    .withOpacity(0.2),
+                                                    .withValues(alpha: 0.2),
                                           ));
                                     }),
                                     IconButton(
@@ -219,7 +223,7 @@ class GesturePlayer extends StatelessWidget {
                                                   .textTheme
                                                   .titleLarge!
                                                   .color!
-                                                  .withOpacity(0.2),
+                                                  .withValues(alpha: 0.2),
                                         ),
                                       ),
                                     ),
@@ -268,7 +272,7 @@ class GesturePlayer extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: AbsorbPointer(
             child: SizedBox(
-              height: Get.mediaQuery.padding.bottom + 20,
+              height: MediaQuery.paddingOf(context).bottom + 20,
               child: Container(),
             ),
           ),

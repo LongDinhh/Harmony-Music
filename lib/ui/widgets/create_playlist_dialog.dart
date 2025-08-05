@@ -61,8 +61,10 @@ class CreateNRenamePlaylistPopup extends StatelessWidget {
                         children: [
                           Radio(
                               value: "piped",
+                              // ignore: deprecated_member_use
                               groupValue:
                                   librPlstCntrller.playlistCreationMode.value,
+                              // ignore: deprecated_member_use
                               onChanged: librPlstCntrller.changeCreationMode),
                           Text("Piped".tr),
                         ],
@@ -74,8 +76,10 @@ class CreateNRenamePlaylistPopup extends StatelessWidget {
                         children: [
                           Radio(
                               value: "local",
+                              // ignore: deprecated_member_use
                               groupValue:
                                   librPlstCntrller.playlistCreationMode.value,
+                              // ignore: deprecated_member_use
                               onChanged: librPlstCntrller.changeCreationMode),
                           Text("local".tr),
                         ],

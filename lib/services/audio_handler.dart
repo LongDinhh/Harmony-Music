@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/services.dart';
 
-
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -28,8 +27,6 @@ import '/models/media_Item_builder.dart';
 import '/services/utils.dart';
 import '../ui/screens/Settings/settings_screen_controller.dart';
 import '../ui/screens/Library/library_controller.dart';
-// ignore: unused_import, implementation_imports, depend_on_referenced_packages
-import "package:media_kit/src/player/platform_player.dart" show MPVLogLevel;
 
 Future<AudioHandler> initAudioService() async {
   return await AudioService.init(
@@ -46,7 +43,7 @@ Future<AudioHandler> initAudioService() async {
 
 class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   // ignore: prefer_typing_uninitialized_variables
-  late final _cacheDir;
+  late final String _cacheDir;
   late AudioPlayer _player;
   late MediaLibrary _mediaLibrary;
   // ignore: prefer_typing_uninitialized_variables
@@ -64,14 +61,22 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   // list of shuffled queue songs ids
   List<String> shuffledQueue = [];
 
-  final _playList =
-      ConcatenatingAudioSource(children: [], useLazyPreparation: false);
-
   MyAudioHandler() {
-    if (GetPlatform.isWindows || GetPlatform.isLinux) {
-      JustAudioMediaKit.title = 'Harmony music';
-      JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
-    }
+    JustAudioMediaKit.ensureInitialized(
+      linux: false,
+      windows: false,
+      android: GetPlatform.isAndroid,
+      iOS: GetPlatform.isIOS,
+      macOS: false,
+    );
+
+    print("GetPlatform.isAndroid: ${GetPlatform.isAndroid}");
+    print("GetPlatform.isIOS: ${GetPlatform.isIOS}");
+
+    // Configure after initialization
+    JustAudioMediaKit.title = 'Harmony music';
+    JustAudioMediaKit.protocolWhitelist = const ['http', 'https', 'file'];
+
     _mediaLibrary = MediaLibrary();
     _player = AudioPlayer(
         audioLoadConfiguration: const AudioLoadConfiguration(
@@ -86,7 +91,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     _notifyAudioHandlerAboutPlaybackEvents();
     _listenToPlaybackForNextSong();
     _listenForSequenceStateChanges();
-    final appPrefsBox = Hive.box("appPrefs");
+    final appPrefsBox = Hive.box("AppPrefs");
     _player
         .setSkipSilenceEnabled(appPrefsBox.get("skipSilenceEnabled") ?? false);
     loopModeEnabled = appPrefsBox.get("isLoopModeEnabled") ?? false;
@@ -110,7 +115,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
   void _addEmptyList() {
     try {
-      _player.setAudioSource(_playList);
+      // No need to set empty source in new API
+      // Player will be ready to accept audio sources when needed
     } catch (r) {
       printERROR(r.toString());
     }
@@ -169,11 +175,16 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       } else {
         printERROR('An error occurred: $e');
         Duration curPos = _player.position;
-        await _player.stop();
+        // Use gentle approach for error handling
+        if (_player.playing) {
+          await _player.pause();
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        await _player.seek(Duration.zero);
 
         if (isPlayingUsingLockCachingSource &&
             e.toString().contains("Connection closed while receiving data")) {
-          await _player.seek(curPos, index: 0);
+          await _player.seek(curPos);
           await _player.play();
           return;
         }
@@ -188,8 +199,13 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         //     _player.play();
         //   }
         // });
+        // Use gentle approach for error retry
+        if (_player.playing) {
+          await _player.pause();
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        await _player.seek(Duration.zero);
         customAction("playByIndex", {'index': currentIndex, 'newUrl': true});
-        await _player.seek(curPos, index: 0);
       }
     });
   }
@@ -199,7 +215,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         ? 200
         : GetPlatform.isLinux
             ? 700
-            : 0;
+            : GetPlatform.isAndroid || GetPlatform.isIOS
+                ? 100 // Thêm offset nhỏ cho mobile để tránh bị cắt âm thanh
+                : 0;
     _player.positionStream.listen((value) async {
       if (_player.duration != null && _player.duration?.inSeconds != 0) {
         if (value.inMilliseconds >=
@@ -292,10 +310,38 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
     printINFO("Playing Using AudioSource.uri");
     isPlayingUsingLockCachingSource = false;
-    return AudioSource.uri(
-      Uri.tryParse(url)!,
-      tag: mediaItem,
-    );
+
+    // Add headers for iOS compatibility
+    final headers = {
+      'User-Agent':
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+    };
+
+    // Check if URL is a local file path and add file:// scheme if needed
+    Uri uri;
+    if ((url.startsWith('/') ||
+            (url.length > 1 && url[1] == ':' && GetPlatform.isWindows)) &&
+        !url.startsWith('http') &&
+        !url.startsWith('file://')) {
+      // This is a local file path, add file:// scheme
+      uri = Uri.file(url);
+      printINFO("Playing local file: ${uri.toString()}");
+      return AudioSource.uri(
+        uri,
+        tag: mediaItem,
+      );
+    } else {
+      // This is a network URL, use with headers
+      uri = Uri.tryParse(url)!;
+      return AudioSource.uri(
+        uri,
+        tag: mediaItem,
+        headers: headers,
+      );
+    }
   }
 
   @override
@@ -327,6 +373,12 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         (GetPlatform.isDesktop &&
             (_player.duration == null ||
                 _player.duration?.inMilliseconds == 0))) {
+      // Use gentle approach before loading new song
+      if (_player.playing) {
+        await _player.pause();
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+      await _player.seek(Duration.zero);
       await customAction("playByIndex", {'index': currentIndex});
       return;
     }
@@ -353,6 +405,12 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= queue.value.length) return;
+    // Use gentle approach before skipping to queue item
+    if (_player.playing) {
+      await _player.pause();
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    await _player.seek(Duration.zero);
     await customAction("playByIndex", {'index': index});
   }
 
@@ -400,7 +458,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   Future<void> skipToNext() async {
     final index = _getNextSongIndex();
     if (index != currentIndex) {
-      if (_player.position != Duration.zero) _player.seek(Duration.zero);
+      // Pause immediately to stop current song, then proceed
+      if (_player.playing) {
+        await _player.pause();
+      }
       await customAction("playByIndex", {'index': index});
     } else {
       _player.seek(Duration.zero);
@@ -414,10 +475,15 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       _player.seek(Duration.zero);
       return;
     }
-    _player.seek(Duration.zero);
     final index = _getPrevSongIndex();
     if (index != currentIndex) {
+      // Pause immediately to stop current song, then proceed
+      if (_player.playing) {
+        await _player.pause();
+      }
       await customAction("playByIndex", {'index': index});
+    } else {
+      _player.seek(Duration.zero);
     }
   }
 
@@ -444,7 +510,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
     switch (name) {
-
       case 'dispose':
         await _player.dispose();
         super.stop();
@@ -458,14 +523,18 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         final futureStreamInfo =
             checkNGetUrl(currentSong.id, generateNewUrl: isNewUrlReq);
         final bool restoreSession = extras['restoreSession'] ?? false;
+
+        // Stop current playback immediately to prevent old song playing during load
+        if (_player.playing) {
+          await _player.pause(); // Pause first to stop audio immediately
+        }
+        await _player.seek(Duration.zero); // Reset position
+
         isSongLoading = true;
         playbackState.add(playbackState.value
             .copyWith(processingState: AudioProcessingState.loading));
-        if (_playList.children.isNotEmpty) {
-          await _playList.clear();
-        }
-
         mediaItem.add(currentSong);
+
         final streamInfo = await futureStreamInfo;
         if (songIndex != currentIndex) {
           return;
@@ -482,10 +551,13 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         currentSongUrl = currentSong.extras!['url'] = streamInfo.audio!.url;
         playbackState
             .add(playbackState.value.copyWith(queueIndex: currentIndex));
-        await _playList.add(_createAudioSource(currentSong));
+
+        // Use new playlist API - set single audio source
+        await _player.setAudioSource(_createAudioSource(currentSong));
 
         isSongLoading = false;
-        if (loudnessNormalizationEnabled && GetPlatform.isAndroid) {
+        if (loudnessNormalizationEnabled &&
+            (GetPlatform.isAndroid || GetPlatform.isIOS)) {
           _normalizeVolume(streamInfo.audio!.loudnessDb);
         }
 
@@ -544,9 +616,16 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       case 'setSourceNPlay':
         final currMed = (extras!['mediaItem'] as MediaItem);
         final futureStreamInfo = checkNGetUrl(currMed.id);
+
+        // Use gentle approach for setSourceNPlay
+        if (_player.playing) {
+          await _player.pause();
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+        await _player.seek(Duration.zero);
+
         isSongLoading = true;
         currentIndex = 0;
-        await _playList.clear();
         mediaItem.add(currMed);
         queue.add([currMed]);
         final streamInfo = (await futureStreamInfo);
@@ -560,11 +639,13 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         }
         currentSongUrl = currMed.extras!['url'] = streamInfo.audio!.url;
 
-        await _playList.add(_createAudioSource(currMed));
+        // Use new playlist API - set single audio source
+        await _player.setAudioSource(_createAudioSource(currMed));
         isSongLoading = false;
 
         // Normalize audio
-        if (loudnessNormalizationEnabled && GetPlatform.isAndroid) {
+        if (loudnessNormalizationEnabled &&
+            (GetPlatform.isAndroid || GetPlatform.isIOS)) {
           _normalizeVolume(streamInfo.audio!.loudnessDb);
         }
 
@@ -847,7 +928,9 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         if (streamInfoJson.runtimeType.toString().contains("Map") &&
             !isExpired(url: (streamInfoJson['lowQualityAudio']['url']))) {
           printINFO("Got cached Url ($songId)");
-          streamInfo = HMStreamingData.fromJson(streamInfoJson);
+          // Cast to Map<String, dynamic> to fix type error
+          streamInfo = HMStreamingData.fromJson(
+              Map<String, dynamic>.from(streamInfoJson));
         }
       }
 
@@ -868,7 +951,6 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 class UrlError extends Error {
   String message() => 'Unable to fetch url';
 }
-
 
 // for Android Auto
 class MediaLibrary {

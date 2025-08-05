@@ -11,6 +11,9 @@ import '../utils/helper.dart';
 import 'constant.dart';
 import 'continuations.dart';
 import 'nav_parser.dart';
+import 'package:crypto/crypto.dart';
+import 'youtube_cookie_manager.dart';
+import 'youtube_config_service.dart';
 
 enum AudioQuality {
   Low,
@@ -25,14 +28,26 @@ class MusicServices extends getx.GetxService {
     'content-type': 'application/json',
     'content-encoding': 'gzip',
     'origin': domain,
-    'cookie': 'CONSENT=YES+1',
+    'X-Goog-AuthUser': '0',
   };
 
   final Map<String, dynamic> _context = {
     'context': {
       'client': {
+        "acceptHeader":
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "browserName": "Chrome",
+        "browserVersion": "140.0.0.0",
+        "clientFormFactor": "UNKNOWN_FORM_FACTOR",
         "clientName": "WEB_REMIX",
-        "clientVersion": "1.20230213.01.00",
+        "clientVersion": "1.20250707.03.00",
+        "deviceMake": "Apple",
+        "userAgent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36,gzip(gfe)",
+        "userInterfaceTheme": "USER_INTERFACE_THEME_DARK",
+        "hl": "vi",
+        "gl": "VN",
+        "originalUrl": "https://music.youtube.com/",
       },
       'user': {}
     }
@@ -50,83 +65,283 @@ class MusicServices extends getx.GetxService {
     //check visitor id in data base, if not generate one , set lang code
     final date = DateTime.now();
     _context['context']['client']['clientVersion'] =
-        "1.${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}.01.00";
+        "1.${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}.03.00";
     final signatureTimestamp = getDatestamp() - 1;
     _context['playbackContext'] = {
       'contentPlaybackContext': {'signatureTimestamp': signatureTimestamp},
     };
 
+    // Configure Dio with certificate pinning and security settings
+    _configureDioSecurity();
+
+    // Khởi tạo cookie từ storage
+    await _initializeCookies();
+
+    // Thêm interceptor cho SAPISIDHASH (đã tối ưu)
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        try {
+          // Sử dụng cached cookie string để tối ưu hiệu suất
+          final cookies = await YouTubeCookieManager.getCachedCookieString();
+          if (cookies.isNotEmpty) {
+            options.headers['cookie'] = cookies;
+
+            // Lấy SAPISID và dataSyncId song song để tối ưu
+            final sapisid =
+                await YouTubeCookieManager.getYouTubeCookie('SAPISID');
+            final dataSyncId = await YouTubeConfigService.getDatasyncId();
+
+            if (sapisid != null && dataSyncId != null) {
+              // Tạo SAPISIDHASH với datasyncId từ storage
+              final sapisidHash = await getSApiSidHash(
+                  dataSyncId, sapisid['value'],
+                  origin: domain);
+              if (sapisidHash != null) {
+                options.headers['Authorization'] = 'SAPISIDHASH $sapisidHash';
+              }
+            }
+          }
+        } catch (e) {
+          printERROR('Error in cookie interceptor: $e');
+        }
+
+        handler.next(options);
+      },
+      onResponse: (response, handler) async {
+        // Cập nhật cookie từ response headers nếu có
+        final responseCookies = response.headers.map['set-cookie'];
+        if (responseCookies != null && responseCookies.isNotEmpty) {
+          await YouTubeCookieManager.saveFromResponseHeaders(responseCookies);
+        }
+        handler.next(response);
+      },
+    ));
+
+    // Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
+    await _initializeAppData();
+
     final appPrefsBox = Hive.box('AppPrefs');
-    hlCode = appPrefsBox.get('contentLanguage') ?? "en";
-    if (appPrefsBox.containsKey('visitorId')) {
-      final visitorData = appPrefsBox.get("visitorId");
-      if (visitorData != null && !isExpired(epoch: visitorData['exp'])) {
-        _headers['X-Goog-Visitor-Id'] = visitorData['id'];
-        appPrefsBox.put("visitorId", {
-          'id': visitorData['id'],
-          'exp': DateTime.now().millisecondsSinceEpoch ~/ 1000 + 2590200
-        });
-        printINFO("Got Visitor id ($visitorData['id']) from Box");
-        return;
+    hlCode = appPrefsBox.get('contentLanguage') ?? "vi";
+
+    // Kiểm tra visitorId từ storage trước
+    final visitorData = await YouTubeConfigService.getVisitorData();
+    if (visitorData != null) {
+      _headers['X-Goog-Visitor-Id'] = visitorData;
+      printINFO("Got Visitor id ($visitorData) from storage");
+      return;
+    }
+
+    // Fallback: sử dụng visitorId mặc định nếu không có trong storage
+    _headers['X-Goog-Visitor-Id'] =
+        "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+  }
+
+  /// Cấu hình bảo mật cho Dio
+  void _configureDioSecurity() {
+    // Configure Dio with security settings
+    dio.options = BaseOptions(
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 30),
+      followRedirects: true,
+      maxRedirects: 5,
+      validateStatus: (status) => status != null && status < 500,
+    );
+
+    // Add security headers
+    dio.options.headers.addAll({
+      'Accept-Encoding': 'gzip, deflate',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+    });
+  }
+
+  /// Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
+  Future<void> _initializeAppData() async {
+    try {
+      printINFO("Initializing app data...");
+      final response = await _retryRequest(
+          () => dio.get(domain, options: Options(headers: _headers)));
+
+      await _processResponseData(response);
+    } catch (e) {
+      printERROR("Error initializing app data: $e");
+      _headers['X-Goog-Visitor-Id'] =
+          "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+    }
+  }
+
+  Future<void> _processResponseData(Response response) async {
+    final responseCookies = response.headers.map['set-cookie'];
+    if (responseCookies != null && responseCookies.isNotEmpty) {
+      await YouTubeCookieManager.saveFromResponseHeaders(responseCookies);
+    }
+
+    final config = _extractYtcfg(response.data.toString());
+    if (config != null) {
+      await _saveVisitorData(config);
+    }
+  }
+
+  Map<String, dynamic>? _extractYtcfg(String responseData) {
+    final reg = RegExp(r'ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;');
+    final matches = reg.firstMatch(responseData);
+    if (matches != null) {
+      return json.decode(matches.group(1).toString());
+    }
+    return null;
+  }
+
+  Future<void> _saveVisitorData(Map<String, dynamic> config) async {
+    final visitorId = config['VISITOR_DATA']?.toString();
+    final datasyncId = _extractDatasyncId(config);
+
+    // Use YouTubeConfigService to save extracted config values
+    if (visitorId != null || datasyncId != null) {
+      try {
+        // Initialize YouTubeConfigService
+        await YouTubeConfigService.init();
+
+        // Save values using the extractAndSaveConfig method by temporarily modifying the config
+        // This is a bit of a workaround since we already extracted the values
+        if (visitorId != null) {
+          _headers['X-Goog-Visitor-Id'] = visitorId;
+          // Create temp config for visitor data
+          // final tempConfig = {'VISITOR_DATA': visitorId};
+          await _saveConfigValueDirectly('VISITOR_DATA', visitorId);
+          printINFO('Saved VISITOR_DATA to YTBPrefs box: $visitorId');
+        }
+
+        if (datasyncId != null) {
+          await _saveConfigValueDirectly('DATASYNC_ID', datasyncId);
+          printINFO('Saved DATASYNC_ID to YTBPrefs box: $datasyncId');
+        }
+      } catch (e) {
+        printERROR('Error saving visitor data to YouTubeConfigService: $e');
+      }
+    }
+  }
+
+  /// Helper method to save config values directly to YTBPrefs box
+  Future<void> _saveConfigValueDirectly(String key, String value) async {
+    try {
+      final box = Hive.box('YTBPrefs');
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final data = {
+        'value': value,
+        'extractedAt': now,
+        'source': 'music_service_ytcfg',
+      };
+      await box.put(key, data);
+    } catch (e) {
+      printERROR('Error saving $key directly to YTBPrefs: $e');
+    }
+  }
+
+  String? _extractDatasyncId(Map<String, dynamic> config) {
+    // Thử các key có thể chứa datasyncId theo thứ tự ưu tiên
+    final possibleKeys = ['USER_SESSION_ID', 'DATASYNC_ID', 'datasyncId'];
+
+    for (final key in possibleKeys) {
+      final value = config[key]?.toString();
+      if (value != null && value.isNotEmpty) {
+        // Xóa ký tự | và validate format
+        final cleanValue =
+            value.replaceAll('|', '').replaceAll('||', '').trim();
+        if (_isValidDatasyncId(cleanValue)) {
+          printINFO("Extracted datasyncId from key '$key': $cleanValue");
+          return cleanValue;
+        }
       }
     }
 
-    final visitorId = await genrateVisitorId();
-    if (visitorId != null) {
-      _headers['X-Goog-Visitor-Id'] = visitorId;
-      printINFO("New Visitor id generated ($visitorId)");
-      appPrefsBox.put("visitorId", {
-        'id': visitorId,
-        'exp': DateTime.now().millisecondsSinceEpoch ~/ 1000 + 2592000
-      });
-      return;
+    printWARN("No valid datasyncId found in config: ${config.keys.toList()}");
+    return null;
+  }
+
+  /// Validate datasyncId format
+  bool _isValidDatasyncId(String? datasyncId) {
+    if (datasyncId == null || datasyncId.isEmpty) return false;
+
+    // Basic validation: should not contain pipes, should have reasonable length
+    if (datasyncId.contains('|') || datasyncId.length < 10) {
+      return false;
     }
-    // not able to generate in that case
-    _headers['X-Goog-Visitor-Id'] =
-        visitorId ?? "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
+
+    // Should contain alphanumeric characters and common special chars
+    final validPattern = RegExp(r'^[a-zA-Z0-9_\-\.\+\=]+$');
+    return validPattern.hasMatch(datasyncId);
   }
 
   set hlCode(String code) {
     _context['context']['client']['hl'] = code;
   }
 
+  /// Khởi tạo cookie từ storage hoặc tạo mới (đã tối ưu)
+  Future<void> _initializeCookies() async {
+    try {
+      // Thêm cookie YouTube đã đăng nhập nếu có
+      _headers['cookie'] = await YouTubeCookieManager.getCachedCookieString();
+      printINFO('Added YouTube cookies to requests');
+    } catch (e) {
+      printERROR('Error initializing cookies: $e');
+      _headers['cookie'] = 'CONSENT=YES+1';
+    }
+  }
+
   Future<String?> genrateVisitorId() async {
     try {
-      final response =
-          await dio.get(domain, options: Options(headers: _headers));
-      final reg = RegExp(r'ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;');
-      final matches = reg.firstMatch(response.data.toString());
-      String? visitorId;
-      if (matches != null) {
-        final ytcfg = json.decode(matches.group(1).toString());
-        visitorId = ytcfg['VISITOR_DATA']?.toString();
+      final response = await _retryRequest(
+          () => dio.get(domain, options: Options(headers: _headers)));
+
+      await _processResponseData(response);
+
+      final config = _extractYtcfg(response.data.toString());
+      if (config != null) {
+        await _saveVisitorData(config);
+        return config['VISITOR_DATA']?.toString();
       }
-      return visitorId;
+      return null;
     } catch (e) {
+      printERROR("Error generating visitor ID: $e");
       return null;
     }
   }
 
   Future<Response> _sendRequest(String action, Map<dynamic, dynamic> data,
       {additionalParams = ""}) async {
-    //print("$baseUrl$action$fixedParms$additionalParams          data:$data");
-    try {
-      final response =
-          await dio.post("$baseUrl$action$fixedParms$additionalParams",
-              options: Options(
-                headers: _headers,
-              ),
-              data: data);
+    return _retryRequest(() async {
+      final response = await dio.post(
+        "$baseUrl$action$fixedParms$additionalParams",
+        options: Options(headers: _headers),
+        data: data,
+      );
 
-      if (response.statusCode == 200) {
-        return response;
-      } else {
-        return _sendRequest(action, data, additionalParams: additionalParams);
+      if (response.statusCode != 200) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+        );
       }
-    } on DioException catch (e) {
-      printINFO("Error $e");
-      throw NetworkError();
+      return response;
+    });
+  }
+
+  Future<Response> _retryRequest(Future<Response> Function() requestFn) async {
+    for (int i = 0; i < 3; i++) {
+      try {
+        return await requestFn();
+      } on DioException catch (e) {
+        if (i == 2) {
+          printERROR("Request failed after 3 attempts: $e");
+          throw NetworkError();
+        }
+        await Future.delayed(Duration(milliseconds: 1000 * (i + 1)));
+      }
     }
+    throw NetworkError();
   }
 
   // Future<List<Map<String, dynamic>>>
@@ -139,7 +354,6 @@ class MusicServices extends getx.GetxService {
 
     final sectionList =
         nav(response.data, single_column_tab + ['sectionListRenderer']);
-    //inspect(sectionList);
     //print(sectionList.containsKey('continuations'));
     if (sectionList.containsKey('continuations')) {
       requestFunc(additionalParams) async {
@@ -158,7 +372,8 @@ class MusicServices extends getx.GetxService {
     return home;
   }
 
-  Future<List<Map<String, dynamic>>> getCharts({String? countryCode}) async {
+  Future<List<Map<String, dynamic>>> getCharts(
+      {String? countryCode = "vi"}) async {
     final List<Map<String, dynamic>> charts = [];
     final data = Map.from(_context);
 
@@ -335,7 +550,7 @@ class MusicServices extends getx.GetxService {
     final Map<String, dynamic> response =
         (await _sendRequest('browse', data)).data;
     if (playlistId != null) {
-      final Map<String, dynamic> header =
+      final dynamic headerData =
           nav(response, ['header', "musicDetailHeaderRenderer"]) ??
               nav(response, [
                 'contents',
@@ -350,26 +565,41 @@ class MusicServices extends getx.GetxService {
                 "musicResponsiveHeaderRenderer"
               ]);
 
-      final Map<String, dynamic> results =
-          nav(response, musicPlaylistShelfRenderer) ??
-              nav(
-                response,
-                [
-                  'contents',
-                  "singleColumnBrowseResultsRenderer",
-                  "tabs",
-                  0,
-                  "tabRenderer",
-                  "content",
-                  'sectionListRenderer',
-                  'contents',
-                  0,
-                  "musicPlaylistShelfRenderer"
-                ],
-              );
-      final Map<String, dynamic> playlist = {'id': results['playlistId']};
+      final dynamic resultsData = nav(response, musicPlaylistShelfRenderer) ??
+          nav(
+            response,
+            [
+              'contents',
+              "singleColumnBrowseResultsRenderer",
+              "tabs",
+              0,
+              "tabRenderer",
+              "content",
+              'sectionListRenderer',
+              'contents',
+              0,
+              "musicPlaylistShelfRenderer"
+            ],
+          );
 
-      playlist['title'] = nav(header, title_text);
+      // Return empty playlist if essential data is missing
+      if (headerData == null || resultsData == null) {
+        return {
+          'id': playlistId,
+          'title': 'Unknown Playlist',
+          'tracks': <dynamic>[],
+          'trackCount': 0,
+          'duration_seconds': 0,
+        };
+      }
+
+      final Map<String, dynamic> header = headerData as Map<String, dynamic>;
+      final Map<String, dynamic> results = resultsData as Map<String, dynamic>;
+      final Map<String, dynamic> playlist = {
+        'id': results['playlistId'] ?? playlistId
+      };
+
+      playlist['title'] = nav(header, title_text) ?? 'Unknown Playlist';
       playlist['thumbnails'] = nav(header, thumnail_cropped) ??
           nav(header, [
             "thumbnail",
@@ -378,28 +608,37 @@ class MusicServices extends getx.GetxService {
             "thumbnails"
           ]);
       playlist["description"] = nav(header, description);
-      final int runCount = header['subtitle']['runs'].length;
-      if (runCount > 1) {
-        playlist['author'] = {
-          'name': nav(header, subtitle2),
-          'id': nav(header, ['subtitle', 'runs', 2] + navigation_browse_id)
-        };
-        if (runCount == 5) {
-          playlist['year'] = nav(header, subtitle3);
+
+      // Safely check subtitle data
+      int runCount = 0;
+      if (header['subtitle'] != null && header['subtitle']['runs'] != null) {
+        runCount = header['subtitle']['runs'].length;
+        if (runCount > 1) {
+          playlist['author'] = {
+            'name': nav(header, subtitle2),
+            'id': nav(header, ['subtitle', 'runs', 2] + navigation_browse_id)
+          };
+          if (runCount == 5) {
+            playlist['year'] = nav(header, subtitle3);
+          }
         }
       }
 
-      final int secondSubtitleRunCount =
-          header['secondSubtitle']['runs'].length;
-      final String count = (((header['secondSubtitle']['runs']
-                      [secondSubtitleRunCount % 3]['text'])
-                  .split(' ')[0])
-              .split(',') as List)
-          .join();
-      final int songCount = int.parse(count);
-      if (header['secondSubtitle']['runs'].length > 1) {
-        playlist['duration'] = header['secondSubtitle']['runs']
-            [(secondSubtitleRunCount % 3) + 2]['text'];
+      int songCount = 0;
+      if (header['secondSubtitle'] != null &&
+          header['secondSubtitle']['runs'] != null) {
+        final int secondSubtitleRunCount =
+            header['secondSubtitle']['runs'].length;
+        final String count = (((header['secondSubtitle']['runs']
+                        [secondSubtitleRunCount % 3]['text'])
+                    .split(' ')[0])
+                .split(',') as List)
+            .join();
+        songCount = int.parse(count);
+        if (header['secondSubtitle']['runs'].length > 1) {
+          playlist['duration'] = header['secondSubtitle']['runs']
+              [(secondSubtitleRunCount % 3) + 2]['text'];
+        }
       }
       playlist['trackCount'] = songCount;
 
@@ -421,6 +660,9 @@ class MusicServices extends getx.GetxService {
           ...(await getContinuationsPlaylist(
               results, limit, requestFuncCountinuation, parseFunc))
         ];
+      } else {
+        // Initialize empty tracks list when no songs found
+        playlist['tracks'] = <dynamic>[];
       }
       playlist['duration_seconds'] = sumTotalDuration(playlist);
       return playlist;
@@ -871,6 +1113,94 @@ class MusicServices extends getx.GetxService {
   void onClose() {
     dio.close();
     super.onClose();
+  }
+
+  /// Làm mới cookie YouTube trong requests (đã tối ưu)
+  Future<void> refreshYouTubeCookies() async {
+    try {
+      // Clear cache để force refresh
+      await YouTubeCookieManager.cleanupExpiredCookies();
+
+      final youtubeCookies = await YouTubeCookieManager.getCachedCookieString();
+      if (youtubeCookies.isNotEmpty) {
+        final existingCookies = _headers['cookie'] ?? '';
+
+        // Tránh trùng lặp cookie bằng cách kiểm tra trước
+        final combinedCookies = existingCookies.isNotEmpty
+            ? _mergeCookies(existingCookies, youtubeCookies)
+            : youtubeCookies;
+
+        _headers['cookie'] = combinedCookies;
+        printINFO(
+            'YouTube cookies refreshed in requests (${youtubeCookies.split(';').length} cookies)');
+      } else {
+        printINFO('No YouTube cookies to refresh');
+      }
+    } catch (e) {
+      printERROR('Error refreshing YouTube cookies: $e');
+    }
+  }
+
+  /// Merge cookies tránh trùng lặp
+  String _mergeCookies(String existing, String newCookies) {
+    final cookieMap = <String, String>{};
+
+    // Parse existing cookies
+    for (final cookie in existing.split(';')) {
+      final parts = cookie.trim().split('=');
+      if (parts.length == 2) {
+        cookieMap[parts[0]] = parts[1];
+      }
+    }
+
+    // Parse và merge new cookies
+    for (final cookie in newCookies.split(';')) {
+      final parts = cookie.trim().split('=');
+      if (parts.length == 2) {
+        cookieMap[parts[0]] = parts[1]; // Override existing
+      }
+    }
+
+    return cookieMap.entries.map((e) => '${e.key}=${e.value}').join('; ');
+  }
+
+  String _sha1(String input) {
+    var bytes = utf8.encode(input);
+    var digest = sha1.convert(bytes);
+    return digest.toString();
+  }
+
+  /// Tạo SAPISIDHASH cho YouTube API
+  ///
+  /// [datasyncId] - ID datasync (nếu null sẽ lấy từ storage)
+  /// [cookieString] - Chuỗi cookie chứa SAPISID
+  /// [origin] - Origin URL (mặc định là https://www.youtube.com)
+  Future<String?> getSApiSidHash(String? datasyncId, String sapisid,
+      {String origin = "https://music.youtube.com"}) async {
+    try {
+      // Nếu datasyncId không được truyền vào, lấy từ storage
+      String? finalDatasyncId = datasyncId;
+      if (finalDatasyncId == null) {
+        finalDatasyncId = await YouTubeConfigService.getDatasyncId();
+        if (finalDatasyncId == null) {
+          printERROR("No datasyncId available for SAPISIDHASH generation");
+          return null;
+        }
+      }
+
+      final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+
+      final inputString =
+          [finalDatasyncId, timestamp, sapisid, origin].join(' ');
+      final digest = _sha1(inputString);
+
+      final sapisidHash = '${timestamp}_${digest}_u';
+
+      return sapisidHash;
+    } catch (e) {
+      printERROR("Error generating SAPISIDHASH: $e");
+      return null;
+    }
   }
 }
 
