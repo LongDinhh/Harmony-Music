@@ -84,22 +84,16 @@ Widget _buildFloatingActionButton(
 
 Widget _buildBody(SettingsScreenController settingsScreenController,
     HomeScreenController homeScreenController) {
-  return Obx(() => Row(
-        children: <Widget>[
-          const SizedBox(width: 0),
-          Expanded(
-            child: AnimatedScreenTransition(
-                enabled: settingsScreenController
-                    .isTransitionAnimationDisabled.isFalse,
-                resverse: homeScreenController.reverseAnimationtransiton,
-                horizontalTransition:
-                    settingsScreenController.isBottomNavBarEnabled.isTrue,
-                child: Center(
-                  key: ValueKey<int>(homeScreenController.tabIndex.value),
-                  child: const Body(),
-                )),
-          ),
-        ],
+  return Obx(() => AnimatedScreenTransition(
+        enabled: settingsScreenController
+            .isTransitionAnimationDisabled.isFalse,
+        resverse: homeScreenController.reverseAnimationtransiton,
+        horizontalTransition:
+            settingsScreenController.isBottomNavBarEnabled.isTrue,
+        child: Center(
+          key: ValueKey<int>(homeScreenController.tabIndex.value),
+          child: const Body(),
+        ),
       ));
 }
 
