@@ -86,33 +86,31 @@ class BackupDialog extends StatelessWidget {
                   )),
                 ),
               ),
-              if (!GetPlatform.isDesktop)
-                Obx(() => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                              value: backupDialogController
-                                  .isDownloadedfilesSeclected.value,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              onChanged:
-                                  backupDialogController.scanning.isTrue ||
-                                          backupDialogController
-                                              .backupRunning.isTrue ||
-                                          backupDialogController
-                                              .isbackupCompleted.isTrue
-                                      ? null
-                                      : (bool? value) {
-                                          backupDialogController
-                                              .isDownloadedfilesSeclected
-                                              .value = value!;
-                                        },
-                            ),
-                            Text("includeDownloadedFiles".tr),
-                          ]),
-                    )),
+              Obx(() => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: backupDialogController
+                                .isDownloadedfilesSeclected.value,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            onChanged: backupDialogController.scanning.isTrue ||
+                                    backupDialogController
+                                        .backupRunning.isTrue ||
+                                    backupDialogController
+                                        .isbackupCompleted.isTrue
+                                ? null
+                                : (bool? value) {
+                                    backupDialogController
+                                        .isDownloadedfilesSeclected
+                                        .value = value!;
+                                  },
+                          ),
+                          Text("includeDownloadedFiles".tr),
+                        ]),
+                  )),
               SizedBox(
                 width: double.maxFinite,
                 child: Align(

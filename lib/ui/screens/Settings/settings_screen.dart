@@ -423,8 +423,7 @@ class SettingsScreen extends StatelessWidget {
                                   .toggleLoudnessNormalization),
                         )),
                   ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 5, right: 10),
+                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("cacheSongs".tr),
                       subtitle: Text("cacheSongsDes".tr,
                           style: Theme.of(context).textTheme.bodyMedium),
@@ -435,29 +434,25 @@ class SettingsScreen extends StatelessWidget {
                                 settingsController.toggleCachingSongsValue),
                       )),
                   ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 5, right: 10),
+                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("skipSilence".tr),
                       subtitle: Text("skipSilenceDes".tr,
                           style: Theme.of(context).textTheme.bodyMedium),
                       trailing: Obx(
                         () => CustSwitch(
-                            value:
-                                settingsController.skipSilenceEnabled.value,
+                            value: settingsController.skipSilenceEnabled.value,
                             onChanged: settingsController.toggleSkipSilence),
                       )),
                   ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 5, right: 10),
+                      contentPadding: const EdgeInsets.only(left: 5, right: 10),
                       title: Text("backgroundPlay".tr),
                       subtitle: Text("backgroundPlayDes".tr,
                           style: Theme.of(context).textTheme.bodyMedium),
                       trailing: Obx(
                         () => CustSwitch(
-                            value: settingsController
-                                .backgroundPlayEnabled.value,
-                            onChanged:
-                                settingsController.toggleBackgroundPlay),
+                            value:
+                                settingsController.backgroundPlayEnabled.value,
+                            onChanged: settingsController.toggleBackgroundPlay),
                       )),
                   ListTile(
                       contentPadding: const EdgeInsets.only(left: 5, right: 10),
@@ -504,10 +499,10 @@ class SettingsScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyMedium),
                     trailing: Obx(
                       () => CustSwitch(
-                          value: settingsController
-                              .stopPlyabackOnSwipeAway.value,
-                          onChanged: settingsController
-                              .toggleStopPlyabackOnSwipeAway),
+                          value:
+                              settingsController.stopPlyabackOnSwipeAway.value,
+                          onChanged:
+                              settingsController.toggleStopPlyabackOnSwipeAway),
                     ),
                   ),
                   GetPlatform.isAndroid

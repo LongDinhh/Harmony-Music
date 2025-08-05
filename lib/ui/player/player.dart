@@ -33,21 +33,15 @@ class Player extends StatelessWidget {
               ? 55 + MediaQuery.paddingOf(context).bottom
               : 0,
           maxHeight: size.height,
-          isDraggable: !GetPlatform.isDesktop,
-          controller: GetPlatform.isDesktop
-              ? null
-              : playerController.queuePanelController,
+          isDraggable: true,
+          controller: playerController.queuePanelController,
 
           /// this is the header of the collapsed panel
           /// contains the button ^ to open the queue panel
           collapsed: InkWell(
             onTap: () {
-              /// queue open in end drawer in desktop
-              if (GetPlatform.isDesktop) {
-                playerController.homeScaffoldkey.currentState!.openEndDrawer();
-              } else {
-                playerController.queuePanelController.open();
-              }
+              /// queue open via panel controller
+              playerController.queuePanelController.open();
             },
             child: Container(
                 color: Theme.of(context).primaryColor,

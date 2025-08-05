@@ -176,8 +176,7 @@ class SortWidget extends StatelessWidget {
                     ),
                     Obx(
                       () => _customIconButton(
-                        isSelected:
-                            controller.sortType.value == SortType.Name,
+                        isSelected: controller.sortType.value == SortType.Name,
                         icon: Icons.sort_by_alpha,
                         tooltip: "sortByName".tr,
                         onPressed: () {
@@ -251,12 +250,11 @@ class SortWidget extends StatelessWidget {
                                     screenController: screenController,
                                     controller: controller,
                                   ));
-                
+
                           controller.setActiveMode(mode);
                           startAdditionalOperation!(controller, mode);
                         },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry>[
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                           if (isPlaylistRearrageFeatureRequired)
                             PopupMenuItem(
                               value: OperationMode.arrange,

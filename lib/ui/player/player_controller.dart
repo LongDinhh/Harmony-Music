@@ -64,7 +64,6 @@ class PlayerController extends GetxController
   final showLyricsflag = false.obs;
   final isLyricsLoading = false.obs;
   final lyricsMode = 0.obs;
-  bool isDesktopLyricsDialogOpen = false;
   // 0 for play, 1 for pause, 2 for blank
   final gesturePlayerVisibleState = 2.obs;
   final lyricUi =
@@ -108,9 +107,7 @@ class PlayerController extends GetxController
     isQueueLoopModeEnabled.value =
         appPrefs.get("queueLoopModeEnabled") ?? false;
 
-    if (GetPlatform.isDesktop) {
-      setVolume(appPrefs.get("volume") ?? 100);
-    }
+    setVolume(appPrefs.get("volume") ?? 100);
 
     if ((appPrefs.get("playerUi") ?? 0) == 1) {
       initGesturePlayerStateAnimationController();
@@ -247,9 +244,7 @@ class PlayerController extends GetxController
           }
           lyrics.value = {"synced": "", "plainLyrics": ""};
           showLyricsflag.value = false;
-          if (isDesktopLyricsDialogOpen) {
-            Navigator.pop(Get.context!);
-          }
+          // Remove desktop-specific lyrics dialog handling
 
           // reset player visible state when player is in gesture mode
           if (Get.find<SettingsScreenController>().playerUi.value == 1) {

@@ -17,7 +17,7 @@ class QuickPicksWidget extends StatelessWidget {
     // So sánh text gốc với text đã dịch
     final translatedText = title.toLowerCase().removeAllWhitespace.tr;
     final originalText = title.toLowerCase().removeAllWhitespace;
-    
+
     // Nếu text dịch giống với text gốc (không có bản dịch), dùng text gốc
     // Nếu text dịch khác với text gốc (có bản dịch), dùng text dịch
     return translatedText == originalText ? title : translatedText;
@@ -41,10 +41,14 @@ class QuickPicksWidget extends StatelessWidget {
           const SizedBox(height: 10),
           Expanded(
             child: Scrollbar(
-              thickness: GetPlatform.isDesktop ? null : 0,
-              controller: scrollController?.hasClients == true ? scrollController : null,
+              thickness: 0,
+              controller: scrollController?.hasClients == true
+                  ? scrollController
+                  : null,
               child: GridView.builder(
-                  controller: scrollController?.hasClients == true ? scrollController : null,
+                  controller: scrollController?.hasClients == true
+                      ? scrollController
+                      : null,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: content.songList.length,
@@ -113,30 +117,7 @@ class QuickPicksWidget extends StatelessWidget {
                             ).whenComplete(
                                 () => Get.delete<SongInfoController>());
                           },
-                          trailing: (GetPlatform.isDesktop)
-                              ? IconButton(
-                                  splashRadius: 20,
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 500),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(10.0)),
-                                      ),
-                                      isScrollControlled: true,
-                                      context: playerController.homeScaffoldkey
-                                          .currentState!.context,
-                                      //constraints: BoxConstraints(maxHeight:Get.height),
-                                      barrierColor:
-                                          Colors.transparent.withAlpha(100),
-                                      builder: (context) => SongInfoBottomSheet(
-                                          content.songList[item]),
-                                    ).whenComplete(
-                                        () => Get.delete<SongInfoController>());
-                                  },
-                                  icon: const Icon(Icons.more_vert))
-                              : null),
+                          trailing: null),
                     );
                   }),
             ),

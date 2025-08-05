@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
         },
         child: Scaffold(
             key: playerController.homeScaffoldkey,
-            endDrawer: GetPlatform.isDesktop || isWideScreen
+            endDrawer: isWideScreen
                 ? _buildEndDrawer(context, playerController)
                 : null,
             drawerScrimColor: Colors.transparent,

@@ -38,7 +38,6 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
   final isExporting = false.obs;
   final exportProgress = 0.0.obs;
 
-
   // Title animation
 
   late AnimationController _animationController;
@@ -59,8 +58,9 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
     _scaleAnimation =
         Tween<double>(begin: 0, end: 1.0).animate(animationController);
 
-    _heightAnimation =
-        Tween<double>(begin: 10.0, end: 75.0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOutBack));
+    _heightAnimation = Tween<double>(begin: 10.0, end: 75.0).animate(
+        CurvedAnimation(
+            parent: animationController, curve: Curves.easeOutBack));
 
     final args = Get.arguments as List;
     final Playlist? playlist = args[0];
@@ -139,8 +139,8 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
       playlist.value = Playlist.fromJson(content);
       _animationController.forward();
     }
-    songList.value = content['tracks'] != null 
-        ? List<MediaItem>.from(content['tracks']) 
+    songList.value = content['tracks'] != null
+        ? List<MediaItem>.from(content['tracks'])
         : <MediaItem>[];
     checkDownloadStatus();
   }
@@ -259,7 +259,8 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
   }
 
   @override
-  void fetchAlbumDetails(Album? album_,String albumId) {} // Not used in this class
+  void fetchAlbumDetails(
+      Album? album_, String albumId) {} // Not used in this class
 
   /// This function updates the local playlist thumbnail based on the first song's thumbnail
   void _updatePlaylistThumbSongBased() {
@@ -373,7 +374,7 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
       }
 
       printERROR("Error exporting playlist: $e");
-      
+
       String errorMsg = "exportError".tr;
       if (e is FileSystemException) {
         if (e.osError?.errorCode == 13) {

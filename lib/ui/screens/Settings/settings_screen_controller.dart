@@ -81,8 +81,6 @@ class SettingsScreenController extends GetxController {
   }
 
   Future<void> _setInitValue() async {
-    final isDesktop = GetPlatform.isDesktop;
-
     // Set default app language if not exists
     if (!setBox.containsKey('currentAppLanguageCode')) {
       await setBox.put('currentAppLanguageCode', 'vi');
@@ -159,7 +157,7 @@ class SettingsScreenController extends GetxController {
     if (!setBox.containsKey('playerUi')) {
       await setBox.put('playerUi', 0);
     }
-    playerUi.value = isDesktop ? 0 : (setBox.get('playerUi') ?? 0);
+    playerUi.value = setBox.get('playerUi') ?? 0;
 
     // Set default background play
     if (!setBox.containsKey('backgroundPlayEnabled')) {
@@ -173,10 +171,7 @@ class SettingsScreenController extends GetxController {
     if (!setBox.containsKey('downloadLocationPath')) {
       await setBox.put('downloadLocationPath', downloadPath);
     }
-    downloadLocationPath.value =
-        (isDesktop && downloadPath.contains("emulated"))
-            ? await _createInAppSongDownDir()
-            : downloadPath;
+    downloadLocationPath.value = downloadPath;
 
     // Set default export location
     if (!setBox.containsKey('exportLocationPath')) {
@@ -435,11 +430,7 @@ class SettingsScreenController extends GetxController {
   }
 
   Future<String> get dbDir async {
-    if (GetPlatform.isDesktop) {
-      return "$supportDirPath/db";
-    } else {
-      return (await getApplicationDocumentsDirectory()).path;
-    }
+    return (await getApplicationDocumentsDirectory()).path;
   }
 
   /// Check if Google is logged in by querying YouTube cookies

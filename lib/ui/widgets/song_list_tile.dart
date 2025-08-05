@@ -203,28 +203,6 @@ class SongListTile extends StatelessWidget with RemoveSongFromPlaylistMixin {
                     ],
                   ),
                 ),
-                if (GetPlatform.isDesktop)
-                  IconButton(
-                      splashRadius: 20,
-                      onPressed: () {
-                        showModalBottomSheet(
-                          constraints: const BoxConstraints(maxWidth: 500),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(10.0)),
-                          ),
-                          isScrollControlled: true,
-                          context: playerController
-                              .homeScaffoldkey.currentState!.context,
-                          //constraints: BoxConstraints(maxHeight:Get.height),
-                          barrierColor: Colors.transparent.withAlpha(100),
-                          builder: (context) => SongInfoBottomSheet(
-                            song,
-                            playlist: playlist,
-                          ),
-                        ).whenComplete(() => Get.delete<SongInfoController>());
-                      },
-                      icon: const Icon(Icons.more_vert))
               ],
             ),
           ),

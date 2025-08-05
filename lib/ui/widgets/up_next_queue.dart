@@ -80,10 +80,8 @@ class UpNextQueue extends StatelessWidget {
                         ),
                       ).whenComplete(() => Get.delete<SongInfoController>());
                     },
-                    contentPadding: EdgeInsets.only(
-                        top: 0,
-                        left: 30,
-                        right: 25),
+                    contentPadding:
+                        EdgeInsets.only(top: 0, left: 30, right: 25),
                     tileColor: playerController.currentSongIndex.value == index
                         ? Theme.of(homeScaffoldContext).colorScheme.secondary
                         : Theme.of(homeScaffoldContext)
@@ -124,8 +122,7 @@ class UpNextQueue extends StatelessWidget {
                       enabled: true,
                       index: index,
                       child: Container(
-                        padding: EdgeInsets.only(
-                            right: 5, left: 20),
+                        padding: EdgeInsets.only(right: 5, left: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [

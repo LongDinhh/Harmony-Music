@@ -1,8 +1,8 @@
+import 'dart:core';
+
 /// Custom Exception classes for Harmony Music
 /// Following user requirement: throw with errorCode and message,
 /// and if caught, return the errorCode and message.
-
-import 'dart:core';
 
 /// Base exception class for Harmony Music app
 class HarmonyMusicException implements Exception {

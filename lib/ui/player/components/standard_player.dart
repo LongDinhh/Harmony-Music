@@ -169,7 +169,9 @@ class StandardPlayer extends StatelessWidget {
         if (!(context.isLandscape && GetPlatform.isMobile))
           Padding(
             padding: EdgeInsets.only(
-                top: MediaQuery.paddingOf(context).top + 20, left: 10, right: 10),
+                top: MediaQuery.paddingOf(context).top + 20,
+                left: 10,
+                right: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,

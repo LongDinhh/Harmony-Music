@@ -395,10 +395,8 @@ class MiniPlayerContent extends StatelessWidget {
                       builder: (context) => const LyricsDialog(),
                       context: context,
                     ).whenComplete(() {
-                      playerController.isDesktopLyricsDialogOpen = false;
                       playerController.showLyricsflag.value = false;
                     });
-                    playerController.isDesktopLyricsDialogOpen = true;
                   },
                   icon: Icon(
                     Icons.lyrics_outlined,

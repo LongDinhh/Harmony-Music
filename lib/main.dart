@@ -22,26 +22,24 @@ import 'utils/update_check_flag_file.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Ensure Hive is initialized first
   await initHive();
-  
+
   // Then set app preferences
   await _setAppInitPrefsAsync();
-  
+
   // Lazy initialization of services
   startApplicationServices();
-  
+
   // Initialize audio service - required for app to function
   final audioHandler = await initAudioService();
   Get.put<AudioHandler>(audioHandler, permanent: true);
-  
-  WidgetsBinding.instance.addObserver(LifecycleHandler());
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  
+
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -49,7 +47,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if (!GetPlatform.isDesktop) Get.put(AppLinksController());
+    Get.put(AppLinksController());
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     return GetMaterialApp(
         title: 'Harmony Music',
@@ -99,19 +97,13 @@ Future<void> startApplicationServices() async {
 }
 
 Future<void> initHive() async {
-  String applicationDataDirectoryPath;
-  if (GetPlatform.isDesktop) {
-    applicationDataDirectoryPath =
-        "${(await getApplicationSupportDirectory()).path}/db";
-  } else {
-    applicationDataDirectoryPath =
-        (await getApplicationDocumentsDirectory()).path;
-  }
+  String applicationDataDirectoryPath =
+      (await getApplicationDocumentsDirectory()).path;
   await Hive.initFlutter(applicationDataDirectoryPath);
-  
+
   // Open critical boxes first (for app to start)
   await Hive.openBox("AppPrefs");
-  
+
   // Open other boxes in parallel for better performance
   await Future.wait([
     Hive.openBox("SongsCache"),
@@ -119,7 +111,7 @@ Future<void> initHive() async {
     Hive.openBox('SongsUrlCache'),
     Hive.openBox("YTBCookies"),
   ]);
-  
+
   // Initialize YouTube Cookie Manager in background
   unawaited(_initYouTubeCookieManager());
 }
@@ -144,16 +136,5 @@ Future<void> _setAppInitPrefsAsync() async {
       'currentAppLanguageCode': "vi",
       'noOfHomeScreenContent': 7
     });
-  }
-}
-
-class LifecycleHandler extends WidgetsBindingObserver {
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    } else if (state == AppLifecycleState.detached) {
-      await Get.find<AudioHandler>().customAction("saveSession");
-    }
   }
 }

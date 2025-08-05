@@ -4,10 +4,6 @@ import '/native_bindings/andrid_utils.dart' show SDKInt;
 
 class PermissionService {
   static Future<bool> getExtStoragePermission() async {
-    if (GetPlatform.isDesktop) {
-      return Future.value(true);
-    }
-
     // iOS permission handling
     if (GetPlatform.isIOS) {
       return await _getIOSStoragePermission();
@@ -85,10 +81,6 @@ class PermissionService {
 
   // Check notification permission for both platforms
   static Future<bool> getNotificationPermission() async {
-    if (GetPlatform.isDesktop) {
-      return true;
-    }
-
     try {
       var status = await Permission.notification.status;
       if (status.isDenied) {

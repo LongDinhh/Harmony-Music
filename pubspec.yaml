@@ -78,7 +78,7 @@ dependencies:
   url_launcher: ^6.2.1
   widget_marquee: ^0.0.8
   webview_flutter: ^4.10.0
-  webview_cookie_manager: ^2.0.6
+  webview_cookie_manager_plus: ^2.0.16
 
   youtube_explode_dart:
     git:

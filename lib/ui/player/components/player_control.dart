@@ -128,7 +128,11 @@ class PlayerControlWidget extends StatelessWidget {
                                 .withValues(alpha: 0.2),
                       ))),
               _previousButton(playerController, context),
-              const CircleAvatar(radius: 35, child: AnimatedPlayButton(key: Key("playButton"),)),
+              const CircleAvatar(
+                  radius: 35,
+                  child: AnimatedPlayButton(
+                    key: Key("playButton"),
+                  )),
               _nextButton(playerController, context),
               Obx(() {
                 return IconButton(
@@ -148,7 +152,6 @@ class PlayerControlWidget extends StatelessWidget {
           ),
         ]);
   }
-
 
   Widget _previousButton(
       PlayerController playerController, BuildContext context) {
@@ -174,7 +177,11 @@ Widget _nextButton(PlayerController playerController, BuildContext context) {
         icon: Icon(
           Icons.skip_next,
           color: isLastSong
-              ? Theme.of(context).textTheme.titleLarge!.color!.withValues(alpha: 0.2)
+              ? Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .color!
+                  .withValues(alpha: 0.2)
               : Theme.of(context).textTheme.titleMedium!.color,
         ),
         iconSize: 30,

@@ -27,8 +27,10 @@ class HMStreamingData {
       );
     }
     // Cast nested objects to Map<String, dynamic> to fix type errors from cache
-    final lowQualityAudio = Audio.fromJson(Map<String, dynamic>.from(json['lowQualityAudio']));
-    final highQualityAudio = Audio.fromJson(Map<String, dynamic>.from(json['highQualityAudio']));
+    final lowQualityAudio =
+        Audio.fromJson(Map<String, dynamic>.from(json['lowQualityAudio']));
+    final highQualityAudio =
+        Audio.fromJson(Map<String, dynamic>.from(json['highQualityAudio']));
     return HMStreamingData(
         playable: json['playable'],
         statusMSG: json['statusMSG'],

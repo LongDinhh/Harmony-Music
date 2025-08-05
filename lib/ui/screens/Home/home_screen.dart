@@ -40,10 +40,9 @@ Widget _buildFloatingActionButton(
     SettingsScreenController settingsScreenController,
     PlayerController playerController) {
   return Obx(() {
-    final showFAB =
-        ((homeScreenController.tabIndex.value == 0 && !GetPlatform.isDesktop) ||
-                homeScreenController.tabIndex.value == 2) &&
-            settingsScreenController.isBottomNavBarEnabled.isFalse;
+    final showFAB = (homeScreenController.tabIndex.value == 0 ||
+            homeScreenController.tabIndex.value == 2) &&
+        settingsScreenController.isBottomNavBarEnabled.isFalse;
 
     if (!showFAB) return const SizedBox.shrink();
 
@@ -85,8 +84,7 @@ Widget _buildFloatingActionButton(
 Widget _buildBody(SettingsScreenController settingsScreenController,
     HomeScreenController homeScreenController) {
   return Obx(() => AnimatedScreenTransition(
-        enabled: settingsScreenController
-            .isTransitionAnimationDisabled.isFalse,
+        enabled: settingsScreenController.isTransitionAnimationDisabled.isFalse,
         resverse: homeScreenController.reverseAnimationtransiton,
         horizontalTransition:
             settingsScreenController.isBottomNavBarEnabled.isTrue,
@@ -239,9 +237,7 @@ class Body extends StatelessWidget {
                               child: ListView.builder(
                                 padding: EdgeInsets.only(
                                   bottom: bottomPadding,
-                                  top: GetPlatform.isDesktop
-                                      ? topPadding
-                                      : topPadding,
+                                  top: topPadding,
                                 ),
                                 itemCount: items.length,
                                 itemBuilder: (context, index) => items[index],

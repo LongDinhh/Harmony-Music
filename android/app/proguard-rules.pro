@@ -22,6 +22,10 @@
 # Keep JNI classes
 -keep class com.github.dart_lang.jni.** { *; }
 
+# Keep Play Core classes
+-keep class com.google.android.play.core.** { *; }
+-keep interface com.google.android.play.core.** { *; }
+
 # General Android optimizations
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses

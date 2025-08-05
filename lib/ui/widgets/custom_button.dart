@@ -43,7 +43,7 @@ class CancelButton extends StatelessWidget {
       ),
       onTap: () {
         Navigator.of(context).pop();
-         if (onPressed != null) {
+        if (onPressed != null) {
           onPressed!();
         }
       },

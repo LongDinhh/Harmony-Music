@@ -367,9 +367,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
   @override
   Future<void> play() async {
     if (currentSongUrl == null ||
-        (GetPlatform.isDesktop &&
-            (_player.duration == null ||
-                _player.duration?.inMilliseconds == 0))) {
+        (_player.duration == null || _player.duration?.inMilliseconds == 0)) {
       // Use gentle approach before loading new song
       if (_player.playing) {
         await _player.pause();
@@ -559,20 +557,18 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
         }
 
         if (restoreSession) {
-          if (!GetPlatform.isDesktop) {
-            final position = extras['position'];
-            await _player.load();
-            await _player.seek(
-              Duration(
-                milliseconds: position,
-              ),
-            );
-            await _player.seek(
-              Duration(
-                milliseconds: position,
-              ),
-            );
-          }
+          final position = extras['position'];
+          await _player.load();
+          await _player.seek(
+            Duration(
+              milliseconds: position,
+            ),
+          );
+          await _player.seek(
+            Duration(
+              milliseconds: position,
+            ),
+          );
         } else {
           await _player.play();
         }

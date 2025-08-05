@@ -239,7 +239,8 @@ class LibraryPlaylistsController extends GetxController
   final creationInProgress = false.obs;
   final textInputController = TextEditingController();
   List<Playlist> tempListContainer = [];
-  final ScrollController gridScrollController = ScrollController(keepScrollOffset: false);
+  final ScrollController gridScrollController =
+      ScrollController(keepScrollOffset: false);
 
   // Add these RxBool to track import progress
   final isImporting = false.obs;

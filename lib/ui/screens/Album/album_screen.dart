@@ -215,9 +215,7 @@ class AlbumScreen extends StatelessWidget {
                             itemBuilder: (_, index) {
                               if (index == 0) {
                                 return Padding(
-                                  padding: EdgeInsets.only(
-                                      left:
-                                          GetPlatform.isDesktop ? 15.0 : 10.0),
+                                  padding: const EdgeInsets.only(left: 10.0),
                                   child: SizedBox(
                                       height: 40,
                                       child: Row(

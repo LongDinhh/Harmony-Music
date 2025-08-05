@@ -37,59 +37,58 @@ class SongsLibraryWidget extends StatelessWidget {
                   ),
                 ),
           GetBuilder<LibrarySongsController>(
-            init: LibrarySongsController(),
-            builder: (libSongsController) => Obx(() => SortWidget(
-              tag: "LibSongSort",
-              screenController: libSongsController,
-              itemCountTitle: "${libSongsController.librarySongsList.length}",
-              itemIcon: Icons.music_note,
-              titleLeftPadding: 9,
-              requiredSortTypes: buildSortTypeSet(true, true),
-              isSearchFeatureRequired: true,
-              isSongDeletetioFeatureRequired: true,
-              onSort: (type, ascending) {
-                libSongsController.onSort(type, ascending);
-              },
-              onSearch: libSongsController.onSearch,
-              onSearchClose: libSongsController.onSearchClose,
-              onSearchStart: libSongsController.onSearchStart,
-              startAdditionalOperation:
-                  libSongsController.startAdditionalOperation,
-              selectAll: libSongsController.selectAll,
-              performAdditionalOperation:
-                  libSongsController.performAdditionalOperation,
-              cancelAdditionalOperation:
-                  libSongsController.cancelAdditionalOperation,
-            ))
-          ),
+              init: LibrarySongsController(),
+              builder: (libSongsController) => Obx(() => SortWidget(
+                    tag: "LibSongSort",
+                    screenController: libSongsController,
+                    itemCountTitle:
+                        "${libSongsController.librarySongsList.length}",
+                    itemIcon: Icons.music_note,
+                    titleLeftPadding: 9,
+                    requiredSortTypes: buildSortTypeSet(true, true),
+                    isSearchFeatureRequired: true,
+                    isSongDeletetioFeatureRequired: true,
+                    onSort: (type, ascending) {
+                      libSongsController.onSort(type, ascending);
+                    },
+                    onSearch: libSongsController.onSearch,
+                    onSearchClose: libSongsController.onSearchClose,
+                    onSearchStart: libSongsController.onSearchStart,
+                    startAdditionalOperation:
+                        libSongsController.startAdditionalOperation,
+                    selectAll: libSongsController.selectAll,
+                    performAdditionalOperation:
+                        libSongsController.performAdditionalOperation,
+                    cancelAdditionalOperation:
+                        libSongsController.cancelAdditionalOperation,
+                  ))),
           GetBuilder<LibrarySongsController>(
-            init: LibrarySongsController(),
-            builder: (controller) => controller.librarySongsList.isNotEmpty
-                ? (controller.additionalOperationMode.value ==
-                        OperationMode.none
-                    ? ListWidget(
-                        controller.librarySongsList,
-                        "library Songs",
-                        true,
-                        isPlaylistOrAlbum: true,
-                        playlist: Playlist(
-                            title: "Library Songs",
-                            playlistId: "SongsDownloads",
-                            thumbnailUrl: "",
-                            isCloudPlaylist: false),
-                      )
-                    : ModificationList(
-                        mode: controller.additionalOperationMode.value,
-                        screenController: controller,
-                      ))
-                : Expanded(
-                    child: Center(
-                        child: Text(
-                      "noOfflineSong".tr,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    )),
-                  )
-          )
+              init: LibrarySongsController(),
+              builder: (controller) => controller.librarySongsList.isNotEmpty
+                  ? (controller.additionalOperationMode.value ==
+                          OperationMode.none
+                      ? ListWidget(
+                          controller.librarySongsList,
+                          "library Songs",
+                          true,
+                          isPlaylistOrAlbum: true,
+                          playlist: Playlist(
+                              title: "Library Songs",
+                              playlistId: "SongsDownloads",
+                              thumbnailUrl: "",
+                              isCloudPlaylist: false),
+                        )
+                      : ModificationList(
+                          mode: controller.additionalOperationMode.value,
+                          screenController: controller,
+                        ))
+                  : Expanded(
+                      child: Center(
+                          child: Text(
+                        "noOfflineSong".tr,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      )),
+                    ))
         ],
       ),
     );
@@ -104,9 +103,12 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final libralbumCntrller = Get.put(LibraryAlbumsController(), permanent: true);
-    final librplstCntrller = Get.put(LibraryPlaylistsController(), permanent: true);
-    final settingscrnController = Get.put(SettingsScreenController(), permanent: true);
+    final libralbumCntrller =
+        Get.put(LibraryAlbumsController(), permanent: true);
+    final librplstCntrller =
+        Get.put(LibraryPlaylistsController(), permanent: true);
+    final settingscrnController =
+        Get.put(SettingsScreenController(), permanent: true);
     final size = MediaQuery.of(context).size;
 
     const double itemHeight = 180;
@@ -201,8 +203,8 @@ class PlaylistNAlbumLibraryWidget extends StatelessWidget {
                               crossAxisCount: columns,
                               childAspectRatio: (itemWidth / itemHeight),
                             ),
-                            controller:
-                                Get.find<LibraryPlaylistsController>().gridScrollController,
+                            controller: Get.find<LibraryPlaylistsController>()
+                                .gridScrollController,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             padding:
