@@ -1,27 +1,34 @@
 // ignore_for_file: constant_identifier_names
 
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
 
-import '/models/album.dart';
-import '/services/utils.dart';
 import '../utils/helper.dart';
 import '../utils/error_handler.dart';
 import 'constant.dart';
-import 'continuations.dart';
-import 'nav_parser.dart';
-import 'package:crypto/crypto.dart';
-import 'youtube_cookie_manager.dart';
 import 'youtube_config_service.dart';
+
+// Import các service mới
+import 'network_service.dart';
+import 'cookie_service.dart';
+import 'api_service.dart';
+import 'youtube_data_parser_service.dart';
 
 enum AudioQuality {
   Low,
   High,
 }
 
+/// Refactored MusicServices - now delegates to specialized services
 class MusicServices extends getx.GetxService {
+  // Service dependencies - lazy initialization
+  NetworkService? _networkService;
+  CookieService? _cookieService;
+  APIService? _apiService;
+  YouTubeDataParserService? _parserService;
+
+  // Legacy headers for backward compatibility
   final Map<String, String> _headers = {
     'user-agent': userAgent,
     'accept': '*/*',
@@ -32,6 +39,7 @@ class MusicServices extends getx.GetxService {
     'X-Goog-AuthUser': '0',
   };
 
+  // Legacy context for backward compatibility
   final Map<String, dynamic> _context = {
     'context': {
       'client': {
@@ -56,83 +64,65 @@ class MusicServices extends getx.GetxService {
 
   @override
   void onInit() {
+    _initializeServices();
     init();
     super.onInit();
   }
 
+  /// Initialize all service dependencies
+  void _initializeServices() {
+    try {
+      _networkService = NetworkService.instance;
+      _cookieService = CookieService.instance;
+      _apiService = APIService.instance;
+      _parserService = YouTubeDataParserService.instance;
+    } catch (e) {
+      // Services will be initialized lazily if not available
+      printINFO(
+          '⚠️ Some services not yet initialized, will initialize lazily: $e');
+    }
+  }
+
+  // Lazy getters for services
+  NetworkService get networkService {
+    _networkService ??= NetworkService.instance;
+    return _networkService!;
+  }
+
+  CookieService get cookieService {
+    _cookieService ??= CookieService.instance;
+    return _cookieService!;
+  }
+
+  APIService get apiService {
+    _apiService ??= APIService.instance;
+    return _apiService!;
+  }
+
+  YouTubeDataParserService get parserService {
+    _parserService ??= YouTubeDataParserService.instance;
+    return _parserService!;
+  }
+
+  // Legacy dio instance for backward compatibility
   final dio = Dio();
 
-  /// Main initialization method - coordinates all setup steps
+  /// Main initialization method - now delegates to services
   Future<void> init() async {
-    await _setupContext();
-    _configureDioSecurity();
-    await _initializeCookies();
-    _setupInterceptors();
-    await _initializeAppData();
-    await _setupVisitorId();
-  }
-
-  /// Sets up the YouTube API context with current timestamp
-  Future<void> _setupContext() async {
-    final date = DateTime.now();
-    _context['context']['client']['clientVersion'] =
-        "1.${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}.03.00";
-    
-    final signatureTimestamp = getDatestamp() - 1;
-    _context['playbackContext'] = {
-      'contentPlaybackContext': {'signatureTimestamp': signatureTimestamp},
-    };
-  }
-
-  /// Sets up Dio interceptors for cookie and SAPISIDHASH handling
-  void _setupInterceptors() {
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        await _handleRequestInterceptor(options);
-        handler.next(options);
-      },
-      onResponse: (response, handler) async {
-        await _handleResponseInterceptor(response);
-        handler.next(response);
-      },
-    ));
-  }
-
-  /// Handles request interceptor logic for cookies and authorization
-  Future<void> _handleRequestInterceptor(RequestOptions options) async {
     try {
-      final cookies = await YouTubeCookieManager.getCachedCookieString();
-      if (cookies.isNotEmpty) {
-        options.headers['cookie'] = cookies;
-        await _addAuthorizationHeader(options);
-      }
+      printINFO('Initializing MusicServices with new architecture...');
+
+      // Initialize services in order
+      await cookieService.initializeCookies();
+      networkService.configureSecurity();
+      await _initializeAppData();
+      await _setupVisitorId();
+
+      printINFO('MusicServices initialization completed successfully');
     } catch (e) {
-      AppErrorHandler.handleError(e, null, context: 'Cookie interceptor');
-    }
-  }
-
-  /// Adds SAPISIDHASH authorization header if credentials available
-  Future<void> _addAuthorizationHeader(RequestOptions options) async {
-    final sapisid = await YouTubeCookieManager.getYouTubeCookie('SAPISID');
-    final dataSyncId = await YouTubeConfigService.getDatasyncId();
-
-    if (sapisid != null && dataSyncId != null) {
-      final sapisidHash = await getSApiSidHash(
-        dataSyncId, 
-        sapisid['value'],
-        origin: domain,
-      );
-      if (sapisidHash != null) {
-        options.headers['Authorization'] = 'SAPISIDHASH $sapisidHash';
-      }
-    }
-  }
-
-  /// Handles response interceptor logic for cookie updates
-  Future<void> _handleResponseInterceptor(Response response) async {
-    final responseCookies = response.headers.map['set-cookie'];
-    if (responseCookies != null && responseCookies.isNotEmpty) {
-      await YouTubeCookieManager.saveFromResponseHeaders(responseCookies);
+      AppErrorHandler.handleError(e, null,
+          context: 'MusicServices initialization');
+      rethrow;
     }
   }
 
@@ -153,34 +143,11 @@ class MusicServices extends getx.GetxService {
         "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
   }
 
-  /// Cấu hình bảo mật cho Dio
-  void _configureDioSecurity() {
-    // Configure Dio with security settings
-    dio.options = BaseOptions(
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-      connectTimeout: const Duration(seconds: 30),
-      followRedirects: true,
-      maxRedirects: 5,
-      validateStatus: (status) => status != null && status < 500,
-    );
-
-    // Add security headers
-    dio.options.headers.addAll({
-      'Accept-Encoding': 'gzip, deflate',
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache',
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY',
-    });
-  }
-
   /// Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
   Future<void> _initializeAppData() async {
     try {
       printINFO("Initializing app data...");
-      final response = await _retryRequest(
-          () => dio.get(domain, options: Options(headers: _headers)));
+      final response = await networkService.get(domain);
 
       await _processResponseData(response);
     } catch (e) {
@@ -193,22 +160,13 @@ class MusicServices extends getx.GetxService {
   Future<void> _processResponseData(Response response) async {
     final responseCookies = response.headers.map['set-cookie'];
     if (responseCookies != null && responseCookies.isNotEmpty) {
-      await YouTubeCookieManager.saveFromResponseHeaders(responseCookies);
+      await cookieService.handleResponseCookies(responseCookies);
     }
 
-    final config = _extractYtcfg(response.data.toString());
+    final config = parserService.extractYtcfg(response.data.toString());
     if (config != null) {
       await _saveVisitorData(config);
     }
-  }
-
-  Map<String, dynamic>? _extractYtcfg(String responseData) {
-    final reg = RegExp(r'ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;');
-    final matches = reg.firstMatch(responseData);
-    if (matches != null) {
-      return json.decode(matches.group(1).toString());
-    }
-    return null;
   }
 
   Future<void> _saveVisitorData(Map<String, dynamic> config) async {
@@ -257,65 +215,24 @@ class MusicServices extends getx.GetxService {
     }
   }
 
+  /// Delegate to parser service
   String? _extractDatasyncId(Map<String, dynamic> config) {
-    // Thử các key có thể chứa datasyncId theo thứ tự ưu tiên
-    final possibleKeys = ['USER_SESSION_ID', 'DATASYNC_ID', 'datasyncId'];
-
-    for (final key in possibleKeys) {
-      final value = config[key]?.toString();
-      if (value != null && value.isNotEmpty) {
-        // Xóa ký tự | và validate format
-        final cleanValue =
-            value.replaceAll('|', '').replaceAll('||', '').trim();
-        if (_isValidDatasyncId(cleanValue)) {
-          printINFO("Extracted datasyncId from key '$key': $cleanValue");
-          return cleanValue;
-        }
-      }
-    }
-
-    printWARN("No valid datasyncId found in config: ${config.keys.toList()}");
-    return null;
-  }
-
-  /// Validate datasyncId format
-  bool _isValidDatasyncId(String? datasyncId) {
-    if (datasyncId == null || datasyncId.isEmpty) return false;
-
-    // Basic validation: should not contain pipes, should have reasonable length
-    if (datasyncId.contains('|') || datasyncId.length < 10) {
-      return false;
-    }
-
-    // Should contain alphanumeric characters and common special chars
-    final validPattern = RegExp(r'^[a-zA-Z0-9_\-\.\+\=]+$');
-    return validPattern.hasMatch(datasyncId);
+    return parserService.extractDatasyncId(config);
   }
 
   set hlCode(String code) {
     _context['context']['client']['hl'] = code;
+    // Also update APIService
+    apiService.hlCode = code;
   }
 
-  /// Khởi tạo cookie từ storage hoặc tạo mới (đã tối ưu)
-  Future<void> _initializeCookies() async {
-    try {
-      // Thêm cookie YouTube đã đăng nhập nếu có
-      _headers['cookie'] = await YouTubeCookieManager.getCachedCookieString();
-      printINFO('Added YouTube cookies to requests');
-    } catch (e) {
-      AppErrorHandler.handleError(e, null, context: 'Cookie initialization');
-      _headers['cookie'] = 'CONSENT=YES+1';
-    }
-  }
-
+  /// Generate visitor ID using NetworkService
   Future<String?> genrateVisitorId() async {
     try {
-      final response = await _retryRequest(
-          () => dio.get(domain, options: Options(headers: _headers)));
-
+      final response = await networkService.get(domain);
       await _processResponseData(response);
 
-      final config = _extractYtcfg(response.data.toString());
+      final config = parserService.extractYtcfg(response.data.toString());
       if (config != null) {
         await _saveVisitorData(config);
         return config['VISITOR_DATA']?.toString();
@@ -327,90 +244,18 @@ class MusicServices extends getx.GetxService {
     }
   }
 
-  Future<Response> _sendRequest(String action, Map<dynamic, dynamic> data,
-      {additionalParams = ""}) async {
-    return _retryRequest(() async {
-      final response = await dio.post(
-        "$baseUrl$action$fixedParms$additionalParams",
-        options: Options(headers: _headers),
-        data: data,
-      );
-
-      if (response.statusCode != 200) {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-        );
-      }
-      return response;
-    });
-  }
-
-  Future<Response> _retryRequest(Future<Response> Function() requestFn) async {
-    for (int i = 0; i < 3; i++) {
-      try {
-        return await requestFn();
-      } on DioException catch (e) {
-        if (i == 2) {
-          AppErrorHandler.handleError(e, null,
-              context: 'Request after 3 attempts');
-          throw NetworkError();
-        }
-        await Future.delayed(Duration(milliseconds: 1000 * (i + 1)));
-      }
-    }
-    throw NetworkError();
-  }
-
-  // Future<List<Map<String, dynamic>>>
+  /// Delegate to APIService - backward compatible
   Future<dynamic> getHome({int limit = 4}) async {
-    final data = Map.from(_context);
-    data["browseId"] = "FEmusic_home";
-    final response = await _sendRequest("browse", data);
-    final results = nav(response.data, single_column_tab + section_list);
-    final home = [...parseMixedContent(results)];
-
-    final sectionList =
-        nav(response.data, single_column_tab + ['sectionListRenderer']);
-    //print(sectionList.containsKey('continuations'));
-    if (sectionList.containsKey('continuations')) {
-      requestFunc(additionalParams) async {
-        return (await _sendRequest("browse", data,
-                additionalParams: additionalParams))
-            .data;
-      }
-
-      parseFunc(contents) => parseMixedContent(contents);
-      final x = (await getContinuations(sectionList, 'sectionListContinuation',
-          limit - home.length, requestFunc, parseFunc));
-      // inspect(x);
-      home.addAll([...x]);
-    }
-
-    return home;
+    return await apiService.getHomeData(limit: limit);
   }
 
+  /// Delegate to APIService - backward compatible
   Future<List<Map<String, dynamic>>> getCharts(
       {String? countryCode = "vi"}) async {
-    final List<Map<String, dynamic>> charts = [];
-    final data = Map.from(_context);
-
-    data['browseId'] = 'FEmusic_charts';
-    if (countryCode != null) {
-      data['formData'] = {
-        'selectedValues': [countryCode]
-      };
-    }
-    final response = (await _sendRequest('browse', data)).data;
-    final results = nav(response, single_column_tab + section_list);
-    results.removeAt(0);
-    for (dynamic result in results) {
-      charts.add(parseChartsItem(result));
-    }
-
-    return charts;
+    return await apiService.getCharts(countryCode: countryCode);
   }
 
+  /// Delegate to APIService - backward compatible
   Future<Map<String, dynamic>> getWatchPlaylist(
       {String videoId = "",
       String? playlistId,
@@ -419,808 +264,119 @@ class MusicServices extends getx.GetxService {
       bool shuffle = false,
       String? additionalParamsNext,
       bool onlyRelated = false}) async {
-    if (videoId.isNotEmpty && videoId.substring(0, 4) == "MPED") {
-      videoId = videoId.substring(4);
-    }
-    final data = Map.from(_context);
-    data['enablePersistentPlaylistPanel'] = true;
-    data['isAudioOnly'] = true;
-    data['tunerSettingValue'] = 'AUTOMIX_SETTING_NORMAL';
-    if (videoId == "" && playlistId == null) {
-      throw Exception(
-          "You must provide either a video id, a playlist id, or both");
-    }
-    if (videoId != "") {
-      data['videoId'] = videoId;
-      playlistId ??= "RDAMVM$videoId";
-
-      if (!(radio || shuffle)) {
-        data['watchEndpointMusicSupportedConfigs'] = {
-          'watchEndpointMusicConfig': {
-            'hasPersistentPlaylistPanel': true,
-            'musicVideoType': "MUSIC_VIDEO_TYPE_ATV",
-          }
-        };
-      }
-    }
-
-    playlistId = validatePlaylistId(playlistId!);
-    data['playlistId'] = playlistId;
-    final isPlaylist =
-        playlistId.startsWith('PL') || playlistId.startsWith('OLA');
-    if (shuffle) {
-      data['params'] = "wAEB8gECKAE%3D";
-    }
-    if (radio) {
-      data['params'] = "wAEB";
-    }
-
-    final List<dynamic> tracks = [];
-    dynamic lyricsBrowseId, relatedBrowseId, playlist;
-    final results = {};
-
-    if (additionalParamsNext == null) {
-      final response = (await _sendRequest("next", data)).data;
-      final watchNextRenderer = nav(response, [
-        'contents',
-        'singleColumnMusicWatchNextResultsRenderer',
-        'tabbedRenderer',
-        'watchNextTabbedResultsRenderer'
-      ]);
-
-      lyricsBrowseId = getTabBrowseId(watchNextRenderer, 1);
-      relatedBrowseId = getTabBrowseId(watchNextRenderer, 2);
-      if (onlyRelated) {
-        return {
-          'lyrics': lyricsBrowseId,
-          'related': relatedBrowseId,
-        };
-      }
-
-      results.addAll(nav(watchNextRenderer, [
-        ...tab_content,
-        'musicQueueRenderer',
-        'content',
-        'playlistPanelRenderer'
-      ]));
-      playlist = results['contents']
-          .map((content) => nav(content,
-              ['playlistPanelVideoRenderer', ...navigation_playlist_id]))
-          .where((e) => e != null)
-          .toList()
-          .first;
-      tracks.addAll(parseWatchPlaylist(results['contents']));
-    }
-
-    dynamic additionalParamsForNext;
-    if (results.containsKey('continuations') || additionalParamsNext != null) {
-      requestFunc(additionalParams) async =>
-          (await _sendRequest("next", data, additionalParams: additionalParams))
-              .data;
-      parseFunc(contents) => parseWatchPlaylist(contents);
-      final x = await getContinuations(results, 'playlistPanelContinuation',
-          limit - tracks.length, requestFunc, parseFunc,
-          ctokenPath: isPlaylist ? '' : 'Radio',
-          isAdditionparamReturnReq: true,
-          additionalParams_: additionalParamsNext);
-      additionalParamsForNext = x[1];
-      tracks.addAll(List<dynamic>.from(x[0]));
-    }
-
-    return {
-      'tracks': tracks,
-      'playlistId': playlist,
-      'lyrics': lyricsBrowseId,
-      'related': relatedBrowseId,
-      'additionalParamsForNext': additionalParamsForNext
-    };
-  }
-
-  Future<String> getAlbumBrowseId(String audioPlaylistId) async {
-    final response = await dio.get("${domain}playlist",
-        options: Options(headers: _headers),
-        queryParameters: {"list": audioPlaylistId});
-    final reg = RegExp(r'\"MPRE.+?\"');
-    final matchs = reg.firstMatch(response.data.toString());
-    if (matchs != null) {
-      final x = (matchs[0])!;
-      final res = (x.substring(1)).split("\\")[0];
-      return res;
-    }
-    return audioPlaylistId;
-  }
-
-  dynamic getContentRelatedToSong(String videoId, String hlCode) async {
-    final params = await getWatchPlaylist(videoId: videoId, onlyRelated: true);
-    final data = Map.from(_context);
-    data['browseId'] = params['related'];
-    data['context']['client']['hl'] = hlCode;
-    final response = (await _sendRequest('browse', data)).data;
-    final sections = nav(response, ['contents'] + section_list);
-    final x = parseMixedContent(sections);
-    return x;
-  }
-
-  dynamic getLyrics(String browseId) async {
-    final data = Map.from(_context);
-    data['browseId'] = browseId;
-    final response = (await _sendRequest('browse', data)).data;
-    return nav(
-      response,
-      ['contents', ...section_list_item, ...description_shelf, ...description],
+    return await apiService.getWatchPlaylist(
+      videoId: videoId,
+      playlistId: playlistId,
+      limit: limit,
+      radio: radio,
+      shuffle: shuffle,
+      additionalParamsNext: additionalParamsNext,
+      onlyRelated: onlyRelated,
     );
   }
 
+  /// Delegate to APIService - backward compatible
+  Future<String> getAlbumBrowseId(String audioPlaylistId) async {
+    return await apiService.getAlbumBrowseId(audioPlaylistId);
+  }
+
+  /// Delegate to APIService - backward compatible
+  Future<dynamic> getContentRelatedToSong(String videoId, String hlCode) async {
+    return await apiService.getContentRelatedToSong(videoId, hlCode);
+  }
+
+  /// Delegate to APIService - backward compatible
+  Future<dynamic> getLyrics(String browseId) async {
+    return await apiService.getLyrics(browseId);
+  }
+
+  /// Delegate to APIService - backward compatible
   Future<Map<String, dynamic>> getPlaylistOrAlbumSongs(
       {String? playlistId,
       String? albumId,
       int limit = 3000,
       bool related = false,
       int suggestionsLimit = 0}) async {
-    String browseId = playlistId != null
-        ? (playlistId.startsWith("VL") ? playlistId : "VL$playlistId")
-        : albumId!;
-    if (albumId != null && albumId.contains("OLAK5uy")) {
-      browseId = await getAlbumBrowseId(browseId);
-    }
-    final data = Map.from(_context);
-    data['browseId'] = browseId;
-    final Map<String, dynamic> response =
-        (await _sendRequest('browse', data)).data;
-    if (playlistId != null) {
-      final dynamic headerData =
-          nav(response, ['header', "musicDetailHeaderRenderer"]) ??
-              nav(response, [
-                'contents',
-                "twoColumnBrowseResultsRenderer",
-                'tabs',
-                0,
-                "tabRenderer",
-                "content",
-                "sectionListRenderer",
-                "contents",
-                0,
-                "musicResponsiveHeaderRenderer"
-              ]);
-
-      final dynamic resultsData = nav(response, musicPlaylistShelfRenderer) ??
-          nav(
-            response,
-            [
-              'contents',
-              "singleColumnBrowseResultsRenderer",
-              "tabs",
-              0,
-              "tabRenderer",
-              "content",
-              'sectionListRenderer',
-              'contents',
-              0,
-              "musicPlaylistShelfRenderer"
-            ],
-          );
-
-      // Return empty playlist if essential data is missing
-      if (headerData == null || resultsData == null) {
-        return {
-          'id': playlistId,
-          'title': 'Unknown Playlist',
-          'tracks': <dynamic>[],
-          'trackCount': 0,
-          'duration_seconds': 0,
-        };
-      }
-
-      final Map<String, dynamic> header = headerData as Map<String, dynamic>;
-      final Map<String, dynamic> results = resultsData as Map<String, dynamic>;
-      final Map<String, dynamic> playlist = {
-        'id': results['playlistId'] ?? playlistId
-      };
-
-      playlist['title'] = nav(header, title_text) ?? 'Unknown Playlist';
-      playlist['thumbnails'] = nav(header, thumnail_cropped) ??
-          nav(header, [
-            "thumbnail",
-            "musicThumbnailRenderer",
-            "thumbnail",
-            "thumbnails"
-          ]);
-      playlist["description"] = nav(header, description);
-
-      // Safely check subtitle data
-      int runCount = 0;
-      if (header['subtitle'] != null && header['subtitle']['runs'] != null) {
-        runCount = header['subtitle']['runs'].length;
-        if (runCount > 1) {
-          playlist['author'] = {
-            'name': nav(header, subtitle2),
-            'id': nav(header, ['subtitle', 'runs', 2] + navigation_browse_id)
-          };
-          if (runCount == 5) {
-            playlist['year'] = nav(header, subtitle3);
-          }
-        }
-      }
-
-      int songCount = 0;
-      if (header['secondSubtitle'] != null &&
-          header['secondSubtitle']['runs'] != null) {
-        final int secondSubtitleRunCount =
-            header['secondSubtitle']['runs'].length;
-        final String count = (((header['secondSubtitle']['runs']
-                        [secondSubtitleRunCount % 3]['text'])
-                    .split(' ')[0])
-                .split(',') as List)
-            .join();
-        songCount = int.parse(count);
-        if (header['secondSubtitle']['runs'].length > 1) {
-          playlist['duration'] = header['secondSubtitle']['runs']
-              [(secondSubtitleRunCount % 3) + 2]['text'];
-        }
-      }
-      playlist['trackCount'] = songCount;
-
-      // requestFunc(additionalParams) async => (await _sendRequest("browse", data,
-      //         additionalParams: additionalParams))
-      //     .data;
-
-      requestFuncCountinuation(cont) async =>
-          (await _sendRequest("browse", {...data, ...cont})).data;
-
-      if (songCount > 0) {
-        playlist['tracks'] = parsePlaylistItems(results['contents']);
-        limit = songCount;
-
-        List<dynamic> parseFunc(contents) => parsePlaylistItems(contents);
-
-        playlist['tracks'] = [
-          ...(playlist['tracks']),
-          ...(await getContinuationsPlaylist(
-              results, limit, requestFuncCountinuation, parseFunc))
-        ];
-      } else {
-        // Initialize empty tracks list when no songs found
-        playlist['tracks'] = <dynamic>[];
-      }
-      playlist['duration_seconds'] = sumTotalDuration(playlist);
-      return playlist;
-    }
-
-    //album content
-    final album = parseAlbumHeader(response);
-    dynamic results = nav(
-          response,
-          [
-            'contents',
-            "twoColumnBrowseResultsRenderer",
-            "secondaryContents",
-            'sectionListRenderer',
-            'contents',
-            0,
-            'musicShelfRenderer'
-          ],
-        ) ??
-        nav(
-          response,
-          [
-            'contents',
-            "singleColumnBrowseResultsRenderer",
-            "tabs",
-            0,
-            "tabRenderer",
-            "content",
-            'sectionListRenderer',
-            'contents',
-            0,
-            'musicShelfRenderer'
-          ],
-        );
-
-    album['tracks'] = parsePlaylistItems(results['contents'],
-        artistsM: album['artists'],
-        thumbnailsM: album["thumbnails"],
-        albumIdName: {"id": albumId, 'name': album['title']},
-        albumYear: album['year'],
-        isAlbum: true);
-    results = nav(
-      response,
-      [...single_column_tab, ...section_list, 1, 'musicCarouselShelfRenderer'],
+    return await apiService.getPlaylistOrAlbumSongs(
+      playlistId: playlistId,
+      albumId: albumId,
+      limit: limit,
+      related: related,
+      suggestionsLimit: suggestionsLimit,
     );
-    if (results != null) {
-      List contents = [];
-      if (results.runtimeType.toString().contains("Iterable") ||
-          results.runtimeType.toString().contains("List")) {
-        for (dynamic result in results) {
-          contents.add(parseAlbum(result['musicTwoRowItemRenderer']));
-        }
-      } else {
-        contents
-            .add(parseAlbum(results['contents'][0]['musicTwoRowItemRenderer']));
-      }
-      album['other_versions'] = contents;
-    }
-    album['duration_seconds'] = sumTotalDuration(album);
-
-    return album;
   }
 
+  /// Delegate to APIService - backward compatible
   Future<List<String>> getSearchSuggestion(String queryStr) async {
-    final data = Map.from(_context);
-    data['input'] = queryStr;
-    final res = nav(
-            (await _sendRequest("music/get_search_suggestions", data)).data,
-            ['contents', 0, 'searchSuggestionsSectionRenderer', 'contents']) ??
-        [];
-    return res
-        .map<String?>((item) {
-          return (nav(item, [
-            'searchSuggestionRenderer',
-            'navigationEndpoint',
-            'searchEndpoint',
-            'query'
-          ])).toString();
-        })
-        .whereType<String>()
-        .toList();
+    return await apiService.getSearchSuggestion(queryStr);
   }
 
-  ///Specially created for deep-links
+  /// Delegate to APIService - backward compatible
   Future<List> getSongWithId(String songId) async {
-    final data = Map.of(_context);
-    data['videoId'] = songId;
-    final response = (await _sendRequest("player", data)).data;
-    final category =
-        nav(response, ["microformat", "microformatDataRenderer", "category"]);
-    if (category == "Music" ||
-        (response["videoDetails"]).containsKey("musicVideoType")) {
-      final list = await getWatchPlaylist(videoId: songId);
-      return [true, list['tracks']];
-    }
-    return [false, null];
+    return await apiService.getSongWithId(songId);
   }
 
+  /// Delegate to APIService - backward compatible
   Future<Map<String, dynamic>> search(String query,
       {String? filter,
       String? scope,
       int limit = 30,
       bool ignoreSpelling = false}) async {
-    final data = Map.of(_context);
-    data['context']['client']["hl"] = 'en';
-    data['query'] = query;
-
-    final Map<String, dynamic> searchResults = {};
-    final filters = [
-      'albums',
-      'artists',
-      'playlists',
-      'community_playlists',
-      'featured_playlists',
-      'songs',
-      'videos'
-    ];
-
-    if (filter != null && !filters.contains(filter)) {
-      throw Exception(
-          'Invalid filter provided. Please use one of the following filters or leave out the parameter: ${filters.join(', ')}');
-    }
-
-    final scopes = ['library', 'uploads'];
-
-    if (scope != null && !scopes.contains(scope)) {
-      throw Exception(
-          'Invalid scope provided. Please use one of the following scopes or leave out the parameter: ${scopes.join(', ')}');
-    }
-
-    if (scope == scopes[1] && filter != null) {
-      throw Exception(
-          'No filter can be set when searching uploads. Please unset the filter parameter when scope is set to uploads.');
-    }
-
-    final params = getSearchParams(filter, scope, ignoreSpelling);
-
-    if (params != null) {
-      data['params'] = params;
-    }
-
-    final response = (await _sendRequest("search", data)).data;
-
-    if (response['contents'] == null) {
-      return searchResults;
-    }
-
-    dynamic results;
-
-    if ((response['contents']).containsKey('tabbedSearchResultsRenderer')) {
-      final tabIndex =
-          scope == null || filter != null ? 0 : scopes.indexOf(scope) + 1;
-      results = response['contents']['tabbedSearchResultsRenderer']['tabs']
-          [tabIndex]['tabRenderer']['content'];
-    } else {
-      results = response['contents'];
-    }
-
-    results = nav(results, ['sectionListRenderer', 'contents']);
-
-    if (results.length == 1 && results[0]['itemSectionRenderer'] != null) {
-      return searchResults;
-    }
-
-    String? type;
-
-    for (var res in results) {
-      String category;
-      if (res.containsKey('musicCardShelfRenderer')) {
-        //final topResult = parseTopResult(res['musicCardShelfRenderer'], ['artist', 'playlist', 'song', 'video', 'station']);
-        //searchResults.add(topResult);
-        results = nav(res, ['musicCardShelfRenderer', 'contents']);
-        if (results != null) {
-          if ((results[0]).containsKey("messageRenderer")) {
-            category = nav(results[0], ['messageRenderer', ...text_run_text]);
-            results = results.sublist(1);
-          }
-          //type = null;
-        } else {
-          continue;
-        }
-        continue;
-      } else if (res['musicShelfRenderer'] != null) {
-        results = res['musicShelfRenderer']['contents'];
-        String? typeFilter = filter;
-
-        category = nav(res, ['musicShelfRenderer', ...title_text]);
-
-        if (typeFilter == null && scope == scopes[0]) {
-          typeFilter = category;
-        }
-
-        type = typeFilter?.substring(0, typeFilter.length - 1).toLowerCase();
-      } else {
-        continue;
-      }
-
-      searchResults[category] = parseSearchResults(results,
-          ['artist', 'playlist', 'song', 'video', 'station'], type, category);
-
-      if (filter != null) {
-        requestFunc(additionalParams) async =>
-            (await _sendRequest("search", data,
-                    additionalParams: additionalParams))
-                .data;
-        parseFunc(contents) => parseSearchResults(contents,
-            ['artist', 'playlist', 'song', 'video', 'station'], type, category);
-
-        if (searchResults.containsKey(category)) {
-          final x = await getContinuations(
-              res['musicShelfRenderer'],
-              'musicShelfContinuation',
-              limit - ((searchResults[category] as List).length),
-              requestFunc,
-              parseFunc,
-              isAdditionparamReturnReq: true);
-
-          searchResults["params"] = {
-            'data': data,
-            "type": type,
-            "category": category,
-            'additionalParams': x[1],
-          };
-
-          searchResults[category] = [
-            ...(searchResults[category] as List),
-            ...(x[0])
-          ];
-        }
-      }
-    }
-
-    return searchResults;
+    return await apiService.search(
+      query,
+      filter: filter,
+      scope: scope,
+      limit: limit,
+      ignoreSpelling: ignoreSpelling,
+    );
   }
 
+  /// Delegate to APIService - backward compatible
   Future<Map<String, dynamic>> getSearchContinuation(Map additionalParamsNext,
       {int limit = 10}) async {
-    final data = additionalParamsNext['data'];
-    final type = additionalParamsNext['type'];
-    final category = additionalParamsNext['category'];
-    final Map<String, dynamic> searchResults = {};
-
-    requestFunc(additionalParams) async =>
-        (await _sendRequest("search", data, additionalParams: additionalParams))
-            .data;
-
-    parseFunc(contents) => parseSearchResults(contents,
-        ['artist', 'playlist', 'song', 'video', 'station'], type, category);
-
-    final x = await getContinuations(
-        {}, 'musicShelfContinuation', limit, requestFunc, parseFunc,
-        isAdditionparamReturnReq: true,
-        additionalParams_: additionalParamsNext['additionalParams']);
-
-    searchResults["params"] = {
-      "data": data,
-      "type": type,
-      "category": category,
-      'additionalParams': x[1],
-    };
-
-    searchResults[category] = x[0];
-
-    return searchResults;
+    return await apiService.getSearchContinuation(additionalParamsNext,
+        limit: limit);
   }
 
+  /// Delegate to APIService - backward compatible
   Future<Map<String, dynamic>> getArtist(String channelId) async {
-    if (channelId.startsWith("MPLA")) {
-      channelId = channelId.substring(4);
-    }
-    final data = Map.from(_context);
-    data['context']['client']["hl"] = 'en';
-    data['browseId'] = channelId;
-    final response = (await _sendRequest("browse", data)).data;
-    final results = nav(response, [...single_column_tab, ...section_list]);
-
-    final Map<String, dynamic> artist = {'description': null, 'views': null};
-    final Map<String, dynamic> header = (response['header']
-            ['musicImmersiveHeaderRenderer']) ??
-        response['header']['musicVisualHeaderRenderer'];
-    artist['name'] = nav(header, title_text);
-    final descriptionShelf =
-        findObjectByKey(results, description_shelf[0], isKey: true);
-    if (descriptionShelf != null) {
-      artist['description'] = nav(descriptionShelf, description);
-      artist['views'] = descriptionShelf['subheader'] == null
-          ? null
-          : descriptionShelf['subheader']['runs'][0]['text'];
-    }
-    final dynamic subscriptionButton = header['subscriptionButton'] != null
-        ? header['subscriptionButton']['subscribeButtonRenderer']
-        : null;
-    artist['channelId'] = channelId;
-    artist['shuffleId'] = nav(header,
-        ['playButton', 'buttonRenderer', ...navigation_watch_playlist_id]);
-    artist['radioId'] = nav(
-      header,
-      ['startRadioButton', 'buttonRenderer'] + navigation_playlist_id,
-    );
-    artist['subscribers'] = subscriptionButton != null
-        ? nav(
-            subscriptionButton,
-            ['subscriberCountText', 'runs', 0, 'text'],
-          )
-        : null;
-
-    artist['thumbnails'] = nav(header, thumbnails);
-
-    artist.addAll(parseArtistContents(results));
-    return artist;
+    return await apiService.getArtist(channelId);
   }
 
+  /// Delegate to APIService - backward compatible
   Future<Map<String, dynamic>> getArtistRealtedContent(
       Map<String, dynamic> browseEndpoint, String category,
       {String additionalParams = ""}) async {
-    final Map<String, dynamic> result = {
-      "results": [],
-    };
-    final data = Map.of(_context);
-    browseEndpoint.remove("content");
-    if (browseEndpoint.isEmpty) return result;
-    data.addAll(browseEndpoint);
-    final response =
-        (await _sendRequest("browse", data, additionalParams: additionalParams))
-            .data;
-    final contents = nav(response, [
-      'contents',
-      'singleColumnBrowseResultsRenderer',
-      'tabs',
-      0,
-      'tabRenderer',
-      'content',
-      'sectionListRenderer',
-      'contents',
-      0,
-    ]);
-
-    if (category == "Songs" || category == "Videos") {
-      if (additionalParams != "") {
-        final contentList = nav(response, [
-          "onResponseReceivedActions",
-          0,
-          "appendContinuationItemsAction",
-          "continuationItems"
-        ]);
-        final x = parsePlaylistItems(contentList);
-        result['results'] = x;
-        result['additionalParams'] = "&ctoken=${null}&continuation=${null}";
-      } else if (contents.containsKey("gridRenderer")) {
-        result['results'] = (contents['gridRenderer']['items'])
-            .map((video) => parseVideo(video['musicTwoRowItemRenderer']))
-            .toList();
-        result['additionalParams'] = "&ctoken=${null}&continuation=${null}";
-      } else {
-        final collapseContent =
-            nav(contents, ['musicPlaylistShelfRenderer', "collapsedItemCount"]);
-        if (collapseContent != null) {
-          final contentlist =
-              contents['musicPlaylistShelfRenderer']['contents'];
-          if (contentlist.length.toString() != collapseContent.toString()) {
-            final continuationItem = contentlist.removeAt(100);
-            result['results'] = parsePlaylistItems(contentlist);
-            final continuationKey = nav(continuationItem, [
-              "continuationItemRenderer",
-              "continuationEndpoint",
-              "continuationCommand",
-              "token"
-            ]);
-            result['additionalParams'] =
-                "&ctoken=$continuationKey&continuation=$continuationKey";
-          } else {
-            result['results'] = parsePlaylistItems(contentlist);
-            result['additionalParams'] = "&ctoken=null&continuation=null";
-          }
-        }
-        return result;
-      }
-    } else if (category == 'Albums' || category == 'Singles') {
-      List contentlist;
-
-      /// in continuation
-      if (additionalParams != "") {
-        contentlist =
-            response['continuationContents']['gridContinuation']['items'];
-        final continuationKey = nav(response, [
-          'continuationContents',
-          'gridContinuation',
-          'continuations',
-          0,
-          'nextContinuationData',
-          'continuation'
-        ]);
-        result['additionalParams'] =
-            "&ctoken=$continuationKey&continuation=$continuationKey";
-      } else {
-        /// in first request
-        contentlist = contents['gridRenderer']['items'];
-
-        final continuationKey = nav(contents, [
-          'gridRenderer',
-          'continuations',
-          0,
-          'nextContinuationData',
-          'continuation'
-        ]);
-        result['additionalParams'] =
-            "&ctoken=$continuationKey&continuation=$continuationKey";
-      }
-
-      result['results'] = category == 'Albums'
-          ? contentlist
-              .map((item) => parseAlbum(item['musicTwoRowItemRenderer']))
-              .whereType<Album>()
-              .toList()
-          : contentlist
-              .map((item) => parseSingle(item['musicTwoRowItemRenderer']))
-              .whereType<Album>()
-              .toList();
-    }
-    return result;
+    return await apiService.getArtistRealtedContent(browseEndpoint, category,
+        additionalParams: additionalParams);
   }
 
+  /// Delegate to APIService - backward compatible
   Future<String?> getSongYear(String songId) async {
-    final data = Map.from(_context);
-    data['browseId'] = "MPTC$songId";
-    try {
-      final response = (await _sendRequest('browse', data)).data;
-      String? year = nav(response, [
-        "onResponseReceivedActions",
-        0,
-        "openPopupAction",
-        "popup",
-        "dismissableDialogRenderer",
-        "metadata",
-        "musicMultiRowListItemRenderer",
-        "secondTitle",
-        "runs",
-        2,
-        "text"
-      ]);
-      return year;
-    } catch (e) {
-      rethrow;
-    }
+    return await apiService.getSongYear(songId);
   }
 
   @override
   void onClose() {
+    // Clean up legacy dio instance
     dio.close();
+
+    // Services will clean up themselves through their own onClose methods
     super.onClose();
   }
 
-  /// Làm mới cookie YouTube trong requests (đã tối ưu)
+  /// Delegate to CookieService - backward compatible
   Future<void> refreshYouTubeCookies() async {
-    try {
-      // Clear cache để force refresh
-      await YouTubeCookieManager.cleanupExpiredCookies();
-
-      final youtubeCookies = await YouTubeCookieManager.getCachedCookieString();
-      if (youtubeCookies.isNotEmpty) {
-        final existingCookies = _headers['cookie'] ?? '';
-
-        // Tránh trùng lặp cookie bằng cách kiểm tra trước
-        final combinedCookies = existingCookies.isNotEmpty
-            ? _mergeCookies(existingCookies, youtubeCookies)
-            : youtubeCookies;
-
-        _headers['cookie'] = combinedCookies;
-        printINFO(
-            'YouTube cookies refreshed in requests (${youtubeCookies.split(';').length} cookies)');
-      } else {
-        printINFO('No YouTube cookies to refresh');
-      }
-    } catch (e) {
-      AppErrorHandler.handleError(e, null, context: 'YouTube cookie refresh');
-    }
+    await cookieService.refreshCookies();
   }
 
-  /// Merge cookies tránh trùng lặp
-  String _mergeCookies(String existing, String newCookies) {
-    final cookieMap = <String, String>{};
-
-    // Parse existing cookies
-    for (final cookie in existing.split(';')) {
-      final parts = cookie.trim().split('=');
-      if (parts.length == 2) {
-        cookieMap[parts[0]] = parts[1];
-      }
-    }
-
-    // Parse và merge new cookies
-    for (final cookie in newCookies.split(';')) {
-      final parts = cookie.trim().split('=');
-      if (parts.length == 2) {
-        cookieMap[parts[0]] = parts[1]; // Override existing
-      }
-    }
-
-    return cookieMap.entries.map((e) => '${e.key}=${e.value}').join('; ');
-  }
-
-  String _sha1(String input) {
-    var bytes = utf8.encode(input);
-    var digest = sha1.convert(bytes);
-    return digest.toString();
-  }
-
-  /// Tạo SAPISIDHASH cho YouTube API
-  ///
-  /// [datasyncId] - ID datasync (nếu null sẽ lấy từ storage)
-  /// [cookieString] - Chuỗi cookie chứa SAPISID
-  /// [origin] - Origin URL (mặc định là https://www.youtube.com)
+  /// Delegate to CookieService - backward compatible
   Future<String?> getSApiSidHash(String? datasyncId, String sapisid,
       {String origin = "https://music.youtube.com"}) async {
-    try {
-      // Nếu datasyncId không được truyền vào, lấy từ storage
-      String? finalDatasyncId = datasyncId;
-      if (finalDatasyncId == null) {
-        finalDatasyncId = await YouTubeConfigService.getDatasyncId();
-        if (finalDatasyncId == null) {
-          AppErrorHandler.logWarning(
-              "No datasyncId available for SAPISIDHASH generation",
-              context: 'SAPISIDHASH');
-          return null;
-        }
-      }
-
-      final timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
-
-      final inputString =
-          [finalDatasyncId, timestamp, sapisid, origin].join(' ');
-      final digest = _sha1(inputString);
-
-      final sapisidHash = '${timestamp}_${digest}_u';
-
-      return sapisidHash;
-    } catch (e) {
-      AppErrorHandler.handleError(e, null, context: 'SAPISIDHASH generation');
-      return null;
-    }
+    return await cookieService.generateSAPISIDHASH(
+      datasyncId: datasyncId,
+      origin: origin,
+    );
   }
 }
 

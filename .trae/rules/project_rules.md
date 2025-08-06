@@ -1,0 +1,1 @@
+1. prefers running 'flutter analyze' and 'flutter build ios' to check and fix errors instead of manual testing and debugging.

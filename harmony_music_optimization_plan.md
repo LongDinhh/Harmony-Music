@@ -272,6 +272,13 @@ class YouTubeDataParserService {
 - [ ] Maintained backward compatibility
 - [ ] Integration tests pass
 
+Áp dụng Repository Pattern
+- **Mục tiêu**: Tách biệt logic truy cập dữ liệu khỏi business logic
+- **Công việc cụ thể**:
+  - `HomeContentRepository` để quản lý việc lấy dữ liệu home screen
+  - `MusicRepository` để quản lý các thao tác với dữ liệu nhạc
+  - `PlayerRepository` để quản lý queue và lịch sử phát nhạc
+
 ---
 
 ### 2.3 Async/Await Pattern Migration
