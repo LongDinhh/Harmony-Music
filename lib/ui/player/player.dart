@@ -10,6 +10,9 @@ import '../widgets/snackbar.dart';
 import '../widgets/up_next_queue.dart';
 import '/ui/player/player_controller.dart';
 import '../widgets/sliding_up_panel.dart';
+import '/ui/player/widgets/queue_length_label.dart';
+import '/ui/player/widgets/queue_loop_btn.dart';
+import '../../utils/performance_testing.dart';
 
 /// Player screen
 /// Contains the player ui
@@ -22,16 +25,20 @@ class Player extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final PlayerController playerController = Get.find<PlayerController>();
-    final settingsScreenController = Get.find<SettingsScreenController>();
+
     return Scaffold(
       /// SlidingUpPanel is used to create a panel that can slide up and down
       /// It is used to show the current queue panel in mobile
-      body: Obx(
-        () => SlidingUpPanel(
+      body: Obx(() {
+        // Use Obx only to calculate minHeight from settings
+        final settingsController = Get.find<SettingsScreenController>();
+        final minHeight = settingsController.playerUi.value == 0
+            ? 55.0 + MediaQuery.paddingOf(context).bottom
+            : 0.0;
+
+        return SlidingUpPanel(
           boxShadow: const [],
-          minHeight: settingsScreenController.playerUi.value == 0
-              ? 55 + MediaQuery.paddingOf(context).bottom
-              : 0,
+          minHeight: minHeight,
           maxHeight: size.height,
           isDraggable: !GetPlatform.isDesktop,
           controller: GetPlatform.isDesktop
@@ -64,7 +71,7 @@ class Player extends StatelessWidget {
                     ),
                   ],
                 )),
-          ),
+          ).trackPerformance('Player_QueuePanelHeader'),
 
           /// Panel for queue
           panelBuilder: (ScrollController sc, onReorderStart, onReorderEnd) {
@@ -76,7 +83,7 @@ class Player extends StatelessWidget {
                 UpNextQueue(
                   onReorderEnd: onReorderEnd,
                   onReorderStart: onReorderStart,
-                ),
+                ).trackPerformance('Player_UpNextQueue'),
 
                 /// Stack second child
                 /// This contains the bottom bar with queue loop, shuffle, clear queue buttons
@@ -103,44 +110,23 @@ class Player extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              /// number of songs in queue
-                              Obx(
-                                () => Text(
-                                  "${playerController.currentQueue.length} ${"songs".tr}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .color),
-                                ),
-                              ),
+                              /// number of songs in queue - using reactive widget
+                              QueueLengthLabel(
+                                suffix: " ${"songs".tr}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .color),
+                              ).trackPerformance('Player_QueueLengthLabel'),
 
-                              /// queue loop button
-                              InkWell(
-                                onTap: () {
-                                  playerController.toggleQueueLoopMode();
-                                },
-                                child: Obx(
-                                  () => Container(
-                                    height: 30,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
-                                    decoration: BoxDecoration(
-                                      color: playerController
-                                              .isQueueLoopModeEnabled.isFalse
-                                          ? Colors.white24
-                                          : Colors.white.withValues(alpha: 0.8),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(child: Text("queueLoop".tr)),
-                                  ),
-                                ),
-                              ),
+                              /// queue loop button - using reactive widget
+                              const QueueLoopBtn().trackPerformance('Player_QueueLoopBtn'),
 
-                              /// queue shuffle button
+                              /// queue shuffle button - stateless
                               InkWell(
                                 onTap: () {
                                   if (playerController
@@ -165,9 +151,9 @@ class Player extends StatelessWidget {
                                       child: Icon(Icons.shuffle,
                                           color: Colors.black)),
                                 ),
-                              ),
+                              ).trackPerformance('Player_ShuffleBtn'),
 
-                              /// clear queue button
+                              /// clear queue button - stateless
                               InkWell(
                                 onTap: () {
                                   playerController.clearQueue();
@@ -184,25 +170,28 @@ class Player extends StatelessWidget {
                                       child: Icon(Icons.playlist_remove,
                                           color: Colors.black)),
                                 ),
-                              ),
+                              ).trackPerformance('Player_ClearQueueBtn'),
                             ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ).trackPerformance('Player_QueueControlsBar'),
               ],
             );
           },
 
           /// show player ui based on selected player ui in settings
           /// Gesture player is only applicable for mobile
-          body: settingsScreenController.playerUi.value == 0
-              ? const StandardPlayer()
-              : const GesturePlayer(),
-        ),
-      ),
+          body: GetX<SettingsScreenController>(
+            builder: (settingsController) =>
+                settingsController.playerUi.value == 0
+                    ? const StandardPlayer().trackPerformance('Player_StandardPlayer')
+                    : const GesturePlayer().trackPerformance('Player_GesturePlayer'),
+          ).trackPerformance('Player_SettingsObx'),
+        );
+      }).trackPerformance('Player_MainObx'),
     );
   }
 }

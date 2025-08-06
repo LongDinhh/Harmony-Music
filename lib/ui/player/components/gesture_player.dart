@@ -5,13 +5,14 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmonymusic/ui/player/components/background_image.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:widget_marquee/widget_marquee.dart';
 
 import '../../widgets/songinfo_bottom_sheet.dart';
 import '../../utils/theme_controller.dart';
 import '../player_controller.dart';
 import '../../../utils/haptic_utils.dart';
+import '../widgets/song_title_marquee.dart';
+import '../widgets/artist_marquee.dart';
+import '../widgets/player_button_widgets.dart';
 
 class GesturePlayer extends StatelessWidget {
   const GesturePlayer({super.key});
@@ -92,55 +93,28 @@ class GesturePlayer extends StatelessWidget {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Obx(() {
-                                    return Marquee(
-                                      delay: const Duration(milliseconds: 300),
-                                      duration: const Duration(seconds: 10),
-                                      id: "${playerController.currentSong.value}_title",
-                                      child: Text(
-                                        playerController.currentSong.value !=
-                                                null
-                                            ? playerController
-                                                .currentSong.value!.title
-                                            : "NA",
-                                        textAlign: TextAlign.start,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor
-                                                    .complementaryColor),
-                                      ),
-                                    );
-                                  }),
+                                  SongTitleMarquee(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .primaryColor
+                                                .complementaryColor),
+                                  ),
                                   const SizedBox(
                                     height: 7,
                                   ),
-                                  GetX<PlayerController>(builder: (controller) {
-                                    return Marquee(
-                                      delay: const Duration(milliseconds: 300),
-                                      duration: const Duration(seconds: 10),
-                                      id: "${playerController.currentSong.value}_subtitle",
-                                      child: Text(
-                                        playerController.currentSong.value !=
-                                                null
-                                            ? controller
-                                                .currentSong.value!.artist!
-                                            : "NA",
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor
-                                                    .complementaryColor,
-                                                fontWeight: FontWeight.normal),
-                                      ),
-                                    );
-                                  }),
+                                  ArtistMarquee(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .primaryColor
+                                                .complementaryColor,
+                                            fontWeight: FontWeight.normal),
+                                  ),
                                 ]),
                           ),
                           SizedBox(
@@ -155,43 +129,19 @@ class GesturePlayer extends StatelessWidget {
                                     visualDensity: const VisualDensity(
                                         horizontal: -4, vertical: -4),
                                     onPressed: playerController.toggleFavourite,
-                                    icon: Obx(() => Icon(
-                                          playerController
-                                                  .isCurrentSongFav.isFalse
-                                              ? Icons.favorite_border
-                                              : Icons.favorite,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .color,
-                                        ))),
+                                    icon: const FavoriteButton(iconSize: 20)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Obx(() {
-                                      return IconButton(
-                                          splashRadius: 10,
-                                          visualDensity: const VisualDensity(
-                                              horizontal: -4, vertical: -4),
-                                          iconSize: 18,
-                                          onPressed:
-                                              playerController.toggleLoopMode,
-                                          icon: Icon(
-                                            Icons.all_inclusive,
-                                            color: playerController
-                                                    .isLoopModeEnabled.value
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge!
-                                                    .color
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge!
-                                                    .color!
-                                                    .withValues(alpha: 0.2),
-                                          ));
-                                    }),
+                                    IconButton(
+                                        splashRadius: 10,
+                                        visualDensity: const VisualDensity(
+                                            horizontal: -4, vertical: -4),
+                                        iconSize: 18,
+                                        onPressed:
+                                            playerController.toggleLoopMode,
+                                        icon: const LoopButton(iconSize: 18)),
                                     IconButton(
                                       iconSize: 18,
                                       splashRadius: 10,
@@ -199,22 +149,7 @@ class GesturePlayer extends StatelessWidget {
                                           horizontal: -4, vertical: -4),
                                       onPressed:
                                           playerController.toggleShuffleMode,
-                                      icon: Obx(
-                                        () => Icon(
-                                          Ionicons.shuffle,
-                                          color: playerController
-                                                  .isShuffleModeEnabled.value
-                                              ? Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .color
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .color!
-                                                  .withValues(alpha: 0.2),
-                                        ),
-                                      ),
+                                      icon: const ShuffleButton(iconSize: 18),
                                     ),
                                   ],
                                 )
@@ -278,18 +213,18 @@ class _GesturePlayerIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerController = Get.find<PlayerController>();
-    
+
     return Obx(() => FadeTransition(
-      opacity: playerController.gesturePlayerStateAnimation!,
-      child: playerController.gesturePlayerVisibleState.value == 2
-          ? const SizedBox.shrink()
-          : Icon(
-              playerController.gesturePlayerVisibleState.value == 1
-                  ? Icons.play_arrow
-                  : Icons.pause,
-              size: 180,
-              color: Colors.white,
-            ),
-    ));
+          opacity: playerController.gesturePlayerStateAnimation!,
+          child: playerController.gesturePlayerVisibleState.value == 2
+              ? const SizedBox.shrink()
+              : Icon(
+                  playerController.gesturePlayerVisibleState.value == 1
+                      ? Icons.play_arrow
+                      : Icons.pause,
+                  size: 180,
+                  color: Colors.white,
+                ),
+        ));
   }
 }

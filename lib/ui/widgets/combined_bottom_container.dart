@@ -40,7 +40,6 @@ class CombinedBottomContainer extends StatelessWidget {
           playerController.isPanelGTHOpened.isFalse &&
           !isKeyboardOpen; // Ẩn nav bar khi keyboard mở
 
-
       // If neither should show, return empty
       if (!shouldShowMiniPlayer && !shouldShowBottomNav) {
         return const SizedBox.shrink();

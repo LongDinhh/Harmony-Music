@@ -75,7 +75,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
 
     // Platform detection logged via debug mode only
     if (kDebugMode) {
-      debugPrint("Platform detected - Android: ${GetPlatform.isAndroid}, iOS: ${GetPlatform.isIOS}");
+      debugPrint(
+          "Platform detected - Android: ${GetPlatform.isAndroid}, iOS: ${GetPlatform.isIOS}");
     }
 
     // Configure after initialization
@@ -123,7 +124,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       // No need to set empty source in new API
       // Player will be ready to accept audio sources when needed
     } catch (r) {
-      AppErrorHandler.handleError(r, null, context: 'AudioService initialization');
+      AppErrorHandler.handleError(r, null,
+          context: 'AudioService initialization');
       throw AudioException.loadFailed();
     }
   }
@@ -177,7 +179,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
     }, onError: (Object e, StackTrace st) async {
       if (e is PlayerException) {
         AppErrorHandler.handleError(e, st, context: 'PlayerException');
-        throw AudioException.playbackError('Code: ${e.code}, Message: ${e.message}');
+        throw AudioException.playbackError(
+            'Code: ${e.code}, Message: ${e.message}');
       } else {
         AppErrorHandler.handleError(e, st, context: 'Audio playback error');
         Duration curPos = _player.position;
@@ -687,7 +690,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
                   streamInfo == null ? 0 : streamInfo[1]["loudnessDb"]);
             }
           } catch (e) {
-            AppErrorHandler.handleError(e, null, context: 'Audio queue processing');
+            AppErrorHandler.handleError(e, null,
+                context: 'Audio queue processing');
           }
         }
         break;

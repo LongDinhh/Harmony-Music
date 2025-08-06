@@ -17,7 +17,7 @@ class QuickPicksWidget extends StatelessWidget {
     // So sánh text gốc với text đã dịch
     final translatedText = title.toLowerCase().removeAllWhitespace.tr;
     final originalText = title.toLowerCase().removeAllWhitespace;
-    
+
     // Nếu text dịch giống với text gốc (không có bản dịch), dùng text gốc
     // Nếu text dịch khác với text gốc (có bản dịch), dùng text dịch
     return translatedText == originalText ? title : translatedText;
@@ -42,9 +42,13 @@ class QuickPicksWidget extends StatelessWidget {
           Expanded(
             child: Scrollbar(
               thickness: GetPlatform.isDesktop ? null : 0,
-              controller: scrollController?.hasClients == true ? scrollController : null,
+              controller: scrollController?.hasClients == true
+                  ? scrollController
+                  : null,
               child: GridView.builder(
-                  controller: scrollController?.hasClients == true ? scrollController : null,
+                  controller: scrollController?.hasClients == true
+                      ? scrollController
+                      : null,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: content.songList.length,

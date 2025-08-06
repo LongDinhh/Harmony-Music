@@ -27,16 +27,17 @@ class RebuildHotspot {
   });
 
   Map<String, dynamic> toJson() => {
-    'filePath': filePath.replaceAll('/Users/longdv/Code/longdinhh/Harmony-Music/', ''),
-    'widgetName': widgetName,
-    'line': line,
-    'obxPattern': obxPattern,
-    'severity': severity,
-    'reason': reason,
-    'estimatedRebuildsPerMinute': estimatedRebuildsPerMinute,
-    'estimatedBuildTimeMs': estimatedBuildTimeMs,
-    'dependencies': dependencies,
-  };
+        'filePath': filePath.replaceAll(
+            '/Users/longdv/Code/longdinhh/Harmony-Music/', ''),
+        'widgetName': widgetName,
+        'line': line,
+        'obxPattern': obxPattern,
+        'severity': severity,
+        'reason': reason,
+        'estimatedRebuildsPerMinute': estimatedRebuildsPerMinute,
+        'estimatedBuildTimeMs': estimatedBuildTimeMs,
+        'dependencies': dependencies,
+      };
 }
 
 class WidgetComplexity {
@@ -59,14 +60,15 @@ class WidgetComplexity {
   });
 
   Map<String, dynamic> toJson() => {
-    'filePath': filePath.replaceAll('/Users/longdv/Code/longdinhh/Harmony-Music/', ''),
-    'widgetName': widgetName,
-    'nestingDepth': nestingDepth,
-    'childCount': childCount,
-    'hasAnimations': hasAnimations,
-    'hasComplexLayouts': hasComplexLayouts,
-    'expensiveOperations': expensiveOperations,
-  };
+        'filePath': filePath.replaceAll(
+            '/Users/longdv/Code/longdinhh/Harmony-Music/', ''),
+        'widgetName': widgetName,
+        'nestingDepth': nestingDepth,
+        'childCount': childCount,
+        'hasAnimations': hasAnimations,
+        'hasComplexLayouts': hasComplexLayouts,
+        'expensiveOperations': expensiveOperations,
+      };
 }
 
 Future<void> main() async {
@@ -92,19 +94,24 @@ Future<void> main() async {
   print('📁 Generated files:');
   print('  - rebuild_hotspots.csv: Ranked list of rebuild hotspots');
   print('  - widget_complexity_analysis.json: Detailed widget analysis');
-  print('  - performance_profile_guide.md: Instructions for performance profiling');
+  print(
+      '  - performance_profile_guide.md: Instructions for performance profiling');
 
   // Summary
-  final highSeverityCount = rebuildHotspots.where((h) => h.severity == 'HIGH').length;
-  final mediumSeverityCount = rebuildHotspots.where((h) => h.severity == 'MEDIUM').length;
+  final highSeverityCount =
+      rebuildHotspots.where((h) => h.severity == 'HIGH').length;
+  final mediumSeverityCount =
+      rebuildHotspots.where((h) => h.severity == 'MEDIUM').length;
 
   print('\n📈 Summary:');
   print('  - Total hotspots found: ${rebuildHotspots.length}');
   print('  - High severity: $highSeverityCount');
   print('  - Medium severity: $mediumSeverityCount');
   print('  - Complex widgets analyzed: ${complexWidgets.length}');
-  print('  - Hotspots >200 rebuilds/min: ${rebuildHotspots.where((h) => h.estimatedRebuildsPerMinute > 200).length}');
-  print('  - Widgets >5ms build time: ${rebuildHotspots.where((h) => h.estimatedBuildTimeMs > 5).length}');
+  print(
+      '  - Hotspots >200 rebuilds/min: ${rebuildHotspots.where((h) => h.estimatedRebuildsPerMinute > 200).length}');
+  print(
+      '  - Widgets >5ms build time: ${rebuildHotspots.where((h) => h.estimatedBuildTimeMs > 5).length}');
 }
 
 Future<List<RebuildHotspot>> detectRebuildHotspots() async {
@@ -139,7 +146,8 @@ Future<List<RebuildHotspot>> detectRebuildHotspots() async {
   return hotspots;
 }
 
-RebuildHotspot? analyzeObxPattern(String filePath, int lineNum, String line, List<String> allLines, int currentIndex) {
+RebuildHotspot? analyzeObxPattern(String filePath, int lineNum, String line,
+    List<String> allLines, int currentIndex) {
   final fileName = filePath.split('/').last;
   String widgetName = 'Unknown';
   String severity = 'MEDIUM';
@@ -175,13 +183,16 @@ RebuildHotspot? analyzeObxPattern(String filePath, int lineNum, String line, Lis
   final widgetSize = estimateWidgetSize(allLines, currentIndex);
   if (widgetSize > 50) {
     severity = 'HIGH';
-    reason = 'Large widget ($widgetSize lines) wrapped in Obx - rebuilds entirely';
+    reason =
+        'Large widget ($widgetSize lines) wrapped in Obx - rebuilds entirely';
     estimatedRebuilds = 250;
     estimatedBuildTime = 10.0;
   }
 
   // Check for Obx without id/tag in lists
-  if (isInListView(allLines, currentIndex) && !line.contains('id:') && !line.contains('tag:')) {
+  if (isInListView(allLines, currentIndex) &&
+      !line.contains('id:') &&
+      !line.contains('tag:')) {
     severity = 'HIGH';
     reason = 'Obx in ListView without id/tag - causes excessive rebuilds';
     estimatedRebuilds = 400;
@@ -215,7 +226,9 @@ RebuildHotspot? analyzeObxPattern(String filePath, int lineNum, String line, Lis
     filePath: filePath,
     widgetName: widgetName,
     line: lineNum,
-    obxPattern: obxPattern.length > 100 ? '${obxPattern.substring(0, 100)}...' : obxPattern,
+    obxPattern: obxPattern.length > 100
+        ? '${obxPattern.substring(0, 100)}...'
+        : obxPattern,
     severity: severity,
     reason: reason.isEmpty ? 'Standard Obx usage' : reason,
     estimatedRebuildsPerMinute: estimatedRebuilds,
@@ -336,7 +349,8 @@ Future<List<WidgetComplexity>> analyzeWidgetComplexity() async {
   return complexWidgets;
 }
 
-WidgetComplexity? analyzeWidgetComplexityAt(String filePath, List<String> lines, int startIndex) {
+WidgetComplexity? analyzeWidgetComplexityAt(
+    String filePath, List<String> lines, int startIndex) {
   final classLine = lines[startIndex];
   final classMatch = RegExp(r'class\s+(\w+)').firstMatch(classLine);
   if (classMatch == null) return null;
@@ -362,7 +376,9 @@ WidgetComplexity? analyzeWidgetComplexityAt(String filePath, List<String> lines,
   bool hasComplexLayouts = false;
   List<String> expensiveOps = [];
 
-  for (int i = buildMethodIndex; i < lines.length && i < buildMethodIndex + 200; i++) {
+  for (int i = buildMethodIndex;
+      i < lines.length && i < buildMethodIndex + 200;
+      i++) {
     final line = lines[i];
 
     // Count nesting
@@ -376,12 +392,16 @@ WidgetComplexity? analyzeWidgetComplexityAt(String filePath, List<String> lines,
     }
 
     // Check for animations
-    if (line.contains('Animation') || line.contains('Tween') || line.contains('AnimatedContainer')) {
+    if (line.contains('Animation') ||
+        line.contains('Tween') ||
+        line.contains('AnimatedContainer')) {
       hasAnimations = true;
     }
 
     // Check for complex layouts
-    if (line.contains('CustomPaint') || line.contains('Transform') || line.contains('ClipPath')) {
+    if (line.contains('CustomPaint') ||
+        line.contains('Transform') ||
+        line.contains('ClipPath')) {
       hasComplexLayouts = true;
     }
 
@@ -408,19 +428,24 @@ WidgetComplexity? analyzeWidgetComplexityAt(String filePath, List<String> lines,
   );
 }
 
-Future<void> generateRebuildHotspotsCSV(List<RebuildHotspot> hotspots, List<WidgetComplexity> complexWidgets) async {
+Future<void> generateRebuildHotspotsCSV(List<RebuildHotspot> hotspots,
+    List<WidgetComplexity> complexWidgets) async {
   final csv = StringBuffer();
 
   // CSV Header
-  csv.writeln('File,Widget,Line,Severity,Rebuilds/Min,Build Time (ms),Reason,Dependencies,Pattern Preview');
+  csv.writeln(
+      'File,Widget,Line,Severity,Rebuilds/Min,Build Time (ms),Reason,Dependencies,Pattern Preview');
 
   for (final hotspot in hotspots) {
     // Escape CSV values
-    final escapedReason = hotspot.reason.replaceAll(',', ';').replaceAll('"', '""');
-    final escapedPattern = hotspot.obxPattern.replaceAll(',', ';').replaceAll('"', '""');
+    final escapedReason =
+        hotspot.reason.replaceAll(',', ';').replaceAll('"', '""');
+    final escapedPattern =
+        hotspot.obxPattern.replaceAll(',', ';').replaceAll('"', '""');
     final escapedDeps = hotspot.dependencies.join(';');
 
-    csv.writeln('"${hotspot.filePath}","${hotspot.widgetName}",${hotspot.line},"${hotspot.severity}",${hotspot.estimatedRebuildsPerMinute},${hotspot.estimatedBuildTimeMs},"$escapedReason","$escapedDeps","$escapedPattern"');
+    csv.writeln(
+        '"${hotspot.filePath}","${hotspot.widgetName}",${hotspot.line},"${hotspot.severity}",${hotspot.estimatedRebuildsPerMinute},${hotspot.estimatedBuildTimeMs},"$escapedReason","$escapedDeps","$escapedPattern"');
   }
 
   await File('rebuild_hotspots.csv').writeAsString(csv.toString());
@@ -431,22 +456,27 @@ Future<void> generateRebuildHotspotsCSV(List<RebuildHotspot> hotspots, List<Widg
     'widgetComplexity': complexWidgets.map((w) => w.toJson()).toList(),
     'summary': {
       'totalHotspots': hotspots.length,
-      'highSeverityHotspots': hotspots.where((h) => h.severity == 'HIGH').length,
-      'hotspotsOver200Rebuilds': hotspots.where((h) => h.estimatedRebuildsPerMinute > 200).length,
-      'hotspotsOver5msBuildTime': hotspots.where((h) => h.estimatedBuildTimeMs > 5).length,
-      'topRebuildFiles': hotspots.take(10).map((h) => {
-        'file': h.filePath.split('/').last,
-        'rebuildsPerMinute': h.estimatedRebuildsPerMinute,
-        'buildTimeMs': h.estimatedBuildTimeMs,
-        'impact': h.estimatedRebuildsPerMinute * h.estimatedBuildTimeMs,
-      }).toList(),
+      'highSeverityHotspots':
+          hotspots.where((h) => h.severity == 'HIGH').length,
+      'hotspotsOver200Rebuilds':
+          hotspots.where((h) => h.estimatedRebuildsPerMinute > 200).length,
+      'hotspotsOver5msBuildTime':
+          hotspots.where((h) => h.estimatedBuildTimeMs > 5).length,
+      'topRebuildFiles': hotspots
+          .take(10)
+          .map((h) => {
+                'file': h.filePath.split('/').last,
+                'rebuildsPerMinute': h.estimatedRebuildsPerMinute,
+                'buildTimeMs': h.estimatedBuildTimeMs,
+                'impact': h.estimatedRebuildsPerMinute * h.estimatedBuildTimeMs,
+              })
+          .toList(),
     },
     'generatedAt': DateTime.now().toIso8601String(),
   };
 
-  await File('widget_complexity_analysis.json').writeAsString(
-    JsonEncoder.withIndent('  ').convert(analysis)
-  );
+  await File('widget_complexity_analysis.json')
+      .writeAsString(JsonEncoder.withIndent('  ').convert(analysis));
 }
 
 Future<void> generateProfileInstructions() async {

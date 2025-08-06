@@ -252,7 +252,8 @@ class Downloader extends GetxService {
 
           // Verify file exists and is accessible
           if (!await file.exists()) {
-            AppErrorHandler.handleError("File does not exist: $filePath", null, context: 'Metadata writing');
+            AppErrorHandler.handleError("File does not exist: $filePath", null,
+                context: 'Metadata writing');
             return;
           }
 

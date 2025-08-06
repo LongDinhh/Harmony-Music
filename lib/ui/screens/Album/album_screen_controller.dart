@@ -30,7 +30,6 @@ class AlbumScreenController extends PlaylistAlbumScreenControllerBase
   Animation<double> get scaleAnimation => _scaleAnimation;
   Animation<double> get heightAnimation => _heightAnimation;
 
-
   @override
   void onInit() {
     super.onInit();
@@ -39,7 +38,8 @@ class AlbumScreenController extends PlaylistAlbumScreenControllerBase
       duration: const Duration(milliseconds: 400),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0, end: 1.0).animate(animationController);
+    _scaleAnimation =
+        Tween<double>(begin: 0, end: 1.0).animate(animationController);
 
     _heightAnimation = Tween<double>(begin: 10.0, end: 90.0).animate(
         CurvedAnimation(

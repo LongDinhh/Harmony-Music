@@ -383,5 +383,4 @@ class SettingsScreenController extends GetxController {
       printERROR('Error during Google logout: $e');
     }
   }
-
 }

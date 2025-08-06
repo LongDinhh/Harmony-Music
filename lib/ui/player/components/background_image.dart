@@ -32,7 +32,6 @@ class BackgroudImage extends StatelessWidget {
                         if (snapshot.connectionState == ConnectionState.done &&
                             snapshot.hasData &&
                             snapshot.data == true) {
-
                           /// if theme mode is dynamic then set the theme with image
                           if (Get.find<SettingsScreenController>()
                                   .themeModetype

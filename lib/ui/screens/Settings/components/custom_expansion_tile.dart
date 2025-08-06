@@ -16,12 +16,14 @@ class CustomExpansionTile extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: ExpansionTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        collapsedShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         childrenPadding: const EdgeInsets.all(8),
-        tilePadding: const EdgeInsets.only(right: 16,left: 10),
+        tilePadding: const EdgeInsets.only(right: 16, left: 10),
         textColor: Theme.of(context).textTheme.titleMedium!.color,
         iconColor: Theme.of(context).textTheme.titleMedium!.color,
-        collapsedBackgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(30),
+        collapsedBackgroundColor:
+            Theme.of(context).colorScheme.secondary.withAlpha(30),
         backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(30),
         title: Text(title),
         leading: Icon(icon),

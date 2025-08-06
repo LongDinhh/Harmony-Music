@@ -55,11 +55,11 @@ class LyricsWidget extends StatelessWidget {
                       child: Text(
                         "syncedLyricsNotAvailable".tr,
                         style: playerController.isDesktopLyricsDialogOpen
-                              ? Theme.of(context).textTheme.titleMedium!
-                              : Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: Colors.white),
+                            ? Theme.of(context).textTheme.titleMedium!
+                            : Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(color: Colors.white),
                       ),
                     ),
                   ),

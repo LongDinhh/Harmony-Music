@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,10 @@ Future<void> main() async {
     // Configure system UI early
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     WidgetsBinding.instance.addObserver(LifecycleHandler());
+    
+    // Enable performance testing in debug mode
+    // To enable, uncomment the performance testing import and this line:
+    // PerformanceTesting.enableDebugRebuildPrint();
 
     AppErrorHandler.logInfo('Starting initialization with timeout',
         context: 'Main');

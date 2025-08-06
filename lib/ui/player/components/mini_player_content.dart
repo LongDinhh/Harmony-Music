@@ -13,6 +13,207 @@ import 'animated_play_button.dart';
 import '../../../utils/haptic_utils.dart';
 import 'package:harmonymusic/ui/screens/Home/home_screen_controller.dart';
 
+/// Container widget that manages the mini player height reactively
+class _MiniPlayerContainer extends StatelessWidget {
+  const _MiniPlayerContainer({
+    required this.child,
+    required this.width,
+  });
+
+  final Widget child;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+
+    return Obx(() => Container(
+          height: playerController.playerPanelMinHeight.value,
+          width: width,
+          color: Colors.transparent,
+          child: child,
+        ));
+  }
+}
+
+/// Granular reactive widget for progress bar
+class _MiniProgressBarWidget extends StatelessWidget {
+  const _MiniProgressBarWidget({
+    required this.isWideScreen,
+    required this.bottomNavEnabled,
+    required this.hasBottomNav,
+    required this.isTop,
+  });
+
+  final bool isWideScreen;
+  final bool bottomNavEnabled;
+  final bool hasBottomNav;
+  final bool isTop;
+
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+
+    return RepaintBoundary(
+      child: !isWideScreen || bottomNavEnabled
+          ? Obx(() => Container(
+                height: 2,
+                margin: EdgeInsets.only(
+                  top: isTop ? 0 : 0,
+                  bottom: isTop ? 0 : 0,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    top: isTop ? const Radius.circular(16) : Radius.zero,
+                    bottom: !isTop ? const Radius.circular(16) : Radius.zero,
+                  ),
+                  color: Theme.of(context).progressIndicatorTheme.color,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: MiniPlayerProgressBar(
+                  progressBarStatus: playerController.progressBarStatus.value,
+                  progressBarColor: Theme.of(context)
+                          .progressIndicatorTheme
+                          .linearTrackColor ??
+                      Colors.white,
+                ),
+              ))
+          : Obx(() => Container(
+                height: 2,
+                margin: EdgeInsets.only(
+                  top: isTop ? 0 : 0,
+                  bottom: isTop ? 0 : 0,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    top: isTop ? const Radius.circular(16) : Radius.zero,
+                    bottom: !isTop ? const Radius.circular(16) : Radius.zero,
+                  ),
+                  color: Theme.of(context).sliderTheme.inactiveTrackColor,
+                ),
+                clipBehavior: Clip.antiAlias,
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: ProgressBar(
+                  timeLabelLocation: TimeLabelLocation.none,
+                  thumbRadius: 3,
+                  barHeight: 2,
+                  thumbGlowRadius: 6,
+                  baseBarColor: Colors.transparent,
+                  bufferedBarColor:
+                      Theme.of(context).sliderTheme.valueIndicatorColor,
+                  progressBarColor:
+                      Theme.of(context).sliderTheme.activeTrackColor,
+                  thumbColor: Theme.of(context).sliderTheme.thumbColor,
+                  progress: playerController.progressBarStatus.value.current,
+                  total: playerController.progressBarStatus.value.total,
+                  buffered: playerController.progressBarStatus.value.buffered,
+                  onSeek: playerController.seek,
+                ),
+              )),
+    );
+  }
+}
+
+/// Granular reactive widget for song info
+class _SongInfoWidget extends StatelessWidget {
+  const _SongInfoWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+
+    return Expanded(
+      child: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          if (details.primaryVelocity! < 0) {
+            playerController.next();
+          } else if (details.primaryVelocity! > 0) {
+            playerController.prev();
+          }
+        },
+        onTap: () {
+          playerController.playerPanelController.open();
+        },
+        child: ColoredBox(
+          color: Colors.transparent,
+          child: Obx(() => Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
+                    child: Text(
+                      playerController.currentSong.value != null
+                          ? playerController.currentSong.value!.title
+                          : "",
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Marquee(
+                      id: "${playerController.currentSong.value}_mini",
+                      delay: const Duration(milliseconds: 300),
+                      duration: const Duration(seconds: 5),
+                      child: Text(
+                        playerController.currentSong.value != null
+                            ? playerController.currentSong.value!.artist!
+                            : "",
+                        maxLines: 1,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
+      ),
+    );
+  }
+}
+
+/// Granular reactive widget for next button
+class _NextButtonWidget extends StatelessWidget {
+  const _NextButtonWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+
+    return SizedBox(
+      width: 40,
+      child: Obx(() {
+        final isLastSong = playerController.currentQueue.isEmpty ||
+            (!(playerController.isShuffleModeEnabled.isTrue ||
+                    playerController.isQueueLoopModeEnabled.isTrue) &&
+                (playerController.currentQueue.last.id ==
+                    playerController.currentSong.value?.id));
+        return InkWell(
+          onTap: isLastSong
+              ? null
+              : () {
+                  HapticUtils.actionHaptic();
+                  playerController.next();
+                },
+          child: Icon(
+            Icons.skip_next,
+            color: isLastSong
+                ? Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .color!
+                    .withValues(alpha: 0.2)
+                : Theme.of(context).textTheme.titleMedium!.color,
+            size: 35,
+          ),
+        );
+      }),
+    );
+  }
+}
+
 /// Pure content of mini player without GlassWrapper
 /// Used inside CombinedBottomContainer
 class MiniPlayerContent extends StatelessWidget {
@@ -26,80 +227,29 @@ class MiniPlayerContent extends StatelessWidget {
     final bottomNavEnabled =
         Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue;
 
+    // Get bottom nav state without wrapping in Obx at top level
+    final homeController = Get.find<HomeScreenController>();
+
     return Obx(() {
-      // Kiểm tra xem có đang ở màn hình có bottom nav bar không
-      final homeController = Get.find<HomeScreenController>();
       final currentRoute = homeController.currentRoute.value;
       final isInHomeScreenContext = currentRoute == '/homeScreen';
       final hasBottomNav = bottomNavEnabled && isInHomeScreenContext;
 
-      return Container(
-        height: playerController.playerPanelMinHeight.value,
+      return _MiniPlayerContainer(
         width: size.width,
-        color: Colors.transparent,
         child: Column(
           mainAxisAlignment: hasBottomNav
-              ? MainAxisAlignment
-                  .spaceBetween // Progress bar ở bottom khi có bottom nav
-              : MainAxisAlignment
-                  .start, // Progress bar ở top khi không có bottom nav
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.start,
           children: [
-            // Progress Bar - đặt ở top khi không có bottom nav
-            if (!hasBottomNav) ...[
-              !isWideScreen || bottomNavEnabled
-                  ? GetX<PlayerController>(
-                      builder: (controller) => Container(
-                          height: 2,
-                          margin: const EdgeInsets.only(top: 0),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(16),
-                            ),
-                            color:
-                                Theme.of(context).progressIndicatorTheme.color,
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: MiniPlayerProgressBar(
-                              progressBarStatus:
-                                  controller.progressBarStatus.value,
-                              progressBarColor: Theme.of(context)
-                                      .progressIndicatorTheme
-                                      .linearTrackColor ??
-                                  Colors.white)),
-                    )
-                  : GetX<PlayerController>(builder: (controller) {
-                      return Container(
-                        height: 2,
-                        margin: const EdgeInsets.only(top: 0),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(16),
-                          ),
-                          color:
-                              Theme.of(context).sliderTheme.inactiveTrackColor,
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: ProgressBar(
-                          timeLabelLocation: TimeLabelLocation.none,
-                          thumbRadius: 3,
-                          barHeight: 2,
-                          thumbGlowRadius: 6,
-                          baseBarColor: Colors
-                              .transparent, // Để tránh xung đột với container color
-                          bufferedBarColor:
-                              Theme.of(context).sliderTheme.valueIndicatorColor,
-                          progressBarColor:
-                              Theme.of(context).sliderTheme.activeTrackColor,
-                          thumbColor: Theme.of(context).sliderTheme.thumbColor,
-                          progress: controller.progressBarStatus.value.current,
-                          total: controller.progressBarStatus.value.total,
-                          buffered: controller.progressBarStatus.value.buffered,
-                          onSeek: controller.seek,
-                        ),
-                      );
-                    }),
-            ],
+            // Progress Bar - top position when no bottom nav
+            if (!hasBottomNav)
+              _MiniProgressBarWidget(
+                isWideScreen: isWideScreen,
+                bottomNavEnabled: bottomNavEnabled,
+                hasBottomNav: hasBottomNav,
+                isTop: true,
+              ),
 
             // Main Content
             Expanded(
@@ -110,76 +260,26 @@ class MiniPlayerContent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Album Art
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        playerController.currentSong.value != null
-                            ? ImageWidget(
-                                size: 50,
-                                song: playerController.currentSong.value!,
-                              )
-                            : const SizedBox(height: 50, width: 50),
-                      ],
+                    // Album Art with RepaintBoundary
+                    RepaintBoundary(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Obx(() => playerController.currentSong.value != null
+                              ? ImageWidget(
+                                  size: 50,
+                                  song: playerController.currentSong.value!,
+                                )
+                              : const SizedBox(height: 50, width: 50)),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 10),
 
-                    // Song Info
-                    Expanded(
-                      child: GestureDetector(
-                        onHorizontalDragEnd: (DragEndDetails details) {
-                          if (details.primaryVelocity! < 0) {
-                            playerController.next();
-                          } else if (details.primaryVelocity! > 0) {
-                            playerController.prev();
-                          }
-                        },
-                        onTap: () {
-                          playerController.playerPanelController.open();
-                        },
-                        child: ColoredBox(
-                          color: Colors.transparent,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                                child: Text(
-                                  playerController.currentSong.value != null
-                                      ? playerController
-                                          .currentSong.value!.title
-                                      : "",
-                                  maxLines: 1,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                                child: Marquee(
-                                  id: "${playerController.currentSong.value}_mini",
-                                  delay: const Duration(milliseconds: 300),
-                                  duration: const Duration(seconds: 5),
-                                  child: Text(
-                                    playerController.currentSong.value != null
-                                        ? playerController
-                                            .currentSong.value!.artist!
-                                        : "",
-                                    maxLines: 1,
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Song Info - now using granular widget
+                    const _SongInfoWidget(),
 
-                    // Player Controls
+                    // Player Controls - now using granular widgets
                     _buildPlayerControls(context, isWideScreen,
                         bottomNavEnabled, playerController, size),
                   ],
@@ -187,62 +287,14 @@ class MiniPlayerContent extends StatelessWidget {
               ),
             ),
 
-            // Progress Bar - đặt ở bottom khi có bottom nav
-            if (hasBottomNav) ...[
-              !isWideScreen || bottomNavEnabled
-                  ? GetX<PlayerController>(
-                      builder: (controller) => Container(
-                          height: 2,
-                          margin: const EdgeInsets.only(bottom: 0),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.vertical(
-                              bottom: Radius.circular(16),
-                            ),
-                            color:
-                                Theme.of(context).progressIndicatorTheme.color,
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: MiniPlayerProgressBar(
-                              progressBarStatus:
-                                  controller.progressBarStatus.value,
-                              progressBarColor: Theme.of(context)
-                                      .progressIndicatorTheme
-                                      .linearTrackColor ??
-                                  Colors.white)),
-                    )
-                  : GetX<PlayerController>(builder: (controller) {
-                      return Container(
-                        height: 2,
-                        margin: const EdgeInsets.only(bottom: 0),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            bottom: Radius.circular(16),
-                          ),
-                          color:
-                              Theme.of(context).sliderTheme.inactiveTrackColor,
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: ProgressBar(
-                          timeLabelLocation: TimeLabelLocation.none,
-                          thumbRadius: 3,
-                          barHeight: 2,
-                          thumbGlowRadius: 6,
-                          baseBarColor: Colors
-                              .transparent, // Để tránh xung đột với container color
-                          bufferedBarColor:
-                              Theme.of(context).sliderTheme.valueIndicatorColor,
-                          progressBarColor:
-                              Theme.of(context).sliderTheme.activeTrackColor,
-                          thumbColor: Theme.of(context).sliderTheme.thumbColor,
-                          progress: controller.progressBarStatus.value.current,
-                          total: controller.progressBarStatus.value.total,
-                          buffered: controller.progressBarStatus.value.buffered,
-                          onSeek: controller.seek,
-                        ),
-                      );
-                    }),
-            ],
+            // Progress Bar - bottom position when has bottom nav
+            if (hasBottomNav)
+              _MiniProgressBarWidget(
+                isWideScreen: isWideScreen,
+                bottomNavEnabled: bottomNavEnabled,
+                hasBottomNav: hasBottomNav,
+                isTop: false,
+              ),
           ],
         ),
       );
@@ -270,7 +322,7 @@ class MiniPlayerContent extends StatelessWidget {
                     HapticUtils.actionHaptic();
                     playerController.toggleFavourite();
                   },
-                  icon: _FavoriteIcon(),
+                  icon: const _FavoriteIcon(),
                 ),
                 IconButton(
                   iconSize: 20,
@@ -278,7 +330,7 @@ class MiniPlayerContent extends StatelessWidget {
                     HapticUtils.actionHaptic();
                     playerController.toggleShuffleMode();
                   },
-                  icon: _ShuffleIcon(),
+                  icon: const _ShuffleIcon(),
                 ),
               ],
             ),
@@ -324,36 +376,8 @@ class MiniPlayerContent extends StatelessWidget {
                   ),
                 ),
 
-          // Next button
-          SizedBox(
-            width: 40,
-            child: Obx(() {
-              final isLastSong = playerController.currentQueue.isEmpty ||
-                  (!(playerController.isShuffleModeEnabled.isTrue ||
-                          playerController.isQueueLoopModeEnabled.isTrue) &&
-                      (playerController.currentQueue.last.id ==
-                          playerController.currentSong.value?.id));
-              return InkWell(
-                onTap: isLastSong
-                    ? null
-                    : () {
-                        HapticUtils.actionHaptic();
-                        playerController.next();
-                      },
-                child: Icon(
-                  Icons.skip_next,
-                  color: isLastSong
-                      ? Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .color!
-                          .withValues(alpha: 0.2)
-                      : Theme.of(context).textTheme.titleMedium!.color,
-                  size: 35,
-                ),
-              );
-            }),
-          ),
+          // Next button - now using granular widget
+          const _NextButtonWidget(),
 
           // Desktop controls (right side)
           if (isWideScreen && !bottomNavEnabled) ...[
@@ -362,16 +386,7 @@ class MiniPlayerContent extends StatelessWidget {
                 IconButton(
                   iconSize: 20,
                   onPressed: playerController.toggleLoopMode,
-                  icon: Icon(
-                    Icons.all_inclusive,
-                    color: playerController.isLoopModeEnabled.value
-                        ? Theme.of(context).textTheme.titleLarge!.color
-                        : Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .color!
-                            .withValues(alpha: 0.2),
-                  ),
+                  icon: const _LoopIcon(),
                 ),
                 IconButton(
                   iconSize: 20,
@@ -403,34 +418,59 @@ class MiniPlayerContent extends StatelessWidget {
 
 /// Optimized favorite icon widget with granular reactivity
 class _FavoriteIcon extends StatelessWidget {
+  const _FavoriteIcon();
+
   @override
   Widget build(BuildContext context) {
     final playerController = Get.find<PlayerController>();
-    
+
     return Obx(() => Icon(
-      playerController.isCurrentSongFav.isFalse
-          ? Icons.favorite_border
-          : Icons.favorite,
-      color: Theme.of(context).textTheme.titleMedium!.color,
-    ));
+          playerController.isCurrentSongFav.isFalse
+              ? Icons.favorite_border
+              : Icons.favorite,
+          color: Theme.of(context).textTheme.titleMedium!.color,
+        ));
   }
 }
 
 /// Optimized shuffle icon widget with granular reactivity
 class _ShuffleIcon extends StatelessWidget {
+  const _ShuffleIcon();
+
   @override
   Widget build(BuildContext context) {
     final playerController = Get.find<PlayerController>();
-    
+
     return Obx(() => Icon(
-      Ionicons.shuffle,
-      color: playerController.isShuffleModeEnabled.value
-          ? Theme.of(context).textTheme.titleLarge!.color
-          : Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .color!
-              .withValues(alpha: 0.2),
-    ));
+          Ionicons.shuffle,
+          color: playerController.isShuffleModeEnabled.value
+              ? Theme.of(context).textTheme.titleLarge!.color
+              : Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .color!
+                  .withValues(alpha: 0.2),
+        ));
+  }
+}
+
+/// Optimized loop icon widget with granular reactivity
+class _LoopIcon extends StatelessWidget {
+  const _LoopIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+
+    return Obx(() => Icon(
+          Icons.all_inclusive,
+          color: playerController.isLoopModeEnabled.value
+              ? Theme.of(context).textTheme.titleLarge!.color
+              : Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .color!
+                  .withValues(alpha: 0.2),
+        ));
   }
 }

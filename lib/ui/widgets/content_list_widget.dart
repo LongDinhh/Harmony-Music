@@ -23,7 +23,7 @@ class ContentListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAlbumContent = content.runtimeType.toString() == "AlbumContent";
     final isQuickPicks = content.runtimeType.toString() == "QuickPicks";
-    
+
     // Nếu là QuickPicks, sử dụng QuickPicksWidget
     if (isQuickPicks) {
       return QuickPicksWidget(
@@ -31,7 +31,7 @@ class ContentListWidget extends StatelessWidget {
         scrollController: scrollController,
       );
     }
-    
+
     // ignore: avoid_unnecessary_containers
     return Container(
       child: Column(

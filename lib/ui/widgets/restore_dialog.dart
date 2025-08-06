@@ -203,7 +203,7 @@ class RestoreDialogController extends GetxController {
       // open the restored box
       final newSongBox = await Hive.openBox("SongDownloads");
       final downloadedSongs = newSongBox.values.toList();
-      for(final song in downloadedSongs) {
+      for (final song in downloadedSongs) {
         final songPath = song["url"];
         if (songPath != null && songPath is String) {
           final fileName = songPath.split("/").last;
