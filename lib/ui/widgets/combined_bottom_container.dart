@@ -19,6 +19,30 @@ class CombinedBottomContainer extends StatelessWidget {
     final homeController = Get.find<HomeScreenController>();
     final playerController = Get.find<PlayerController>();
 
+    return _CombinedBottomContainerContent(
+      key: const ValueKey('combined_bottom_container_content'),
+      settingsController: settingsController,
+      homeController: homeController,
+      playerController: playerController,
+    );
+  }
+}
+
+/// Optimized Content widget with granular state management
+class _CombinedBottomContainerContent extends StatelessWidget {
+  const _CombinedBottomContainerContent({
+    super.key,
+    required this.settingsController,
+    required this.homeController,
+    required this.playerController,
+  });
+
+  final SettingsScreenController settingsController;
+  final HomeScreenController homeController;
+  final PlayerController playerController;
+
+  @override
+  Widget build(BuildContext context) {
     return Obx(() {
       // Check if keyboard is open using KeyboardVisibilityController from PlayerController
       final isKeyboardOpen = playerController.isKeyboardVisible.value;
@@ -53,9 +77,8 @@ class CombinedBottomContainer extends StatelessWidget {
         bottom: shouldShowBottomNav
             ? 0
             : -80, // Slide down when bottom nav hidden (bottom nav height ~80px)
-        child: AnimatedOpacity(
-          opacity: playerController.playerPaneOpacity.value,
-          duration: Duration.zero,
+        child: _OpacityWrapper(
+          playerController: playerController,
           child: GlassWrapper(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             backgroundColor:
@@ -72,13 +95,9 @@ class CombinedBottomContainer extends StatelessWidget {
                   if (shouldShowMiniPlayer) const MiniPlayerContent(),
 
                   // Bottom Nav Bar with fade animation only (container handles positioning)
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: shouldShowBottomNav ? 1.0 : 0.0,
-                    child: shouldShowBottomNav ||
-                            settingsController.isBottomNavBarEnabled.isTrue
-                        ? const BottomNavBarContent()
-                        : const SizedBox.shrink(),
+                  _BottomNavWrapper(
+                    shouldShowBottomNav: shouldShowBottomNav,
+                    settingsController: settingsController,
                   ),
                 ],
               ),
@@ -87,5 +106,48 @@ class CombinedBottomContainer extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+/// Separate opacity wrapper to minimize rebuilds
+class _OpacityWrapper extends StatelessWidget {
+  const _OpacityWrapper({
+    required this.playerController,
+    required this.child,
+  });
+
+  final PlayerController playerController;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => AnimatedOpacity(
+          opacity: playerController.playerPaneOpacity.value,
+          duration: Duration.zero,
+          child: child,
+        ));
+  }
+}
+
+/// Separate bottom nav wrapper to minimize rebuilds
+class _BottomNavWrapper extends StatelessWidget {
+  const _BottomNavWrapper({
+    required this.shouldShowBottomNav,
+    required this.settingsController,
+  });
+
+  final bool shouldShowBottomNav;
+  final SettingsScreenController settingsController;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: shouldShowBottomNav ? 1.0 : 0.0,
+      child:
+          shouldShowBottomNav || settingsController.isBottomNavBarEnabled.isTrue
+              ? const BottomNavBarContent()
+              : const SizedBox.shrink(),
+    );
   }
 }

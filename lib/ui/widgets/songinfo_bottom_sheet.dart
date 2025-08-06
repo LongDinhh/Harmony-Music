@@ -40,6 +40,7 @@ class SongInfoBottomSheet extends StatelessWidget {
         Get.put(SongInfoController(song, calledFromPlayer));
     final playerController = Get.find<PlayerController>();
     return Padding(
+      key: ValueKey('song_info_sheet_${song.id}'),
       padding: EdgeInsets.only(bottom: Get.mediaQuery.padding.bottom),
       child: SingleChildScrollView(
         child: Column(
@@ -82,17 +83,10 @@ class SongInfoBottomSheet extends StatelessWidget {
                                   .titleMedium!
                                   .color,
                             ))
-                        : IconButton(
-                            onPressed: songInfoController.toggleFav,
-                            icon: Obx(() => Icon(
-                                  songInfoController.isCurrentSongFav.isFalse
-                                      ? Icons.favorite_border
-                                      : Icons.favorite,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .color,
-                                ))),
+                        : _FavoriteIconButton(
+                            controller: songInfoController,
+                            context: context,
+                          ),
                     SongDownloadButton(
                       song_: song,
                       isDownloadingDoneCallback:
@@ -215,41 +209,11 @@ class SongInfoBottomSheet extends StatelessWidget {
                       }
                     })
                 : const SizedBox.shrink(),
-            Obx(
-              () => (songInfoController.isDownloaded.isTrue &&
-                      (playlist?.playlistId != "SongDownloads" &&
-                          playlist?.playlistId != "SongsCache"))
-                  ? ListTile(
-                      contentPadding: const EdgeInsets.only(left: 15),
-                      visualDensity: const VisualDensity(vertical: -1),
-                      leading: const Icon(Icons.delete),
-                      title: Text("deleteDownloadData".tr),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        final box = Hive.box("SongDownloads");
-                        Get.find<LibrarySongsController>()
-                            .removeSong(song, true,
-                                url: box.get(song.id)['url'])
-                            .then((value) async {
-                          box.delete(song.id).then((value) {
-                            if (playlist != null) {
-                              Get.find<PlaylistScreenController>(
-                                      tag: Key(playlist!.playlistId)
-                                          .hashCode
-                                          .toString())
-                                  .checkDownloadStatus();
-                            }
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  snackbar(
-                                      context, "deleteDownloadedDataAlert".tr,
-                                      size: SanckBarSize.BIG));
-                            }
-                          });
-                        });
-                      },
-                    )
-                  : const SizedBox.shrink(),
+            _DeleteDownloadDataTile(
+              controller: songInfoController,
+              song: song,
+              playlist: playlist,
+              context: context,
             ),
             // ListTile(
             //   leading: const Icon(Icons.open_with),
@@ -407,6 +371,87 @@ class SongInfoController extends GetxController
         isCurrentSongFav.isTrue) {
       Get.find<Downloader>().download(song);
     }
+  }
+}
+
+/// Optimized Favorite Icon Button with granular rebuild
+class _FavoriteIconButton extends StatelessWidget {
+  const _FavoriteIconButton({
+    required this.controller,
+    required this.context,
+  });
+
+  final SongInfoController controller;
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      key: const ValueKey('favorite_icon_button'),
+      onPressed: controller.toggleFav,
+      icon: Obx(() => Icon(
+            controller.isCurrentSongFav.isFalse
+                ? Icons.favorite_border
+                : Icons.favorite,
+            color: Theme.of(context).textTheme.titleMedium!.color,
+          )),
+    );
+  }
+}
+
+/// Optimized Delete Download Data Tile with granular rebuild
+class _DeleteDownloadDataTile extends StatelessWidget {
+  const _DeleteDownloadDataTile({
+    required this.controller,
+    required this.song,
+    required this.playlist,
+    required this.context,
+  });
+
+  final SongInfoController controller;
+  final MediaItem song;
+  final Playlist? playlist;
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final shouldShow = controller.isDownloaded.isTrue &&
+          (playlist?.playlistId != "SongDownloads" &&
+              playlist?.playlistId != "SongsCache");
+
+      if (!shouldShow) {
+        return const SizedBox.shrink();
+      }
+
+      return ListTile(
+        key: const ValueKey('delete_download_tile'),
+        contentPadding: const EdgeInsets.only(left: 15),
+        visualDensity: const VisualDensity(vertical: -1),
+        leading: const Icon(Icons.delete),
+        title: Text("deleteDownloadData".tr),
+        onTap: () {
+          Navigator.of(context).pop();
+          final box = Hive.box("SongDownloads");
+          Get.find<LibrarySongsController>()
+              .removeSong(song, true, url: box.get(song.id)['url'])
+              .then((value) async {
+            box.delete(song.id).then((value) {
+              if (playlist != null) {
+                Get.find<PlaylistScreenController>(
+                        tag: Key(playlist!.playlistId).hashCode.toString())
+                    .checkDownloadStatus();
+              }
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(snackbar(
+                    context, "deleteDownloadedDataAlert".tr,
+                    size: SanckBarSize.BIG));
+              }
+            });
+          });
+        },
+      );
+    });
   }
 }
 
