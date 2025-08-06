@@ -249,7 +249,7 @@ mixin ScrollControllerManagerMixin on GetxController {
   @override
   void onClose() {
     _healthCheckTimer?.cancel();
-    _scrollManager.disposeAll(reason: '${runtimeType} disposal');
+    _scrollManager.disposeAll(reason: '$runtimeType disposal');
     super.onClose();
   }
 }

@@ -94,7 +94,7 @@ Future<void> main() async {
   
   flameCaptureText.writeln('TOP 10 MOST EXPENSIVE WIDGETS:');
   flameCaptureText.writeln();
-  flameCaptureText.writeln('Widget Name'.padRight(25) + 'Builds'.padRight(8) + 'Total Time'.padRight(12) + 'Avg Time'.padRight(10) + 'Max Time');
+  flameCaptureText.writeln('${'Widget Name'.padRight(25)}${'Builds'.padRight(8)}${'Total Time'.padRight(12)}${'Avg Time'.padRight(10)}Max Time');
   flameCaptureText.writeln('-' * 70);
   
   for (int i = 0; i < sortedWidgets.length && i < 10; i++) {

@@ -106,7 +106,7 @@ class WidgetDepthAnalyzer {
     final flaggedFiles = analysis.values.where((info) => info.isFlagged).toList();
     final sortedByDepth = flaggedFiles..sort((a, b) => b.maxDepth.compareTo(a.maxDepth));
     
-    print('\n' + '='*80);
+    print('\n${'='*80}');
     print('WIDGET TREE DEPTH ANALYSIS REPORT');
     print('='*80);
     print('Analysis completed. Found ${sortedByDepth.length} files with depth > $maxDepthThreshold');

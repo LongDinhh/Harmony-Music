@@ -33,13 +33,13 @@ class AppErrorHandler {
 
   static void logInfo(String message, {String? context}) {
     final contextInfo = context != null ? '[$context] ' : '';
-    printINFO('${contextInfo}$message');
-    debugPrint('ℹ️ ${contextInfo}$message');
+    printINFO('$contextInfo$message');
+    debugPrint('ℹ️ $contextInfo$message');
   }
 
   static void logWarning(String message, {String? context}) {
     final contextInfo = context != null ? '[$context] ' : '';
-    printWARN('${contextInfo}$message');
-    debugPrint('⚠️ ${contextInfo}$message');
+    printWARN('$contextInfo$message');
+    debugPrint('⚠️ $contextInfo$message');
   }
 }

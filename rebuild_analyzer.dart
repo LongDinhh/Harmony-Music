@@ -175,7 +175,7 @@ RebuildHotspot? analyzeObxPattern(String filePath, int lineNum, String line, Lis
   final widgetSize = estimateWidgetSize(allLines, currentIndex);
   if (widgetSize > 50) {
     severity = 'HIGH';
-    reason = 'Large widget (${widgetSize} lines) wrapped in Obx - rebuilds entirely';
+    reason = 'Large widget ($widgetSize lines) wrapped in Obx - rebuilds entirely';
     estimatedRebuilds = 250;
     estimatedBuildTime = 10.0;
   }
@@ -215,7 +215,7 @@ RebuildHotspot? analyzeObxPattern(String filePath, int lineNum, String line, Lis
     filePath: filePath,
     widgetName: widgetName,
     line: lineNum,
-    obxPattern: obxPattern.length > 100 ? obxPattern.substring(0, 100) + '...' : obxPattern,
+    obxPattern: obxPattern.length > 100 ? '${obxPattern.substring(0, 100)}...' : obxPattern,
     severity: severity,
     reason: reason.isEmpty ? 'Standard Obx usage' : reason,
     estimatedRebuildsPerMinute: estimatedRebuilds,

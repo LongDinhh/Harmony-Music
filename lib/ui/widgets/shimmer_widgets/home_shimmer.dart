@@ -27,7 +27,7 @@ class HomeShimmer extends StatelessWidget {
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 5),
+              padding: EdgeInsets.only(left: 5),
               child: BasicShimmerContainer(Size(220, 30)),
             ),
           ),
