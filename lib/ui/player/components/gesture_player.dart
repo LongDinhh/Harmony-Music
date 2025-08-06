@@ -56,19 +56,8 @@ class GesturePlayer extends StatelessWidget {
         IgnorePointer(
           child: Align(
             child: Center(
-              child: Obx(
-                () => FadeTransition(
-                  opacity: playerController.gesturePlayerStateAnimation!,
-                  child: playerController.gesturePlayerVisibleState.value == 2
-                      ? const SizedBox.shrink()
-                      : Icon(
-                          playerController.gesturePlayerVisibleState.value == 1
-                              ? Icons.play_arrow
-                              : Icons.pause,
-                          size: 180,
-                          color: Colors.white,
-                        ),
-                ),
+              child: _GesturePlayerIcon(
+                key: const ValueKey('gesture_player_icon'),
               ),
             ),
           ),
@@ -279,5 +268,28 @@ class GesturePlayer extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+/// Optimized gesture player icon widget with granular reactivity
+class _GesturePlayerIcon extends StatelessWidget {
+  const _GesturePlayerIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+    
+    return Obx(() => FadeTransition(
+      opacity: playerController.gesturePlayerStateAnimation!,
+      child: playerController.gesturePlayerVisibleState.value == 2
+          ? const SizedBox.shrink()
+          : Icon(
+              playerController.gesturePlayerVisibleState.value == 1
+                  ? Icons.play_arrow
+                  : Icons.pause,
+              size: 180,
+              color: Colors.white,
+            ),
+    ));
   }
 }

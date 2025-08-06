@@ -270,12 +270,7 @@ class MiniPlayerContent extends StatelessWidget {
                     HapticUtils.actionHaptic();
                     playerController.toggleFavourite();
                   },
-                  icon: Obx(() => Icon(
-                        playerController.isCurrentSongFav.isFalse
-                            ? Icons.favorite_border
-                            : Icons.favorite,
-                        color: Theme.of(context).textTheme.titleMedium!.color,
-                      )),
+                  icon: _FavoriteIcon(),
                 ),
                 IconButton(
                   iconSize: 20,
@@ -283,16 +278,7 @@ class MiniPlayerContent extends StatelessWidget {
                     HapticUtils.actionHaptic();
                     playerController.toggleShuffleMode();
                   },
-                  icon: Obx(() => Icon(
-                        Ionicons.shuffle,
-                        color: playerController.isShuffleModeEnabled.value
-                            ? Theme.of(context).textTheme.titleLarge!.color
-                            : Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .color!
-                                .withValues(alpha: 0.2),
-                      )),
+                  icon: _ShuffleIcon(),
                 ),
               ],
             ),
@@ -412,5 +398,39 @@ class MiniPlayerContent extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Optimized favorite icon widget with granular reactivity
+class _FavoriteIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+    
+    return Obx(() => Icon(
+      playerController.isCurrentSongFav.isFalse
+          ? Icons.favorite_border
+          : Icons.favorite,
+      color: Theme.of(context).textTheme.titleMedium!.color,
+    ));
+  }
+}
+
+/// Optimized shuffle icon widget with granular reactivity
+class _ShuffleIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final playerController = Get.find<PlayerController>();
+    
+    return Obx(() => Icon(
+      Ionicons.shuffle,
+      color: playerController.isShuffleModeEnabled.value
+          ? Theme.of(context).textTheme.titleLarge!.color
+          : Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .color!
+              .withValues(alpha: 0.2),
+    ));
   }
 }

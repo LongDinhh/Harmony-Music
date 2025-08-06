@@ -29,8 +29,10 @@ class MiniPlayer extends StatelessWidget {
         Get.find<SettingsScreenController>().isBottomNavBarEnabled.isTrue;
     return Obx(() {
       return Visibility(
+        key: const ValueKey('mini_player_visibility'),
         visible: playerController.isPlayerpanelTopVisible.value,
         child: AnimatedOpacity(
+          key: const ValueKey('mini_player_opacity'),
           opacity: playerController.playerPaneOpacity.value,
           duration: Duration.zero,
           child: GlassWrapper(
