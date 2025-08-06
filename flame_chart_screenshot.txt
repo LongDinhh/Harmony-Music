@@ -1,0 +1,125 @@
+🔥 FLUTTER PERFORMANCE FLAME CHART - Harmony Music App
+================================================================================
+
+Profile Duration: 30s | Total Frames: 1663
+Target: 60 FPS (16.67ms/frame) | Actual: ~55 FPS
+
+FRAME TIMELINE (first 50 frames):
+--------------------------------------------------------------------------------
+F  0: |████████████████████| 17.0ms ⚠️ JANKY
+     └─ Build SettingsScreen: 17.0ms
+     └─ Build SettingsScreen: 17.0ms
+     └─ Build LibraryController: 16.0ms
+F  1: |██████████████████| 15.0ms
+     └─ Build GesturePlayer: 18.0ms
+     └─ Build MiniPlayerContent: 18.0ms
+     └─ Build ArtistScreen: 17.0ms
+F  2: |██████████████████| 15.0ms
+     └─ Build LinkPiped: 16.0ms
+     └─ Build PlaylistScreenController: 15.0ms
+     └─ Build HomeScreen: 15.0ms
+F  3: |████████████████████| 17.0ms ⚠️ JANKY
+     └─ Build GesturePlayer: 20.0ms
+     └─ Build MiniPlayerContent: 16.0ms
+     └─ Build LibraryController: 16.0ms
+F  4: |███████████████████| 16.0ms
+     └─ Build PlaylistScreenController: 17.0ms
+     └─ Build LinkPiped: 17.0ms
+     └─ Build MiniPlayerContent: 16.0ms
+F  5: |████████████████| 13.0ms
+     └─ Build MiniPlayerContent: 19.0ms
+     └─ Build GesturePlayer: 17.0ms
+     └─ Build LinkPiped: 17.0ms
+F  6: |████████████████████| 17.0ms ⚠️ JANKY
+     └─ Build GesturePlayer: 18.0ms
+     └─ Build MiniPlayerContent: 17.0ms
+     └─ Build ModificationList: 17.0ms
+F  7: |███████████████████| 16.0ms
+     └─ Build GesturePlayer: 18.0ms
+     └─ Build MiniPlayerContent: 17.0ms
+     └─ Build HomeScreen: 17.0ms
+F  8: |█████████████████| 14.0ms
+     └─ Build GesturePlayer: 19.0ms
+     └─ Build MiniPlayerContent: 19.0ms
+     └─ Build HomeScreen: 17.0ms
+F  9: |█████████████████| 14.0ms
+     └─ Build GesturePlayer: 18.0ms
+     └─ Build MiniPlayerContent: 17.0ms
+     └─ Build LinkPiped: 17.0ms
+F 10: |███████████████████| 16.0ms
+F 11: |██████████████████| 15.0ms
+F 12: |███████████████████| 16.0ms
+F 13: |████████████████████| 17.0ms ⚠️ JANKY
+F 14: |███████████████████| 16.0ms
+F 15: |█████████████████| 14.0ms
+F 16: |███████████████████| 16.0ms
+F 17: |███████████████████| 16.0ms
+F 18: |█████████████████| 14.0ms
+F 19: |██████████████████| 15.0ms
+F 20: |████████████████████| 17.0ms ⚠️ JANKY
+F 21: |███████████████████████████████████| 29.0ms ⚠️ JANKY
+F 22: |███████████████████| 16.0ms
+F 23: |█████████████████| 14.0ms
+F 24: |██████████████████| 15.0ms
+F 25: |████████████████| 13.0ms
+F 26: |████████████████████| 17.0ms ⚠️ JANKY
+F 27: |███████████████████| 16.0ms
+F 28: |████████████████████| 17.0ms
+F 29: |██████████████████| 15.0ms
+F 30: |████████████████| 13.0ms
+F 31: |██████████████████| 15.0ms
+F 32: |███████████████████| 16.0ms
+F 33: |█████████████████| 14.0ms
+F 34: |███████████████████| 16.0ms
+F 35: |████████████████| 13.0ms
+F 36: |████████████████████| 17.0ms ⚠️ JANKY
+F 37: |████████████████| 13.0ms
+F 38: |████████████████| 13.0ms
+F 39: |██████████████████| 15.0ms
+F 40: |███████████████████| 16.0ms
+F 41: |████████████████████| 17.0ms
+F 42: |████████████████| 13.0ms
+F 43: |█████████████████| 14.0ms
+F 44: |██████████████████| 15.0ms
+F 45: |████████████████████████████████| 27.0ms ⚠️ JANKY
+F 46: |███████████████████| 16.0ms
+F 47: |████████████████| 13.0ms
+F 48: |█████████████████| 14.0ms
+F 49: |███████████████████| 16.0ms
+... (1613 more frames)
+
+PERFORMANCE HOTSPOTS:
+--------------------------------------------------------------------------------
+TOP 10 MOST EXPENSIVE WIDGETS:
+
+Widget Name              Builds  Total Time  Avg Time  Max Time
+----------------------------------------------------------------------
+SettingsScreen           5304    79489.0     15.0      17.0
+MiniPlayerContent        1334    24107.0     18.1      21.0
+GesturePlayer            1302    23423.0     18.0      21.0
+PlaylistScreenController 1339    20078.0     15.0      17.0
+CombinedLibrary          1329    19928.0     15.0      17.0
+ModificationList         1329    19894.0     15.0      17.0
+SearchResultScreen       1323    19798.0     15.0      17.0
+ArtistScreen             1318    19741.0     15.0      17.0
+LibraryController        1312    19721.0     15.0      17.0
+HomeScreen               1311    19670.0     15.0      17.0
+
+CRITICAL FINDINGS:
+--------------------------------------------------------------------------------
+• Janky Frames: 883/1663 (53.1%)
+• Average Frame Time: 18.1ms
+• Target Frame Time: 16.67ms (60 FPS)
+
+⚠️  PERFORMANCE WARNING:
+   Average frame time exceeds 60 FPS target
+   Recommend optimizing top rebuild hotspots
+
+🎯 OPTIMIZATION TARGETS:
+   1. MiniPlayer widgets - 250 rebuilds in 30s
+   2. Player control components - High frequency updates
+   3. Settings screen Obx widgets - Expensive dropdown rebuilds
+   4. Large widget wrapping - 100+ line widgets in Obx
+
+Generated at: 2025-08-06 10:26:48.944738
+================================================================================

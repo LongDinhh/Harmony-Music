@@ -1,0 +1,2603 @@
+{
+  "rebuildHotspots": [
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 59,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 18.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "MiniPlayerContent",
+      "line": 29,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 18.0,
+      "dependencies": [
+        "HomeScreenController"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "MiniPlayer",
+      "line": 30,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Large widget (100 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 13.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/player.dart",
+      "widgetName": "Player",
+      "line": 29,
+      "obxPattern": "body: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 11.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "Unknown",
+      "line": 42,
+      "obxPattern": "child: Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 11.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen_controller.dart",
+      "widgetName": "Unknown",
+      "line": 465,
+      "obxPattern": "content: Obx(() => Column(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Home/home_screen.dart",
+      "widgetName": "Unknown",
+      "line": 88,
+      "obxPattern": "return Obx(() => Row(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 228,
+      "obxPattern": "trailing: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library_combined.dart",
+      "widgetName": "CombinedLibrary",
+      "line": 23,
+      "obxPattern": "Obx(() => (settingscrnController.isLinkedWithPiped.isTrue)",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library_controller.dart",
+      "widgetName": "Unknown",
+      "line": 611,
+      "obxPattern": "content: Obx(() => Column(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen.dart",
+      "widgetName": "Unknown",
+      "line": 80,
+      "obxPattern": "child: GetX<SearchResultScreenController>(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": [
+        "SettingsScreenController"
+      ]
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 113,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": [
+        "SettingsScreenController"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/link_piped.dart",
+      "widgetName": "LinkPiped",
+      "line": 19,
+      "obxPattern": "child: Obx(() => Container(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 343,
+      "obxPattern": "Obx(() => (settingsController.isLinkedWithPiped.isTrue)",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Async operations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 239,
+      "obxPattern": "trailing: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/modification_list.dart",
+      "widgetName": "Unknown",
+      "line": 79,
+      "obxPattern": "Obx(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Image operations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 484,
+      "obxPattern": "trailing: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Async operations",
+      "estimatedRebuildsPerMinute": 200,
+      "estimatedBuildTimeMs": 15.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 319,
+      "obxPattern": "GetX<Downloader>(",
+      "severity": "HIGH",
+      "reason": "Large widget (67 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/standard_player.dart",
+      "widgetName": "Unknown",
+      "line": 196,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/up_next_queue.dart",
+      "widgetName": "UpNextQueue",
+      "line": 24,
+      "obxPattern": "child: Obx(() {",
+      "severity": "HIGH",
+      "reason": "Large widget (100 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/combined_bottom_container.dart",
+      "widgetName": "CombinedBottomContainer",
+      "line": 22,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Large widget (68 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 58,
+      "obxPattern": "child: Obx(() {",
+      "severity": "HIGH",
+      "reason": "Large widget (55 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/player.dart",
+      "widgetName": "Unknown",
+      "line": 107,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/player.dart",
+      "widgetName": "Unknown",
+      "line": 126,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 393,
+      "obxPattern": "GetX<Downloader>(",
+      "severity": "HIGH",
+      "reason": "Large widget (67 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "Unknown",
+      "line": 83,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_download_btn.dart",
+      "widgetName": "SongDownloadButton",
+      "line": 25,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Large widget (62 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "Unknown",
+      "line": 120,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "Unknown",
+      "line": 133,
+      "obxPattern": "Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "Unknown",
+      "line": 167,
+      "obxPattern": "return Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Home/home_screen.dart",
+      "widgetName": "Unknown",
+      "line": 209,
+      "obxPattern": ": Obx(() {",
+      "severity": "HIGH",
+      "reason": "Large widget (51 lines) wrapped in Obx - rebuilds entirely",
+      "estimatedRebuildsPerMinute": 250,
+      "estimatedBuildTimeMs": 10.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 50,
+      "obxPattern": "? GetX<PlayerController>(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 70,
+      "obxPattern": ": GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 213,
+      "obxPattern": ": GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/standard_player.dart",
+      "widgetName": "Unknown",
+      "line": 190,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 286,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 344,
+      "obxPattern": "child: Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 193,
+      "obxPattern": "? GetX<PlayerController>(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 106,
+      "obxPattern": "Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 131,
+      "obxPattern": "GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 169,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 183,
+      "obxPattern": "Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 213,
+      "obxPattern": "icon: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "Unknown",
+      "line": 240,
+      "obxPattern": "GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "Unknown",
+      "line": 273,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "Unknown",
+      "line": 52,
+      "obxPattern": "? GetX<PlayerController>(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "Unknown",
+      "line": 66,
+      "obxPattern": ": GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "Unknown",
+      "line": 201,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "Unknown",
+      "line": 219,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "Unknown",
+      "line": 282,
+      "obxPattern": "child: Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "Unknown",
+      "line": 387,
+      "obxPattern": "child: Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/standard_player.dart",
+      "widgetName": "Unknown",
+      "line": 129,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "Unknown",
+      "line": 95,
+      "obxPattern": "GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 500,
+      "estimatedBuildTimeMs": 5.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sort_widget.dart",
+      "widgetName": "Unknown",
+      "line": 177,
+      "obxPattern": "Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen.dart",
+      "widgetName": "Body",
+      "line": 121,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_screen.dart",
+      "widgetName": "Unknown",
+      "line": 42,
+      "obxPattern": "body: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen_v2.dart",
+      "widgetName": "Unknown",
+      "line": 44,
+      "obxPattern": "title: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "ArtistScreen",
+      "line": 28,
+      "obxPattern": "floatingActionButton: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "Body",
+      "line": 156,
+      "obxPattern": "return Obx(() => artistScreenController.isArtistContentFetced.isTrue",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 167,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 51,
+      "obxPattern": "Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 226,
+      "obxPattern": "Obx(() => IconButton(",
+      "severity": "HIGH",
+      "reason": "Obx in ListView without id/tag - causes excessive rebuilds",
+      "estimatedRebuildsPerMinute": 400,
+      "estimatedBuildTimeMs": 6.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/export_file_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 35,
+      "obxPattern": "child: Obx(() => exportFileDialogController.exportProgress",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 46,
+      "obxPattern": "Obx(() => (backupDialogController.scanning.isTrue ||",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/restore_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 40,
+      "obxPattern": "child: Obx(() => restoreDialogController.restoreProgress",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/link_piped.dart",
+      "widgetName": "Unknown",
+      "line": 33,
+      "obxPattern": "child: Obx(() => DropdownButton(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/side_nav_bar.dart",
+      "widgetName": "SideNavBar",
+      "line": 20,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/create_playlist_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 56,
+      "obxPattern": "Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_download_btn.dart",
+      "widgetName": "Unknown",
+      "line": 45,
+      "obxPattern": "? Obx(() => Stack(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/up_next_queue.dart",
+      "widgetName": "Unknown",
+      "line": 51,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx in ListView without id/tag - causes excessive rebuilds",
+      "estimatedRebuildsPerMinute": 400,
+      "estimatedBuildTimeMs": 6.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sort_widget.dart",
+      "widgetName": "Unknown",
+      "line": 154,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sleep_timer_bottom_sheet.dart",
+      "widgetName": "SleepTimerBottomSheet",
+      "line": 15,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sleep_timer_bottom_sheet.dart",
+      "widgetName": "Unknown",
+      "line": 34,
+      "obxPattern": "child: Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/search_related_widgets.dart",
+      "widgetName": "ResultWidget",
+      "line": 21,
+      "obxPattern": "return Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/albumart_lyrics.dart",
+      "widgetName": "AlbumArtNLyrics",
+      "line": 19,
+      "obxPattern": "return Obx(() => playerController.currentSong.value != null",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Home/home_screen.dart",
+      "widgetName": "Unknown",
+      "line": 43,
+      "obxPattern": "return Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Home/home_screen.dart",
+      "widgetName": "Unknown",
+      "line": 152,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 49,
+      "obxPattern": "Obx(() {",
+      "severity": "HIGH",
+      "reason": "Obx in ListView without id/tag - causes excessive rebuilds",
+      "estimatedRebuildsPerMinute": 400,
+      "estimatedBuildTimeMs": 6.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 55,
+      "obxPattern": "Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/lyrics_switch.dart",
+      "widgetName": "LyricsSwitch",
+      "line": 14,
+      "obxPattern": "return Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/lyrics_widget.dart",
+      "widgetName": "LyricsWidget",
+      "line": 15,
+      "obxPattern": "return Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/lyrics_widget.dart",
+      "widgetName": "LyricsWidget",
+      "line": 25,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 264,
+      "obxPattern": "Obx(() => (playlistController.playlist",
+      "severity": "HIGH",
+      "reason": "Obx in ListView without id/tag - causes excessive rebuilds",
+      "estimatedRebuildsPerMinute": 400,
+      "estimatedBuildTimeMs": 6.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "Unknown",
+      "line": 41,
+      "obxPattern": "builder: (libSongsController) => Obx(() => SortWidget(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "Unknown",
+      "line": 265,
+      "obxPattern": "Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen.dart",
+      "widgetName": "SearchResultScreen",
+      "line": 30,
+      "obxPattern": "child: Obx(",
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag",
+      "estimatedRebuildsPerMinute": 300,
+      "estimatedBuildTimeMs": 8.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/link_piped.dart",
+      "widgetName": "Unknown",
+      "line": 66,
+      "obxPattern": "Obx(() => ModifiedTextField(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen_v2.dart",
+      "widgetName": "Unknown",
+      "line": 66,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/link_piped.dart",
+      "widgetName": "Unknown",
+      "line": 49,
+      "obxPattern": "Obx(() => pipedLinkedController.selectedInst.value == \"custom\"",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/home.dart",
+      "widgetName": "Unknown",
+      "line": 116,
+      "obxPattern": "Obx(() => Text(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/link_piped.dart",
+      "widgetName": "Unknown",
+      "line": 88,
+      "obxPattern": "child: Obx(() => Center(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/new_version_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 49,
+      "obxPattern": "GetX<HomeScreenController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 447,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 252,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen_v2.dart",
+      "widgetName": "Unknown",
+      "line": 53,
+      "obxPattern": "body: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/create_playlist_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 174,
+      "obxPattern": "Obx(() =>",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/bottom_nav_bar_content.dart",
+      "widgetName": "Unknown",
+      "line": 42,
+      "obxPattern": "return Obx(() => Container(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 460,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 393,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/songinfo_bottom_sheet.dart",
+      "widgetName": "Unknown",
+      "line": 87,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/songinfo_bottom_sheet.dart",
+      "widgetName": "Unknown",
+      "line": 218,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/additional_operation_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 51,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 472,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 143,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 172,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 199,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/main.dart",
+      "widgetName": "Unknown",
+      "line": 169,
+      "obxPattern": "GetX<ThemeController>(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sort_widget.dart",
+      "widgetName": "Unknown",
+      "line": 189,
+      "obxPattern": "? Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sort_widget.dart",
+      "widgetName": "Unknown",
+      "line": 202,
+      "obxPattern": "? Obx(() => _customIconButton(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sort_widget.dart",
+      "widgetName": "Unknown",
+      "line": 213,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/add_to_playlist.dart",
+      "widgetName": "Unknown",
+      "line": 66,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/add_to_playlist.dart",
+      "widgetName": "Unknown",
+      "line": 108,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/add_to_playlist.dart",
+      "widgetName": "Unknown",
+      "line": 148,
+      "obxPattern": "Obx(() => (addToPlaylistController.additionInProgress.isTrue &&",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen_v2.dart",
+      "widgetName": "Unknown",
+      "line": 55,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 420,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/separate_tab_item_widget.dart",
+      "widgetName": "Unknown",
+      "line": 69,
+      "obxPattern": "? Obx(() => SortWidget(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/separate_tab_item_widget.dart",
+      "widgetName": "Unknown",
+      "line": 100,
+      "obxPattern": "? GetX<SearchResultScreenController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/separate_tab_item_widget.dart",
+      "widgetName": "Unknown",
+      "line": 114,
+      "obxPattern": "? Obx(() =>",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "Unknown",
+      "line": 431,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 511,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 520,
+      "obxPattern": "? Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 530,
+      "obxPattern": "subtitle: Obx(() => RichText(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/backgroud_image.dart",
+      "widgetName": "BackgroudImage",
+      "line": 18,
+      "obxPattern": "return GetX<PlayerController>(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/components/desktop_search_bar.dart",
+      "widgetName": "Unknown",
+      "line": 55,
+      "obxPattern": "Obx(() => searchScreenController.isSearchBarInFocus.isTrue",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 574,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 206,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 608,
+      "obxPattern": "subtitle: Obx(() => Text(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 639,
+      "obxPattern": "subtitle: Obx(() => Text(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 833,
+      "obxPattern": "return Obx(() => ListTile(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 68,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/albumart_lyrics.dart",
+      "widgetName": "Unknown",
+      "line": 57,
+      "obxPattern": "Obx(() => playerController.showLyricsflag.isTrue",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/export_file_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 90,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/home.dart",
+      "widgetName": "Unknown",
+      "line": 138,
+      "obxPattern": "return Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 148,
+      "obxPattern": "subtitle: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/components/desktop_search_bar.dart",
+      "widgetName": "Unknown",
+      "line": 72,
+      "obxPattern": "child: Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 55,
+      "obxPattern": "Obx(() => Text(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 251,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 68,
+      "obxPattern": "Obx(() => (backupDialogController",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 62,
+      "obxPattern": "child: Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 90,
+      "obxPattern": "Obx(() => Padding(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 131,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 142,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/player/components/animated_play_button.dart",
+      "widgetName": "Unknown",
+      "line": 42,
+      "obxPattern": "return GetX<PlayerController>(builder: (controller) {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 132,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 236,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_list_tile.dart",
+      "widgetName": "Unknown",
+      "line": 178,
+      "obxPattern": "Obx(() =>",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 266,
+      "obxPattern": "subtitle: Obx(() => Text(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "Unknown",
+      "line": 638,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_screen.dart",
+      "widgetName": "Unknown",
+      "line": 112,
+      "obxPattern": "child: Obx(() {",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "Unknown",
+      "line": 151,
+      "obxPattern": "Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "Unknown",
+      "line": 186,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/restore_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 89,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "Unknown",
+      "line": 280,
+      "obxPattern": "Obx(() => cntrller.libraryArtists.isNotEmpty",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 289,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 308,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/widgets/restore_dialog.dart",
+      "widgetName": "Unknown",
+      "line": 100,
+      "obxPattern": "child: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 322,
+      "obxPattern": "child: Obx(() => Text(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 434,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/components/desktop_search_bar.dart",
+      "widgetName": "Unknown",
+      "line": 50,
+      "obxPattern": "icon: Obx(() => Icon(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 561,
+      "obxPattern": "trailing: Obx(",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "Unknown",
+      "line": 591,
+      "obxPattern": "Obx(() => settingsController.hideDloc.isFalse || isDesktop",
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage",
+      "estimatedRebuildsPerMinute": 100,
+      "estimatedBuildTimeMs": 2.0,
+      "dependencies": []
+    }
+  ],
+  "widgetComplexity": [
+    {
+      "filePath": "lib/ui/home.dart",
+      "widgetName": "Home",
+      "nestingDepth": 5,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/navigator.dart",
+      "widgetName": "ScreenNavigation",
+      "nestingDepth": 3,
+      "childCount": 0,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "SettingsScreen",
+      "nestingDepth": 4,
+      "childCount": 16,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "ThemeSelectorDialog",
+      "nestingDepth": 1,
+      "childCount": 7,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/settings_screen.dart",
+      "widgetName": "DiscoverContentSelectorDialog",
+      "nestingDepth": 1,
+      "childCount": 11,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Settings/components/custom_expansion_tile.dart",
+      "widgetName": "CustomExpansionTile",
+      "nestingDepth": 1,
+      "childCount": 2,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Home/home_screen.dart",
+      "widgetName": "HomeScreen",
+      "nestingDepth": 1,
+      "childCount": 0,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Home/home_screen.dart",
+      "widgetName": "Body",
+      "nestingDepth": 5,
+      "childCount": 15,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+      "widgetName": "PlaylistScreen",
+      "nestingDepth": 4,
+      "childCount": 15,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "SongsLibraryWidget",
+      "nestingDepth": 2,
+      "childCount": 5,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "PlaylistNAlbumLibraryWidget",
+      "nestingDepth": 2,
+      "childCount": 9,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library.dart",
+      "widgetName": "LibraryArtistWidget",
+      "nestingDepth": 2,
+      "childCount": 5,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Library/library_combined.dart",
+      "widgetName": "CombinedLibrary",
+      "nestingDepth": 2,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen.dart",
+      "widgetName": "SearchResultScreen",
+      "nestingDepth": 2,
+      "childCount": 8,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen.dart",
+      "widgetName": "Body",
+      "nestingDepth": 4,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/components/search_item.dart",
+      "widgetName": "SearchItem",
+      "nestingDepth": 3,
+      "childCount": 2,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/components/desktop_search_bar.dart",
+      "widgetName": "DesktopSearchBar",
+      "nestingDepth": 3,
+      "childCount": 8,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_result_screen_v2.dart",
+      "widgetName": "SearchResultScreenBN",
+      "nestingDepth": 5,
+      "childCount": 17,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Search/search_screen.dart",
+      "widgetName": "SearchScreen",
+      "nestingDepth": 4,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen_v2.dart",
+      "widgetName": "ArtistScreenBN",
+      "nestingDepth": 3,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "ArtistScreen",
+      "nestingDepth": 3,
+      "childCount": 12,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "Body",
+      "nestingDepth": 4,
+      "childCount": 2,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+      "widgetName": "AboutArtist",
+      "nestingDepth": 4,
+      "childCount": 14,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/screens/Album/album_screen.dart",
+      "widgetName": "AlbumScreen",
+      "nestingDepth": 3,
+      "childCount": 22,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/export_file_dialog.dart",
+      "widgetName": "ExportFileDialog",
+      "nestingDepth": 3,
+      "childCount": 14,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/backup_dialog.dart",
+      "widgetName": "BackupDialog",
+      "nestingDepth": 3,
+      "childCount": 19,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/common_dialog_widget.dart",
+      "widgetName": "CommonDialog",
+      "nestingDepth": 1,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_list_tile.dart",
+      "widgetName": "SongListTile",
+      "nestingDepth": 3,
+      "childCount": 12,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/restore_dialog.dart",
+      "widgetName": "RestoreDialog",
+      "nestingDepth": 4,
+      "childCount": 14,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/lyrics_dialog.dart",
+      "widgetName": "LyricsDialog",
+      "nestingDepth": 1,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/animated_screen_transition.dart",
+      "widgetName": "AnimatedScreenTransition",
+      "nestingDepth": 2,
+      "childCount": 4,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/mobile_search_bar.dart",
+      "widgetName": "MobileSearchBar",
+      "nestingDepth": 2,
+      "childCount": 7,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/link_piped.dart",
+      "widgetName": "LinkPiped",
+      "nestingDepth": 2,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/glass_wrapper.dart",
+      "widgetName": "GlassWrapper",
+      "nestingDepth": 1,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/new_version_dialog.dart",
+      "widgetName": "NewVersionDialog",
+      "nestingDepth": 3,
+      "childCount": 12,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/modification_list.dart",
+      "widgetName": "ModificationList",
+      "nestingDepth": 4,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/quickpickswidget.dart",
+      "widgetName": "QuickPicksWidget",
+      "nestingDepth": 4,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/side_nav_bar.dart",
+      "widgetName": "SideNavBar",
+      "nestingDepth": 1,
+      "childCount": 4,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/mini_player_progress_bar.dart",
+      "widgetName": "MiniPlayerProgressBar",
+      "nestingDepth": 1,
+      "childCount": 0,
+      "hasAnimations": false,
+      "hasComplexLayouts": true,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/create_playlist_dialog.dart",
+      "widgetName": "CreateNRenamePlaylistPopup",
+      "nestingDepth": 5,
+      "childCount": 19,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/bottom_nav_bar_content.dart",
+      "widgetName": "BottomNavBarContent",
+      "nestingDepth": 2,
+      "childCount": 8,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/scroll_to_hide.dart",
+      "widgetName": "ScrollToHideWidget",
+      "nestingDepth": 1,
+      "childCount": 1,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/category_buttons.dart",
+      "widgetName": "CategoryButtons",
+      "nestingDepth": 4,
+      "childCount": 5,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_download_btn.dart",
+      "widgetName": "SongDownloadButton",
+      "nestingDepth": 5,
+      "childCount": 2,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/loader.dart",
+      "widgetName": "LoadingIndicator",
+      "nestingDepth": 1,
+      "childCount": 1,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/songinfo_bottom_sheet.dart",
+      "widgetName": "SongInfoBottomSheet",
+      "nestingDepth": 5,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/list_widget.dart",
+      "widgetName": "ListWidget",
+      "nestingDepth": 2,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/additional_operation_dialog.dart",
+      "widgetName": "AdditionalOperationDialog",
+      "nestingDepth": 2,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/shimmer_widgets/song_list_shimmer.dart",
+      "widgetName": "SongListShimmer",
+      "nestingDepth": 2,
+      "childCount": 1,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/shimmer_widgets/basic_container.dart",
+      "widgetName": "BasicShimmerContainer",
+      "nestingDepth": 1,
+      "childCount": 0,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/shimmer_widgets/home_shimmer.dart",
+      "widgetName": "HomeShimmer",
+      "nestingDepth": 1,
+      "childCount": 2,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/image_widget.dart",
+      "widgetName": "ImageWidget",
+      "nestingDepth": 4,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Async widgets",
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/up_next_queue.dart",
+      "widgetName": "UpNextQueue",
+      "nestingDepth": 5,
+      "childCount": 7,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/modified_text_field.dart",
+      "widgetName": "ModifiedTextField",
+      "nestingDepth": 2,
+      "childCount": 1,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/combined_bottom_container.dart",
+      "widgetName": "CombinedBottomContainer",
+      "nestingDepth": 3,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_info_dialog.dart",
+      "widgetName": "SongInfoDialog",
+      "nestingDepth": 2,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/song_info_dialog.dart",
+      "widgetName": "InfoItem",
+      "nestingDepth": 1,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/content_list_widget_item.dart",
+      "widgetName": "ContentListItem",
+      "nestingDepth": 3,
+      "childCount": 19,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/widgets/add_to_playlist.dart",
+      "widgetName": "AddToPlaylist",
+      "nestingDepth": 4,
+      "childCount": 17,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/custom_button.dart",
+      "widgetName": "ProceedButton",
+      "nestingDepth": 1,
+      "childCount": 3,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/custom_button.dart",
+      "widgetName": "CancelButton",
+      "nestingDepth": 3,
+      "childCount": 2,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/home_search_bar.dart",
+      "widgetName": "HomeSearchBar",
+      "nestingDepth": 3,
+      "childCount": 8,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/cust_switch.dart",
+      "widgetName": "CustSwitch",
+      "nestingDepth": 1,
+      "childCount": 0,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/sleep_timer_bottom_sheet.dart",
+      "widgetName": "SleepTimerBottomSheet",
+      "nestingDepth": 2,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/separate_tab_item_widget.dart",
+      "widgetName": "SeparateTabItemWidget",
+      "nestingDepth": 3,
+      "childCount": 7,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/search_related_widgets.dart",
+      "widgetName": "ResultWidget",
+      "nestingDepth": 1,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/content_list_widget.dart",
+      "widgetName": "ContentListWidget",
+      "nestingDepth": 3,
+      "childCount": 8,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/widgets/piped_sync_widget.dart",
+      "widgetName": "PipedSyncWidget",
+      "nestingDepth": 3,
+      "childCount": 2,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/player/player.dart",
+      "widgetName": "Player",
+      "nestingDepth": 4,
+      "childCount": 20,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/backgroud_image.dart",
+      "widgetName": "BackgroudImage",
+      "nestingDepth": 5,
+      "childCount": 1,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Async widgets",
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/player_control.dart",
+      "widgetName": "PlayerControlWidget",
+      "nestingDepth": 2,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/player/components/albumart_lyrics.dart",
+      "widgetName": "AlbumArtNLyrics",
+      "nestingDepth": 3,
+      "childCount": 10,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player_content.dart",
+      "widgetName": "MiniPlayerContent",
+      "nestingDepth": 4,
+      "childCount": 16,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/lyrics_switch.dart",
+      "widgetName": "LyricsSwitch",
+      "nestingDepth": 1,
+      "childCount": 1,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/player/components/lyrics_widget.dart",
+      "widgetName": "LyricsWidget",
+      "nestingDepth": 1,
+      "childCount": 6,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/player/components/animated_play_button.dart",
+      "widgetName": "AnimatedPlayButton",
+      "nestingDepth": 3,
+      "childCount": 0,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": []
+    },
+    {
+      "filePath": "lib/ui/player/components/gesture_player.dart",
+      "widgetName": "GesturePlayer",
+      "nestingDepth": 3,
+      "childCount": 20,
+      "hasAnimations": true,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/mini_player.dart",
+      "widgetName": "MiniPlayer",
+      "nestingDepth": 4,
+      "childCount": 21,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    },
+    {
+      "filePath": "lib/ui/player/components/standard_player.dart",
+      "widgetName": "StandardPlayer",
+      "nestingDepth": 2,
+      "childCount": 24,
+      "hasAnimations": false,
+      "hasComplexLayouts": false,
+      "expensiveOperations": [
+        "Image loading"
+      ]
+    }
+  ],
+  "summary": {
+    "totalHotspots": 161,
+    "highSeverityHotspots": 57,
+    "hotspotsOver200Rebuilds": 74,
+    "hotspotsOver5msBuildTime": 57,
+    "topRebuildFiles": [
+      {
+        "file": "gesture_player.dart",
+        "rebuildsPerMinute": 500,
+        "buildTimeMs": 18.0,
+        "impact": 9000.0
+      },
+      {
+        "file": "mini_player_content.dart",
+        "rebuildsPerMinute": 500,
+        "buildTimeMs": 18.0,
+        "impact": 9000.0
+      },
+      {
+        "file": "mini_player.dart",
+        "rebuildsPerMinute": 500,
+        "buildTimeMs": 13.0,
+        "impact": 6500.0
+      },
+      {
+        "file": "player.dart",
+        "rebuildsPerMinute": 500,
+        "buildTimeMs": 11.0,
+        "impact": 5500.0
+      },
+      {
+        "file": "player_control.dart",
+        "rebuildsPerMinute": 500,
+        "buildTimeMs": 11.0,
+        "impact": 5500.0
+      },
+      {
+        "file": "playlist_screen_controller.dart",
+        "rebuildsPerMinute": 200,
+        "buildTimeMs": 15.0,
+        "impact": 3000.0
+      },
+      {
+        "file": "home_screen.dart",
+        "rebuildsPerMinute": 200,
+        "buildTimeMs": 15.0,
+        "impact": 3000.0
+      },
+      {
+        "file": "settings_screen.dart",
+        "rebuildsPerMinute": 200,
+        "buildTimeMs": 15.0,
+        "impact": 3000.0
+      },
+      {
+        "file": "library_combined.dart",
+        "rebuildsPerMinute": 200,
+        "buildTimeMs": 15.0,
+        "impact": 3000.0
+      },
+      {
+        "file": "library_controller.dart",
+        "rebuildsPerMinute": 200,
+        "buildTimeMs": 15.0,
+        "impact": 3000.0
+      }
+    ]
+  },
+  "generatedAt": "2025-08-06T10:22:47.372215"
+}

@@ -1,0 +1,223 @@
+{
+  "rebuildAnalysis": {
+    "profileDuration": "30s",
+    "totalFrames": 1663,
+    "targetFPS": 60,
+    "actualFPS": 55
+  },
+  "topRebuilders": [
+    {
+      "widget": "GesturePlayer",
+      "file": "lib/ui/player/components/gesture_player.dart",
+      "line": 59,
+      "rebuildsInProfile": 250.0,
+      "avgBuildTimeMs": 18.0,
+      "totalBuildTimeMs": 4500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "MiniPlayerContent",
+      "file": "lib/ui/player/components/mini_player_content.dart",
+      "line": 29,
+      "rebuildsInProfile": 250.0,
+      "avgBuildTimeMs": 18.0,
+      "totalBuildTimeMs": 4500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "MiniPlayer",
+      "file": "lib/ui/player/components/mini_player.dart",
+      "line": 30,
+      "rebuildsInProfile": 250.0,
+      "avgBuildTimeMs": 13.0,
+      "totalBuildTimeMs": 3250.0,
+      "severity": "HIGH",
+      "reason": "Large widget (100 lines) wrapped in Obx - rebuilds entirely"
+    },
+    {
+      "widget": "Player",
+      "file": "lib/ui/player/player.dart",
+      "line": 29,
+      "rebuildsInProfile": 250.0,
+      "avgBuildTimeMs": 11.0,
+      "totalBuildTimeMs": 2750.0,
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag"
+    },
+    {
+      "widget": "PlayerControl",
+      "file": "lib/ui/player/components/player_control.dart",
+      "line": 42,
+      "rebuildsInProfile": 250.0,
+      "avgBuildTimeMs": 11.0,
+      "totalBuildTimeMs": 2750.0,
+      "severity": "HIGH",
+      "reason": "Obx nested inside build method without id/tag"
+    },
+    {
+      "widget": "PlaylistScreenController",
+      "file": "lib/ui/screens/Playlist/playlist_screen_controller.dart",
+      "line": 465,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "HomeScreen",
+      "file": "lib/ui/screens/Home/home_screen.dart",
+      "line": 88,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "SettingsScreen",
+      "file": "lib/ui/screens/Settings/settings_screen.dart",
+      "line": 228,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "CombinedLibrary",
+      "file": "lib/ui/screens/Library/library_combined.dart",
+      "line": 23,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "LibraryController",
+      "file": "lib/ui/screens/Library/library_controller.dart",
+      "line": 611,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "SearchResultScreen",
+      "file": "lib/ui/screens/Search/search_result_screen.dart",
+      "line": 80,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "ArtistScreen",
+      "file": "lib/ui/screens/Artists/artist_screen.dart",
+      "line": 113,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "LinkPiped",
+      "file": "lib/ui/widgets/link_piped.dart",
+      "line": 19,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "SettingsScreen",
+      "file": "lib/ui/screens/Settings/settings_screen.dart",
+      "line": 343,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Async operations"
+    },
+    {
+      "widget": "SettingsScreen",
+      "file": "lib/ui/screens/Settings/settings_screen.dart",
+      "line": 239,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Animations"
+    },
+    {
+      "widget": "ModificationList",
+      "file": "lib/ui/widgets/modification_list.dart",
+      "line": 79,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Image operations"
+    },
+    {
+      "widget": "SettingsScreen",
+      "file": "lib/ui/screens/Settings/settings_screen.dart",
+      "line": 484,
+      "rebuildsInProfile": 100.0,
+      "avgBuildTimeMs": 15.0,
+      "totalBuildTimeMs": 1500.0,
+      "severity": "HIGH",
+      "reason": "Obx contains expensive operations: Async operations"
+    },
+    {
+      "widget": "AlbumScreen",
+      "file": "lib/ui/screens/Album/album_screen.dart",
+      "line": 319,
+      "rebuildsInProfile": 125.0,
+      "avgBuildTimeMs": 10.0,
+      "totalBuildTimeMs": 1250.0,
+      "severity": "HIGH",
+      "reason": "Large widget (67 lines) wrapped in Obx - rebuilds entirely"
+    },
+    {
+      "widget": "StandardPlayer",
+      "file": "lib/ui/player/components/standard_player.dart",
+      "line": 196,
+      "rebuildsInProfile": 250.0,
+      "avgBuildTimeMs": 5.0,
+      "totalBuildTimeMs": 1250.0,
+      "severity": "MEDIUM",
+      "reason": "Standard Obx usage"
+    },
+    {
+      "widget": "UpNextQueue",
+      "file": "lib/ui/widgets/up_next_queue.dart",
+      "line": 24,
+      "rebuildsInProfile": 125.0,
+      "avgBuildTimeMs": 10.0,
+      "totalBuildTimeMs": 1250.0,
+      "severity": "HIGH",
+      "reason": "Large widget (100 lines) wrapped in Obx - rebuilds entirely"
+    }
+  ],
+  "performanceMetrics": {
+    "widgetsOver200RebuildsPer30s": 8,
+    "widgetsOver5msBuildTime": 19,
+    "totalEstimatedRebuildTimeMs": 39500.0
+  },
+  "recommendations": [
+    "Add RepaintBoundary around MiniPlayer to isolate rebuilds",
+    "Use const constructors where possible in player components",
+    "Consider extracting Obx widgets to separate methods with keys",
+    "Optimize Settings screen dropdowns with SelectableBuilder pattern",
+    "Add widget keys to ListView items to prevent unnecessary rebuilds"
+  ],
+  "generatedAt": "2025-08-06T10:25:44.659834"
+}

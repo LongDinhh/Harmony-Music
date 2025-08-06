@@ -1,0 +1,2059 @@
+[
+  {
+    "filePath": "lib/utils/get_localization.dart",
+    "linesOfCode": 9627,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/music_service.dart",
+    "linesOfCode": 1013,
+    "maxNestingDepth": 7,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "init (async function)",
+      "Line 78: await expression",
+      "Anonymous async function/block",
+      "Line 85: await expression",
+      "Line 91: await expression",
+      "Line 92: await expression",
+      "Line 96: await expression",
+      "Anonymous async function/block",
+      "Line 114: await expression",
+      "Line 121: await expression",
+      "Line 127: await expression",
+      "_initializeAppData (async function)",
+      "Line 165: await expression",
+      "Line 168: await expression",
+      "_processResponseData (async function)",
+      "Line 179: await expression",
+      "Line 184: await expression",
+      "_saveVisitorData (async function)",
+      "Anonymous async function/block",
+      "Line 205: await expression",
+      "Line 213: await expression",
+      "Anonymous async function/block",
+      "Line 218: await expression",
+      "_saveConfigValueDirectly (async function)",
+      "Line 237: await expression",
+      "Anonymous async function/block",
+      "Anonymous async function/block",
+      "Anonymous async function/block",
+      "Anonymous async function/block",
+      "Anonymous async function/block",
+      "_initializeCookies (async function)",
+      "Line 286: await expression",
+      "genrateVisitorId (async function)",
+      "Line 296: await expression",
+      "Line 299: await expression",
+      "Line 303: await expression",
+      "Anonymous async function/block",
+      "_retryRequest (async function)",
+      "Line 316: await expression",
+      "Anonymous async function/block",
+      "Line 335: await expression",
+      "Line 341: await expression",
+      "getHome (async function)",
+      "Line 351: await expression",
+      "requestFunc (async function)",
+      "Line 360: await expression",
+      "Line 366: await expression",
+      "Anonymous async function/block",
+      "Line 386: await expression",
+      "Anonymous async function/block",
+      "Line 445: await expression",
+      "requestFunc (async function)",
+      "Line 480: await expression",
+      "Line 483: await expression",
+      "getAlbumBrowseId (async function)",
+      "Line 502: await expression",
+      "getContentRelatedToSong (async function)",
+      "Line 516: await expression",
+      "Line 520: await expression",
+      "getLyrics (async function)",
+      "Line 529: await expression",
+      "Anonymous async function/block",
+      "Line 546: await expression",
+      "Line 551: await expression",
+      "requestFunc (async function)",
+      "Line 645: await expression",
+      "requestFuncCountinuation (async function)",
+      "Line 650: await expression",
+      "Line 660: await expression",
+      "getSearchSuggestion (async function)",
+      "Line 733: await expression",
+      "getSongWithId (async function)",
+      "Line 753: await expression",
+      "Line 758: await expression",
+      "Anonymous async function/block",
+      "Line 807: await expression",
+      "requestFunc (async function)",
+      "Line 868: await expression",
+      "Line 875: await expression",
+      "Anonymous async function/block",
+      "requestFunc (async function)",
+      "Line 909: await expression",
+      "Line 915: await expression",
+      "getArtist (async function)",
+      "Line 939: await expression",
+      "Anonymous async function/block",
+      "Line 989: await expression",
+      "getSongYear (async function)",
+      "Line 1092: await expression",
+      "refreshYouTubeCookies (async function)",
+      "Line 1122: await expression",
+      "Line 1124: await expression",
+      "Anonymous async function/block",
+      "Anonymous async function/block",
+      "Line 1184: await expression",
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/nav_parser.dart",
+    "linesOfCode": 936,
+    "maxNestingDepth": 7,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Playlist/playlist_screen.dart",
+    "linesOfCode": 735,
+    "maxNestingDepth": 7,
+    "widgetClasses": [
+      "PlaylistScreen"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Library/library_controller.dart",
+    "linesOfCode": 614,
+    "maxNestingDepth": 5,
+    "widgetClasses": [],
+    "controllerServices": [
+      "LibrarySongsController",
+      "LibraryPlaylistsController",
+      "LibraryAlbumsController",
+      "LibraryArtistsController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "init (async function)",
+      "Line 40: await expression",
+      "Anonymous async function/block",
+      "Line 116: await expression",
+      "Line 120: await expression",
+      "Line 121: await expression",
+      "Line 126: await expression",
+      "Line 127: await expression",
+      "deleteMultipleSongs (async function)",
+      "Line 178: await expression",
+      "Line 179: await expression",
+      "Line 182: await expression",
+      "Line 185: await expression",
+      "refreshLib (async function)",
+      "Line 259: await expression",
+      "Line 270: await expression",
+      "Line 274: await expression",
+      "updatePlaylistIntoDb (async function)",
+      "Line 278: await expression",
+      "syncPipedPlaylist (async function)",
+      "Line 292: await expression",
+      "Line 293: await expression",
+      "renamePlaylist (async function)",
+      "Line 343: await expression",
+      "Line 348: await expression",
+      "Anonymous async function/block",
+      "Line 371: await expression",
+      "Line 395: await expression",
+      "Line 397: await expression",
+      "Line 403: await expression",
+      "Line 411: await expression",
+      "blacklistPipedPlaylist (async function)",
+      "Line 421: await expression",
+      "resetBlacklistedPlaylist (async function)",
+      "Line 428: await expression",
+      "importPlaylistFromJson (async function)",
+      "Line 477: await expression",
+      "Line 496: await expression",
+      "Line 500: await expression",
+      "Line 532: await expression",
+      "Line 537: await expression",
+      "Line 543: await expression",
+      "Line 548: await expression",
+      "Line 549: await expression",
+      "refreshLib (async function)",
+      "Line 649: await expression",
+      "refreshLib (async function)",
+      "Line 695: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Album/album_screen.dart",
+    "linesOfCode": 550,
+    "maxNestingDepth": 7,
+    "widgetClasses": [
+      "AlbumScreen"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/mini_player.dart",
+    "linesOfCode": 544,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "MiniPlayer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/sliding_up_panel.dart",
+    "linesOfCode": 505,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "SlidingUpPanel"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/songinfo_bottom_sheet.dart",
+    "linesOfCode": 424,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "SongInfoBottomSheet"
+    ],
+    "controllerServices": [
+      "SongInfoController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "then (async function)",
+      "Anonymous async function/block",
+      "Line 345: await expression",
+      "_setInitStatus (async function)",
+      "Line 372: await expression",
+      "toggleFav (async function)",
+      "Line 399: await expression",
+      "removeSongFromPlaylist (async function)",
+      "Line 415: await expression",
+      "Line 432: await expression",
+      "Line 440: await expression",
+      "Line 444: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/youtube_cookie_manager.dart",
+    "linesOfCode": 400,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "init (async function)",
+      "Line 59: await expression",
+      "Line 67: await expression",
+      "Line 69: await expression",
+      "saveYouTubeCookies (async function)",
+      "Line 96: await expression",
+      "Line 159: await expression",
+      "getValidYouTubeCookies (async function)",
+      "Line 174: await expression",
+      "Line 209: await expression",
+      "Anonymous async function/block",
+      "Line 224: await expression",
+      "Line 237: await expression",
+      "isLoggedIn (async function)",
+      "Line 251: await expression",
+      "getLoginInfo (async function)",
+      "Line 272: await expression",
+      "Line 273: await expression",
+      "clearAllYouTubeCookies (async function)",
+      "Line 293: await expression",
+      "Line 297: await expression",
+      "clearAll (async function)",
+      "Line 306: await expression",
+      "Line 308: await expression",
+      "removeYouTubeCookie (async function)",
+      "Line 315: await expression",
+      "Line 319: await expression",
+      "syncCookiesFromWebView (async function)",
+      "Line 336: await expression",
+      "Line 351: await expression",
+      "cleanupExpiredCookies (async function)",
+      "Line 362: await expression",
+      "Line 386: await expression",
+      "startBackgroundCleanup (async function)",
+      "Line 400: await expression",
+      "Anonymous async function/block",
+      "Line 404: await expression",
+      "compressCookieData (async function)",
+      "Line 414: await expression",
+      "Line 418: await expression",
+      "Line 421: await expression",
+      "Line 422: await expression",
+      "getCookieString (async function)",
+      "Line 433: await expression",
+      "Anonymous async function/block",
+      "Line 468: await expression",
+      "Anonymous async function/block",
+      "Line 505: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/native_bindings/andrid_utils.dart",
+    "linesOfCode": 394,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Playlist/playlist_screen_controller.dart",
+    "linesOfCode": 390,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "fetchPlaylistDetails (async function)",
+      "Line 102: await expression",
+      "Line 103: await expression",
+      "Anonymous async function/block",
+      "Line 128: await expression",
+      "Line 135: await expression",
+      "checkIfAddedToLibrary (async function)",
+      "Line 158: await expression",
+      "Line 161: await expression",
+      "addNremoveFromLibrary (async function)",
+      "Line 171: await expression",
+      "Line 175: await expression",
+      "Line 182: await expression",
+      "Line 190: await expression",
+      "updateSongsIntoDb (async function)",
+      "Line 201: await expression",
+      "Line 202: await expression",
+      "Line 205: await expression",
+      "Line 207: await expression",
+      "deleteMultipleSongs (async function)",
+      "Line 218: await expression",
+      "Line 223: await expression",
+      "Line 226: await expression",
+      "Line 232: await expression",
+      "exportPlaylistToJson (async function)",
+      "Line 303: await expression",
+      "Line 322: await expression",
+      "Line 344: await expression",
+      "Line 354: await expression",
+      "_getExportDirectory (async function)",
+      "Line 409: await expression",
+      "Line 419: await expression",
+      "Line 424: await expression",
+      "Line 425: await expression",
+      "Line 431: await expression",
+      "Line 433: await expression",
+      "Line 434: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/mini_player_content.dart",
+    "linesOfCode": 388,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "MiniPlayerContent"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/sort_widget.dart",
+    "linesOfCode": 367,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "SortWidget"
+    ],
+    "controllerServices": [
+      "SortWidgetController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/utils/theme_controller.dart",
+    "linesOfCode": 366,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [
+      "ThemeController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "setTheme (async function)",
+      "Line 65: await expression",
+      "setWindowsTitleBarColor (async function)",
+      "Anonymous async function/block",
+      "Line 345: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Settings/settings_screen_controller.dart",
+    "linesOfCode": 335,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [
+      "SettingsScreenController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "_createInAppSongDownDir (async function)",
+      "Line 75: await expression",
+      "Line 77: await expression",
+      "Line 78: await expression",
+      "_setInitValue (async function)",
+      "Line 112: await expression",
+      "Line 115: await expression",
+      "Line 130: await expression",
+      "setExportedLocation (async function)",
+      "Line 192: await expression",
+      "Line 196: await expression",
+      "setDownloadLocation (async function)",
+      "Line 207: await expression",
+      "Line 211: await expression",
+      "clearImagesCache (async function)",
+      "Line 232: await expression",
+      "Line 235: await expression",
+      "Line 236: await expression",
+      "toggleCacheHomeScreenData (async function)",
+      "then (async function)",
+      "Line 287: await expression",
+      "Line 288: await expression",
+      "Line 291: await expression",
+      "enableIgnoringBatteryOptimizations (async function)",
+      "Line 307: await expression",
+      "Line 309: await expression",
+      "unlinkPiped (async function)",
+      "Line 321: await expression",
+      "resetAppSettingsToDefault (async function)",
+      "Line 329: await expression",
+      "closeAllDatabases (async function)",
+      "Line 338: await expression",
+      "Anonymous async function/block",
+      "Line 345: await expression",
+      "_checkGoogleLogin (async function)",
+      "Line 352: await expression",
+      "loginWithGoogle (async function)",
+      "Line 363: await expression",
+      "logoutGoogle (async function)",
+      "Line 380: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/main.dart",
+    "linesOfCode": 335,
+    "maxNestingDepth": 7,
+    "widgetClasses": [
+      "MyApp",
+      "FallbackApp"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "main (async function)",
+      "Line 39: await expression",
+      "_prepareBackgroundServices (async function)",
+      "Line 68: await expression",
+      "Line 72: await expression",
+      "_initializeAppParallel (async function)",
+      "Line 89: await expression",
+      "Line 102: await expression",
+      "Line 114: await expression",
+      "Line 130: await expression",
+      "initHive (async function)",
+      "Line 228: await expression",
+      "Line 231: await expression",
+      "Line 233: await expression",
+      "Line 236: await expression",
+      "Line 239: await expression",
+      "Line 247: await expression",
+      "_initYouTubeCookieManager (async function)",
+      "Line 251: await expression",
+      "_setAppInitPrefsAsync (async function)",
+      "_initializeAndRestart (async function)",
+      "Line 318: await expression",
+      "Line 319: await expression",
+      "didChangeAppLifecycleState (async function)",
+      "Line 402: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Home/home_screen_controller.dart",
+    "linesOfCode": 333,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [
+      "HomeScreenController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "loadContent (async function)",
+      "Line 51: await expression",
+      "loadContentFromDb (async function)",
+      "Line 69: await expression",
+      "Line 106: await expression",
+      "Line 107: await expression",
+      "loadContentFromNetwork (async function)",
+      "Line 127: await expression",
+      "Line 132: await expression",
+      "Line 153: await expression",
+      "Line 158: await expression",
+      "refresh (async function)",
+      "Line 172: await expression",
+      "changeDiscoverContent (async function)",
+      "Line 250: await expression",
+      "Line 267: await expression",
+      "Anonymous async function/block",
+      "Line 354: await expression",
+      "Line 361: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/youtube_config_service.dart",
+    "linesOfCode": 329,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "init (async function)",
+      "Line 65: await expression",
+      "fetchYouTubeConfig (async function)",
+      "Line 87: await expression",
+      "Line 89: await expression",
+      "Line 104: await expression",
+      "extractAndSaveConfig (async function)",
+      "Line 146: await expression",
+      "Line 152: await expression",
+      "Line 167: await expression",
+      "return (async function)",
+      "Line 195: await expression",
+      "Anonymous async function/block",
+      "getSavedConfigValue (async function)",
+      "Line 246: await expression",
+      "clearSavedConfig (async function)",
+      "Line 259: await expression",
+      "Line 261: await expression",
+      "Anonymous async function/block",
+      "Line 273: await expression",
+      "Anonymous async function/block",
+      "Line 300: await expression",
+      "Line 302: await expression",
+      "Line 307: await expression",
+      "getDatasyncId (async function)",
+      "Line 317: await expression",
+      "getVisitorData (async function)",
+      "Line 322: await expression",
+      "getSessionToken (async function)",
+      "Line 327: await expression",
+      "getApiKey (async function)",
+      "Line 332: await expression",
+      "getClientVersion (async function)",
+      "Line 337: await expression",
+      "isLoggedIn (async function)",
+      "Line 342: await expression",
+      "getApiHeaders (async function)",
+      "Line 354: await expression",
+      "Line 355: await expression",
+      "Line 356: await expression",
+      "getInnerTubeContext (async function)",
+      "Line 371: await expression",
+      "Line 372: await expression",
+      "Line 373: await expression",
+      "getCookiesForRequest (async function)",
+      "Line 397: await expression",
+      "getAuthenticatedHeaders (async function)",
+      "Line 402: await expression",
+      "Line 403: await expression",
+      "Line 404: await expression",
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Artists/artist_screen.dart",
+    "linesOfCode": 300,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "ArtistScreen",
+      "Body",
+      "AboutArtist"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Home/home_screen.dart",
+    "linesOfCode": 298,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "HomeScreen",
+      "Body"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/backup_dialog.dart",
+    "linesOfCode": 284,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "BackupDialog"
+    ],
+    "controllerServices": [
+      "BackupDialogController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "scanFilesToBackup (async function)",
+      "Line 175: await expression",
+      "Line 176: await expression",
+      "Line 184: await expression",
+      "backup (async function)",
+      "Line 194: await expression",
+      "Line 198: await expression",
+      "Line 202: await expression",
+      "Line 209: await expression",
+      "Line 210: await expression",
+      "Anonymous async function/block",
+      "Line 297: await expression",
+      "Anonymous async function/block",
+      "run (async function)",
+      "Line 307: await expression",
+      "Line 310: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Library/library.dart",
+    "linesOfCode": 282,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "SongsLibraryWidget",
+      "PlaylistNAlbumLibraryWidget",
+      "LibraryArtistWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/gesture_player.dart",
+    "linesOfCode": 276,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "GesturePlayer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/list_widget.dart",
+    "linesOfCode": 259,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "ListWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Artists/artist_screen_controller.dart",
+    "linesOfCode": 254,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [
+      "ArtistScreenController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "_checkIfAddedToLibrary (async function)",
+      "Line 77: await expression",
+      "Line 79: await expression",
+      "_fetchArtistContent (async function)",
+      "Line 83: await expression",
+      "addNremoveFromLibrary (async function)",
+      "Line 99: await expression",
+      "onDestinationSelected (async function)",
+      "Line 134: await expression",
+      "Anonymous async function/block",
+      "Line 170: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/downloader.dart",
+    "linesOfCode": 237,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [
+      "Downloader"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "checkPermissionNDir (async function)",
+      "Line 42: await expression",
+      "Line 49: await expression",
+      "Line 50: await expression",
+      "Anonymous async function/block",
+      "Line 57: await expression",
+      "Line 70: await expression",
+      "download (async function)",
+      "Line 75: await expression",
+      "Line 82: await expression",
+      "triggerDownloadingJob (async function)",
+      "Line 94: await expression",
+      "Line 120: await expression",
+      "Anonymous async function/block",
+      "Line 144: await expression",
+      "writeFileStream (async function)",
+      "Line 160: await expression",
+      "Anonymous async function/block",
+      "Line 218: await expression",
+      "Line 227: await expression",
+      "Line 250: await expression",
+      "Line 253: await expression",
+      "Line 262: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/song_list_tile.dart",
+    "linesOfCode": 221,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "SongListTile"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/add_to_playlist.dart",
+    "linesOfCode": 220,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "AddToPlaylist"
+    ],
+    "controllerServices": [
+      "AddToPlaylistController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "_getAllPlaylist (async function)",
+      "Line 180: await expression",
+      "Line 188: await expression",
+      "Anonymous async function/block",
+      "Line 214: await expression",
+      "Line 218: await expression",
+      "Line 221: await expression",
+      "Line 227: await expression",
+      "Anonymous async function/block",
+      "Line 236: await expression",
+      "Line 249: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/restore_dialog.dart",
+    "linesOfCode": 200,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "RestoreDialog"
+    ],
+    "controllerServices": [
+      "RestoreDialogController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "restore (async function)",
+      "Line 134: await expression",
+      "Line 138: await expression",
+      "Line 142: await expression",
+      "Line 156: await expression",
+      "Line 159: await expression",
+      "Line 162: await expression",
+      "Line 167: await expression",
+      "Line 170: await expression",
+      "Line 188: await expression",
+      "Line 189: await expression",
+      "Line 195: await expression",
+      "Line 198: await expression",
+      "Line 204: await expression",
+      "Line 213: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/standard_player.dart",
+    "linesOfCode": 195,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "StandardPlayer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/utils.dart",
+    "linesOfCode": 190,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/scroll_controller_manager.dart",
+    "linesOfCode": 187,
+    "maxNestingDepth": 5,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": [
+      "unnecessary_brace_in_string_interps: Unnecessary braces in a string interpolation"
+    ]
+  },
+  {
+    "filePath": "lib/ui/widgets/create_playlist_dialog.dart",
+    "linesOfCode": 186,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "CreateNRenamePlaylistPopup"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/home.dart",
+    "linesOfCode": 185,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "Home"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 61: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Settings/google_login_webview.dart",
+    "linesOfCode": 183,
+    "maxNestingDepth": 7,
+    "widgetClasses": [
+      "GoogleLoginWebView"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 45: await expression",
+      "_handleLoginSuccess (async function)",
+      "Line 75: await expression",
+      "Line 113: await expression",
+      "Line 126: await expression",
+      "_closeWebView (async function)",
+      "_extractYouTubeConfig (async function)",
+      "Line 175: await expression",
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/link_piped.dart",
+    "linesOfCode": 181,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "LinkPiped"
+    ],
+    "controllerServices": [
+      "PipedLinkedController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "getAllInstList (async function)"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/helper.dart",
+    "linesOfCode": 179,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "newVersionCheck (async function)",
+      "Line 171: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/search_result_screen_v2.dart",
+    "linesOfCode": 177,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "SearchResultScreenBN"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/player_control.dart",
+    "linesOfCode": 177,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "PlayerControlWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/player.dart",
+    "linesOfCode": 175,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "Player"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/up_next_queue.dart",
+    "linesOfCode": 173,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "UpNextQueue"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/continuations.dart",
+    "linesOfCode": 162,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 30: await expression",
+      "Anonymous async function/block",
+      "Line 67: await expression",
+      "Anonymous async function/block",
+      "Line 107: await expression",
+      "Anonymous async function/block",
+      "Line 170: await expression",
+      "Line 174: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/piped_service.dart",
+    "linesOfCode": 162,
+    "maxNestingDepth": 5,
+    "widgetClasses": [],
+    "controllerServices": [
+      "PipedServices"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "login (async function)",
+      "Line 30: await expression",
+      "Anonymous async function/block",
+      "Line 75: await expression",
+      "Line 82: await expression",
+      "getAllInstanceList (async function)",
+      "Line 113: await expression",
+      "createPlaylist (async function)",
+      "Line 117: await expression",
+      "getAllPlaylists (async function)",
+      "Line 122: await expression",
+      "renamePlaylist (async function)",
+      "Line 126: await expression",
+      "deletePlaylist (async function)",
+      "Line 131: await expression",
+      "addToPlaylist (async function)",
+      "Line 136: await expression",
+      "removeFromPlaylist (async function)",
+      "Line 141: await expression",
+      "getPlaylistSongs (async function)",
+      "Line 146: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/content_list_widget_item.dart",
+    "linesOfCode": 161,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ContentListItem"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/image_widget.dart",
+    "linesOfCode": 155,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "ImageWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/search_result_screen.dart",
+    "linesOfCode": 152,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "SearchResultScreen",
+      "Body"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/search_screen.dart",
+    "linesOfCode": 149,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "SearchScreen"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/search_result_screen_controller.dart",
+    "linesOfCode": 149,
+    "maxNestingDepth": 6,
+    "widgetClasses": [],
+    "controllerServices": [
+      "SearchResultScreenController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 55: await expression",
+      "getContinuationContents (async function)",
+      "Line 82: await expression",
+      "_getInitSearchResult (async function)",
+      "Line 99: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/export_file_dialog.dart",
+    "linesOfCode": 146,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ExportFileDialog"
+    ],
+    "controllerServices": [
+      "ExportFileDialogController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "scanFilesToExport (async function)",
+      "export (async function)",
+      "Line 138: await expression",
+      "Line 150: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/albumart_lyrics.dart",
+    "linesOfCode": 145,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "AlbumArtNLyrics"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/sleep_timer_bottom_sheet.dart",
+    "linesOfCode": 142,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "SleepTimerBottomSheet"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/quickpickswidget.dart",
+    "linesOfCode": 138,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "QuickPicksWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/separate_tab_item_widget.dart",
+    "linesOfCode": 137,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "SeparateTabItemWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/bottom_nav_bar_content.dart",
+    "linesOfCode": 129,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "BottomNavBarContent"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/stream_service.dart",
+    "linesOfCode": 128,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [
+      "Line 23: await yt.videos.streamsClient.getManifest(videoId,..."
+    ],
+    "asyncAwaitUsage": [
+      "fetch (async function)",
+      "Line 23: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/modification_list.dart",
+    "linesOfCode": 121,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "ModificationList"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/side_nav_bar.dart",
+    "linesOfCode": 120,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "SideNavBar"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Album/album_screen_controller.dart",
+    "linesOfCode": 119,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "fetchAlbumDetails (async function)",
+      "Line 62: await expression",
+      "Line 65: await expression",
+      "Line 73: await expression",
+      "checkIfAddedToLibrary (async function)",
+      "Line 90: await expression",
+      "addNremoveFromLibrary (async function)",
+      "Line 100: await expression",
+      "Line 107: await expression",
+      "updateSongsIntoDb (async function)",
+      "Line 123: await expression",
+      "Line 124: await expression",
+      "Line 127: await expression",
+      "Line 129: await expression",
+      "deleteMultipleSongs (async function)"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/song_info_dialog.dart",
+    "linesOfCode": 116,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "SongInfoDialog",
+      "InfoItem"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/components/desktop_search_bar.dart",
+    "linesOfCode": 109,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "DesktopSearchBar"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/home_search_bar.dart",
+    "linesOfCode": 106,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "HomeSearchBar"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Artists/artist_screen_v2.dart",
+    "linesOfCode": 105,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ArtistScreenBN"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/mixins/additional_opeartion_mixin.dart",
+    "linesOfCode": 105,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/category_buttons.dart",
+    "linesOfCode": 104,
+    "maxNestingDepth": 5,
+    "widgetClasses": [
+      "CategoryButtons"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/additional_operation_dialog.dart",
+    "linesOfCode": 100,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "AdditionalOperationDialog"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Library/library_combined.dart",
+    "linesOfCode": 94,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "CombinedLibrary"
+    ],
+    "controllerServices": [
+      "CombinedLibraryController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/bindings/app_bindings.dart",
+    "linesOfCode": 93,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/custom_exceptions.dart",
+    "linesOfCode": 93,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Line 147: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/shimmer_widgets/home_shimmer.dart",
+    "linesOfCode": 91,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "HomeShimmer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": [
+      "unnecessary_const: Unnecessary 'const' keyword",
+      "unnecessary_const: Unnecessary 'const' keyword",
+      "unnecessary_const: Unnecessary 'const' keyword"
+    ]
+  },
+  {
+    "filePath": "lib/ui/widgets/search_related_widgets.dart",
+    "linesOfCode": 88,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ResultWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/content_list_widget.dart",
+    "linesOfCode": 86,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ContentListWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/song_download_btn.dart",
+    "linesOfCode": 85,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "SongDownloadButton"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/mobile_search_bar.dart",
+    "linesOfCode": 84,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "MobileSearchBar"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/search_screen_controller.dart",
+    "linesOfCode": 82,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [
+      "SearchScreenController"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "_init (async function)",
+      "Line 32: await expression",
+      "onChanged (async function)",
+      "Line 49: await expression",
+      "suggestionInput (async function)",
+      "Line 61: await expression",
+      "addToHistryQueryList (async function)",
+      "Line 72: await expression",
+      "Line 76: await expression",
+      "removeQueryFromHistory (async function)",
+      "Line 92: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/permission_service.dart",
+    "linesOfCode": 80,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "getExtStoragePermission (async function)",
+      "Line 13: await expression",
+      "Line 18: await expression",
+      "Line 20: await expression",
+      "Line 27: await expression",
+      "Line 28: await expression",
+      "Line 31: await expression",
+      "Line 33: await expression",
+      "Line 34: await expression",
+      "_getIOSStoragePermission (async function)",
+      "Line 45: await expression",
+      "Line 47: await expression",
+      "Line 51: await expression",
+      "getIOSMediaLibraryPermission (async function)",
+      "Line 69: await expression",
+      "Line 71: await expression",
+      "Line 75: await expression",
+      "getNotificationPermission (async function)",
+      "Line 93: await expression",
+      "Line 95: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/playlist.dart",
+    "linesOfCode": 78,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/new_version_dialog.dart",
+    "linesOfCode": 76,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "NewVersionDialog"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/combined_bottom_container.dart",
+    "linesOfCode": 73,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "CombinedBottomContainer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/backgroud_image.dart",
+    "linesOfCode": 71,
+    "maxNestingDepth": 6,
+    "widgetClasses": [
+      "BackgroudImage"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Search/components/search_item.dart",
+    "linesOfCode": 69,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "SearchItem"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/navigator.dart",
+    "linesOfCode": 67,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ScreenNavigation"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/media_Item_builder.dart",
+    "linesOfCode": 67,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/lyrics_widget.dart",
+    "linesOfCode": 66,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "LyricsWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/album.dart",
+    "linesOfCode": 63,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/base_class/playlist_album_screen_con_base.dart",
+    "linesOfCode": 63,
+    "maxNestingDepth": 4,
+    "widgetClasses": [],
+    "controllerServices": [
+      "PlaylistAlbumScreenControllerBase"
+    ],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "fetchSongsfromDatabase (async function)",
+      "Line 64: await expression",
+      "Line 69: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/player/components/animated_play_button.dart",
+    "linesOfCode": 56,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "AnimatedPlayButton"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/house_keeping.dart",
+    "linesOfCode": 55,
+    "maxNestingDepth": 5,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "removeExpiredSongsUrlFromDb (async function)",
+      "Line 26: await expression",
+      "removeDeletedOfflineSongsFromDb (async function)",
+      "Line 37: await expression",
+      "Line 46: await expression",
+      "Line 47: await expression",
+      "Line 48: await expression",
+      "Line 51: await expression",
+      "Line 52: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/animated_screen_transition.dart",
+    "linesOfCode": 55,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "AnimatedScreenTransition"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/performance_optimization.dart",
+    "linesOfCode": 52,
+    "maxNestingDepth": 5,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 29: await expression",
+      "Line 31: await expression",
+      "Line 32: await expression",
+      "clearExpiredCache (async function)",
+      "Line 57: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/modified_text_field.dart",
+    "linesOfCode": 51,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "ModifiedTextField"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/lang_mapping.dart",
+    "linesOfCode": 50,
+    "maxNestingDepth": 1,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/custom_button.dart",
+    "linesOfCode": 48,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "ProceedButton",
+      "CancelButton"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/mini_player_progress_bar.dart",
+    "linesOfCode": 47,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "MiniPlayerProgressBar"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/piped_sync_widget.dart",
+    "linesOfCode": 43,
+    "maxNestingDepth": 4,
+    "widgetClasses": [
+      "PipedSyncWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 31: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/artist.dart",
+    "linesOfCode": 39,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/hm_streaming_data.dart",
+    "linesOfCode": 39,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/glass_wrapper.dart",
+    "linesOfCode": 39,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "GlassWrapper"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/error_handler.dart",
+    "linesOfCode": 35,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": [
+      "unnecessary_brace_in_string_interps: Unnecessary braces in a string interpolation",
+      "unnecessary_brace_in_string_interps: Unnecessary braces in a string interpolation",
+      "unnecessary_brace_in_string_interps: Unnecessary braces in a string interpolation",
+      "unnecessary_brace_in_string_interps: Unnecessary braces in a string interpolation"
+    ]
+  },
+  {
+    "filePath": "lib/ui/player/components/lyrics_switch.dart",
+    "linesOfCode": 35,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "LyricsSwitch"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/synced_lyrics_service.dart",
+    "linesOfCode": 33,
+    "maxNestingDepth": 5,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 9: await expression",
+      "Line 12: await expression",
+      "Line 19: await expression",
+      "Line 26: await expression",
+      "Line 32: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/snackbar.dart",
+    "linesOfCode": 32,
+    "maxNestingDepth": 1,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/screens/Settings/components/custom_expansion_tile.dart",
+    "linesOfCode": 30,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "CustomExpansionTile"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/shimmer_widgets/song_list_shimmer.dart",
+    "linesOfCode": 29,
+    "maxNestingDepth": 3,
+    "widgetClasses": [
+      "SongListShimmer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/playling_from.dart",
+    "linesOfCode": 23,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/cust_switch.dart",
+    "linesOfCode": 23,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "CustSwitch"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/lyrics_dialog.dart",
+    "linesOfCode": 22,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "LyricsDialog"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": [
+      "unnecessary_const: Unnecessary 'const' keyword"
+    ]
+  },
+  {
+    "filePath": "lib/services/equalizer.dart",
+    "linesOfCode": 22,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/haptic_utils.dart",
+    "linesOfCode": 18,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/thumbnail.dart",
+    "linesOfCode": 18,
+    "maxNestingDepth": 1,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/common_dialog_widget.dart",
+    "linesOfCode": 18,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "CommonDialog"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/loader.dart",
+    "linesOfCode": 18,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "LoadingIndicator"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/scroll_to_hide.dart",
+    "linesOfCode": 17,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "ScrollToHideWidget"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/quick_picks.dart",
+    "linesOfCode": 16,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/shimmer_widgets/basic_container.dart",
+    "linesOfCode": 15,
+    "maxNestingDepth": 2,
+    "widgetClasses": [
+      "BasicShimmerContainer"
+    ],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "test/widget_test.dart",
+    "linesOfCode": 14,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "testWidgets (async function)",
+      "Line 16: await expression",
+      "Line 23: await expression",
+      "Line 24: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/background_task.dart",
+    "linesOfCode": 11,
+    "maxNestingDepth": 3,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [
+      "Anonymous async function/block",
+      "Line 12: await expression",
+      "getStreamInfo (async function)",
+      "Line 35: await expression"
+    ],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/models/durationstate.dart",
+    "linesOfCode": 10,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/ui/widgets/playlist_album_scroll_behaviour.dart",
+    "linesOfCode": 8,
+    "maxNestingDepth": 2,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/services/constant.dart",
+    "linesOfCode": 6,
+    "maxNestingDepth": 0,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  },
+  {
+    "filePath": "lib/utils/update_check_flag_file.dart",
+    "linesOfCode": 1,
+    "maxNestingDepth": 0,
+    "widgetClasses": [],
+    "controllerServices": [],
+    "streamSubscriptions": [],
+    "asyncAwaitUsage": [],
+    "issuesFound": []
+  }
+]

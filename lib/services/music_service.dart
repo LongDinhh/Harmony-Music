@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import '/models/album.dart';
 import '/services/utils.dart';
 import '../utils/helper.dart';
+import '../utils/error_handler.dart';
 import 'constant.dart';
 import 'continuations.dart';
 import 'nav_parser.dart';
@@ -102,7 +103,7 @@ class MusicServices extends getx.GetxService {
             }
           }
         } catch (e) {
-          printERROR('Error in cookie interceptor: $e');
+          AppErrorHandler.handleError(e, null, context: 'Cookie interceptor');
         }
 
         handler.next(options);
@@ -167,7 +168,7 @@ class MusicServices extends getx.GetxService {
 
       await _processResponseData(response);
     } catch (e) {
-      printERROR("Error initializing app data: $e");
+      AppErrorHandler.handleError(e, null, context: 'App data initialization');
       _headers['X-Goog-Visitor-Id'] =
           "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
     }
@@ -219,7 +220,7 @@ class MusicServices extends getx.GetxService {
           printINFO('Saved DATASYNC_ID to YTBPrefs box: $datasyncId');
         }
       } catch (e) {
-        printERROR('Error saving visitor data to YouTubeConfigService: $e');
+        AppErrorHandler.handleError(e, null, context: 'Visitor data save');
       }
     }
   }
@@ -236,7 +237,7 @@ class MusicServices extends getx.GetxService {
       };
       await box.put(key, data);
     } catch (e) {
-      printERROR('Error saving $key directly to YTBPrefs: $e');
+      AppErrorHandler.handleError(e, null, context: 'YTBPrefs save - $key');
     }
   }
 
@@ -286,7 +287,7 @@ class MusicServices extends getx.GetxService {
       _headers['cookie'] = await YouTubeCookieManager.getCachedCookieString();
       printINFO('Added YouTube cookies to requests');
     } catch (e) {
-      printERROR('Error initializing cookies: $e');
+      AppErrorHandler.handleError(e, null, context: 'Cookie initialization');
       _headers['cookie'] = 'CONSENT=YES+1';
     }
   }
@@ -305,7 +306,7 @@ class MusicServices extends getx.GetxService {
       }
       return null;
     } catch (e) {
-      printERROR("Error generating visitor ID: $e");
+      AppErrorHandler.handleError(e, null, context: 'Visitor ID generation');
       return null;
     }
   }
@@ -335,7 +336,7 @@ class MusicServices extends getx.GetxService {
         return await requestFn();
       } on DioException catch (e) {
         if (i == 2) {
-          printERROR("Request failed after 3 attempts: $e");
+          AppErrorHandler.handleError(e, null, context: 'Request after 3 attempts');
           throw NetworkError();
         }
         await Future.delayed(Duration(milliseconds: 1000 * (i + 1)));
@@ -1137,7 +1138,7 @@ class MusicServices extends getx.GetxService {
         printINFO('No YouTube cookies to refresh');
       }
     } catch (e) {
-      printERROR('Error refreshing YouTube cookies: $e');
+      AppErrorHandler.handleError(e, null, context: 'YouTube cookie refresh');
     }
   }
 
@@ -1183,7 +1184,7 @@ class MusicServices extends getx.GetxService {
       if (finalDatasyncId == null) {
         finalDatasyncId = await YouTubeConfigService.getDatasyncId();
         if (finalDatasyncId == null) {
-          printERROR("No datasyncId available for SAPISIDHASH generation");
+          AppErrorHandler.logWarning("No datasyncId available for SAPISIDHASH generation", context: 'SAPISIDHASH');
           return null;
         }
       }
@@ -1198,7 +1199,7 @@ class MusicServices extends getx.GetxService {
 
       return sapisidHash;
     } catch (e) {
-      printERROR("Error generating SAPISIDHASH: $e");
+      AppErrorHandler.handleError(e, null, context: 'SAPISIDHASH generation');
       return null;
     }
   }

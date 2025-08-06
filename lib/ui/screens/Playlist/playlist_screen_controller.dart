@@ -139,8 +139,8 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
       playlist.value = Playlist.fromJson(content);
       _animationController.forward();
     }
-    songList.value = content['tracks'] != null 
-        ? List<MediaItem>.from(content['tracks']) 
+    songList.value = content['tracks'] != null
+        ? List<MediaItem>.from(content['tracks'])
         : <MediaItem>[];
     checkDownloadStatus();
   }
@@ -373,7 +373,7 @@ class PlaylistScreenController extends PlaylistAlbumScreenControllerBase
       }
 
       printERROR("Error exporting playlist: $e");
-      
+
       String errorMsg = "exportError".tr;
       if (e is FileSystemException) {
         if (e.osError?.errorCode == 13) {

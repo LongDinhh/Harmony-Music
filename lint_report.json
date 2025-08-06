@@ -1,0 +1,15 @@
+Analyzing Harmony-Music...                                      
+
+   info • Don't invoke 'print' in production code • lib/services/audio_handler.dart:73:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/services/audio_handler.dart:74:5 • avoid_print
+   info • Unnecessary 'const' keyword • lib/ui/widgets/lyrics_dialog.dart:17:20 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/ui/widgets/shimmer_widgets/home_shimmer.dart:30:24 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/ui/widgets/shimmer_widgets/home_shimmer.dart:47:37 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/ui/widgets/shimmer_widgets/home_shimmer.dart:65:20 • unnecessary_const
+   info • Unnecessary braces in a string interpolation • lib/utils/error_handler.dart:36:16 • unnecessary_brace_in_string_interps
+   info • Unnecessary braces in a string interpolation • lib/utils/error_handler.dart:37:20 • unnecessary_brace_in_string_interps
+   info • Unnecessary braces in a string interpolation • lib/utils/error_handler.dart:42:16 • unnecessary_brace_in_string_interps
+   info • Unnecessary braces in a string interpolation • lib/utils/error_handler.dart:43:20 • unnecessary_brace_in_string_interps
+   info • Unnecessary braces in a string interpolation • lib/utils/scroll_controller_manager.dart:252:40 • unnecessary_brace_in_string_interps
+
+11 issues found. (ran in 1.8s)

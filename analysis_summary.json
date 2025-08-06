@@ -1,0 +1,1351 @@
+{
+  "projectSummary": {
+    "totalFiles": 121,
+    "totalLinesOfCode": 29361,
+    "averageLinesPerFile": 243,
+    "maxNestingDepth": 7
+  },
+  "widgetAnalysis": {
+    "totalWidgetClasses": 81,
+    "filesWithWidgets": 72,
+    "widgetFiles": [
+      {
+        "file": "home.dart",
+        "widgets": [
+          "Home"
+        ],
+        "linesOfCode": 185
+      },
+      {
+        "file": "navigator.dart",
+        "widgets": [
+          "ScreenNavigation"
+        ],
+        "linesOfCode": 67
+      },
+      {
+        "file": "google_login_webview.dart",
+        "widgets": [
+          "GoogleLoginWebView"
+        ],
+        "linesOfCode": 183
+      },
+      {
+        "file": "custom_expansion_tile.dart",
+        "widgets": [
+          "CustomExpansionTile"
+        ],
+        "linesOfCode": 30
+      },
+      {
+        "file": "home_screen.dart",
+        "widgets": [
+          "HomeScreen",
+          "Body"
+        ],
+        "linesOfCode": 298
+      },
+      {
+        "file": "playlist_screen.dart",
+        "widgets": [
+          "PlaylistScreen"
+        ],
+        "linesOfCode": 735
+      },
+      {
+        "file": "library.dart",
+        "widgets": [
+          "SongsLibraryWidget",
+          "PlaylistNAlbumLibraryWidget",
+          "LibraryArtistWidget"
+        ],
+        "linesOfCode": 282
+      },
+      {
+        "file": "library_combined.dart",
+        "widgets": [
+          "CombinedLibrary"
+        ],
+        "linesOfCode": 94
+      },
+      {
+        "file": "search_result_screen.dart",
+        "widgets": [
+          "SearchResultScreen",
+          "Body"
+        ],
+        "linesOfCode": 152
+      },
+      {
+        "file": "search_item.dart",
+        "widgets": [
+          "SearchItem"
+        ],
+        "linesOfCode": 69
+      },
+      {
+        "file": "desktop_search_bar.dart",
+        "widgets": [
+          "DesktopSearchBar"
+        ],
+        "linesOfCode": 109
+      },
+      {
+        "file": "search_result_screen_v2.dart",
+        "widgets": [
+          "SearchResultScreenBN"
+        ],
+        "linesOfCode": 177
+      },
+      {
+        "file": "search_screen.dart",
+        "widgets": [
+          "SearchScreen"
+        ],
+        "linesOfCode": 149
+      },
+      {
+        "file": "artist_screen_v2.dart",
+        "widgets": [
+          "ArtistScreenBN"
+        ],
+        "linesOfCode": 105
+      },
+      {
+        "file": "artist_screen.dart",
+        "widgets": [
+          "ArtistScreen",
+          "Body",
+          "AboutArtist"
+        ],
+        "linesOfCode": 300
+      },
+      {
+        "file": "album_screen.dart",
+        "widgets": [
+          "AlbumScreen"
+        ],
+        "linesOfCode": 550
+      },
+      {
+        "file": "export_file_dialog.dart",
+        "widgets": [
+          "ExportFileDialog"
+        ],
+        "linesOfCode": 146
+      },
+      {
+        "file": "backup_dialog.dart",
+        "widgets": [
+          "BackupDialog"
+        ],
+        "linesOfCode": 284
+      },
+      {
+        "file": "common_dialog_widget.dart",
+        "widgets": [
+          "CommonDialog"
+        ],
+        "linesOfCode": 18
+      },
+      {
+        "file": "song_list_tile.dart",
+        "widgets": [
+          "SongListTile"
+        ],
+        "linesOfCode": 221
+      },
+      {
+        "file": "restore_dialog.dart",
+        "widgets": [
+          "RestoreDialog"
+        ],
+        "linesOfCode": 200
+      },
+      {
+        "file": "lyrics_dialog.dart",
+        "widgets": [
+          "LyricsDialog"
+        ],
+        "linesOfCode": 22
+      },
+      {
+        "file": "animated_screen_transition.dart",
+        "widgets": [
+          "AnimatedScreenTransition"
+        ],
+        "linesOfCode": 55
+      },
+      {
+        "file": "mobile_search_bar.dart",
+        "widgets": [
+          "MobileSearchBar"
+        ],
+        "linesOfCode": 84
+      },
+      {
+        "file": "link_piped.dart",
+        "widgets": [
+          "LinkPiped"
+        ],
+        "linesOfCode": 181
+      },
+      {
+        "file": "glass_wrapper.dart",
+        "widgets": [
+          "GlassWrapper"
+        ],
+        "linesOfCode": 39
+      },
+      {
+        "file": "new_version_dialog.dart",
+        "widgets": [
+          "NewVersionDialog"
+        ],
+        "linesOfCode": 76
+      },
+      {
+        "file": "modification_list.dart",
+        "widgets": [
+          "ModificationList"
+        ],
+        "linesOfCode": 121
+      },
+      {
+        "file": "quickpickswidget.dart",
+        "widgets": [
+          "QuickPicksWidget"
+        ],
+        "linesOfCode": 138
+      },
+      {
+        "file": "side_nav_bar.dart",
+        "widgets": [
+          "SideNavBar"
+        ],
+        "linesOfCode": 120
+      },
+      {
+        "file": "mini_player_progress_bar.dart",
+        "widgets": [
+          "MiniPlayerProgressBar"
+        ],
+        "linesOfCode": 47
+      },
+      {
+        "file": "create_playlist_dialog.dart",
+        "widgets": [
+          "CreateNRenamePlaylistPopup"
+        ],
+        "linesOfCode": 186
+      },
+      {
+        "file": "bottom_nav_bar_content.dart",
+        "widgets": [
+          "BottomNavBarContent"
+        ],
+        "linesOfCode": 129
+      },
+      {
+        "file": "scroll_to_hide.dart",
+        "widgets": [
+          "ScrollToHideWidget"
+        ],
+        "linesOfCode": 17
+      },
+      {
+        "file": "category_buttons.dart",
+        "widgets": [
+          "CategoryButtons"
+        ],
+        "linesOfCode": 104
+      },
+      {
+        "file": "song_download_btn.dart",
+        "widgets": [
+          "SongDownloadButton"
+        ],
+        "linesOfCode": 85
+      },
+      {
+        "file": "loader.dart",
+        "widgets": [
+          "LoadingIndicator"
+        ],
+        "linesOfCode": 18
+      },
+      {
+        "file": "songinfo_bottom_sheet.dart",
+        "widgets": [
+          "SongInfoBottomSheet"
+        ],
+        "linesOfCode": 424
+      },
+      {
+        "file": "list_widget.dart",
+        "widgets": [
+          "ListWidget"
+        ],
+        "linesOfCode": 259
+      },
+      {
+        "file": "additional_operation_dialog.dart",
+        "widgets": [
+          "AdditionalOperationDialog"
+        ],
+        "linesOfCode": 100
+      },
+      {
+        "file": "song_list_shimmer.dart",
+        "widgets": [
+          "SongListShimmer"
+        ],
+        "linesOfCode": 29
+      },
+      {
+        "file": "basic_container.dart",
+        "widgets": [
+          "BasicShimmerContainer"
+        ],
+        "linesOfCode": 15
+      },
+      {
+        "file": "home_shimmer.dart",
+        "widgets": [
+          "HomeShimmer"
+        ],
+        "linesOfCode": 91
+      },
+      {
+        "file": "image_widget.dart",
+        "widgets": [
+          "ImageWidget"
+        ],
+        "linesOfCode": 155
+      },
+      {
+        "file": "up_next_queue.dart",
+        "widgets": [
+          "UpNextQueue"
+        ],
+        "linesOfCode": 173
+      },
+      {
+        "file": "modified_text_field.dart",
+        "widgets": [
+          "ModifiedTextField"
+        ],
+        "linesOfCode": 51
+      },
+      {
+        "file": "combined_bottom_container.dart",
+        "widgets": [
+          "CombinedBottomContainer"
+        ],
+        "linesOfCode": 73
+      },
+      {
+        "file": "song_info_dialog.dart",
+        "widgets": [
+          "SongInfoDialog",
+          "InfoItem"
+        ],
+        "linesOfCode": 116
+      },
+      {
+        "file": "content_list_widget_item.dart",
+        "widgets": [
+          "ContentListItem"
+        ],
+        "linesOfCode": 161
+      },
+      {
+        "file": "sort_widget.dart",
+        "widgets": [
+          "SortWidget"
+        ],
+        "linesOfCode": 367
+      },
+      {
+        "file": "add_to_playlist.dart",
+        "widgets": [
+          "AddToPlaylist"
+        ],
+        "linesOfCode": 220
+      },
+      {
+        "file": "custom_button.dart",
+        "widgets": [
+          "ProceedButton",
+          "CancelButton"
+        ],
+        "linesOfCode": 48
+      },
+      {
+        "file": "home_search_bar.dart",
+        "widgets": [
+          "HomeSearchBar"
+        ],
+        "linesOfCode": 106
+      },
+      {
+        "file": "cust_switch.dart",
+        "widgets": [
+          "CustSwitch"
+        ],
+        "linesOfCode": 23
+      },
+      {
+        "file": "sleep_timer_bottom_sheet.dart",
+        "widgets": [
+          "SleepTimerBottomSheet"
+        ],
+        "linesOfCode": 142
+      },
+      {
+        "file": "separate_tab_item_widget.dart",
+        "widgets": [
+          "SeparateTabItemWidget"
+        ],
+        "linesOfCode": 137
+      },
+      {
+        "file": "sliding_up_panel.dart",
+        "widgets": [
+          "SlidingUpPanel"
+        ],
+        "linesOfCode": 505
+      },
+      {
+        "file": "search_related_widgets.dart",
+        "widgets": [
+          "ResultWidget"
+        ],
+        "linesOfCode": 88
+      },
+      {
+        "file": "content_list_widget.dart",
+        "widgets": [
+          "ContentListWidget"
+        ],
+        "linesOfCode": 86
+      },
+      {
+        "file": "piped_sync_widget.dart",
+        "widgets": [
+          "PipedSyncWidget"
+        ],
+        "linesOfCode": 43
+      },
+      {
+        "file": "player.dart",
+        "widgets": [
+          "Player"
+        ],
+        "linesOfCode": 175
+      },
+      {
+        "file": "backgroud_image.dart",
+        "widgets": [
+          "BackgroudImage"
+        ],
+        "linesOfCode": 71
+      },
+      {
+        "file": "player_control.dart",
+        "widgets": [
+          "PlayerControlWidget"
+        ],
+        "linesOfCode": 177
+      },
+      {
+        "file": "albumart_lyrics.dart",
+        "widgets": [
+          "AlbumArtNLyrics"
+        ],
+        "linesOfCode": 145
+      },
+      {
+        "file": "mini_player_content.dart",
+        "widgets": [
+          "MiniPlayerContent"
+        ],
+        "linesOfCode": 388
+      },
+      {
+        "file": "lyrics_switch.dart",
+        "widgets": [
+          "LyricsSwitch"
+        ],
+        "linesOfCode": 35
+      },
+      {
+        "file": "lyrics_widget.dart",
+        "widgets": [
+          "LyricsWidget"
+        ],
+        "linesOfCode": 66
+      },
+      {
+        "file": "animated_play_button.dart",
+        "widgets": [
+          "AnimatedPlayButton"
+        ],
+        "linesOfCode": 56
+      },
+      {
+        "file": "gesture_player.dart",
+        "widgets": [
+          "GesturePlayer"
+        ],
+        "linesOfCode": 276
+      },
+      {
+        "file": "mini_player.dart",
+        "widgets": [
+          "MiniPlayer"
+        ],
+        "linesOfCode": 544
+      },
+      {
+        "file": "standard_player.dart",
+        "widgets": [
+          "StandardPlayer"
+        ],
+        "linesOfCode": 195
+      },
+      {
+        "file": "main.dart",
+        "widgets": [
+          "MyApp",
+          "FallbackApp"
+        ],
+        "linesOfCode": 335
+      }
+    ]
+  },
+  "controllerAnalysis": {
+    "totalControllerServices": 21,
+    "filesWithControllers": 18,
+    "controllerFiles": [
+      {
+        "file": "theme_controller.dart",
+        "controllers": [
+          "ThemeController"
+        ],
+        "linesOfCode": 366
+      },
+      {
+        "file": "settings_screen_controller.dart",
+        "controllers": [
+          "SettingsScreenController"
+        ],
+        "linesOfCode": 335
+      },
+      {
+        "file": "home_screen_controller.dart",
+        "controllers": [
+          "HomeScreenController"
+        ],
+        "linesOfCode": 333
+      },
+      {
+        "file": "library_combined.dart",
+        "controllers": [
+          "CombinedLibraryController"
+        ],
+        "linesOfCode": 94
+      },
+      {
+        "file": "library_controller.dart",
+        "controllers": [
+          "LibrarySongsController",
+          "LibraryPlaylistsController",
+          "LibraryAlbumsController",
+          "LibraryArtistsController"
+        ],
+        "linesOfCode": 614
+      },
+      {
+        "file": "search_screen_controller.dart",
+        "controllers": [
+          "SearchScreenController"
+        ],
+        "linesOfCode": 82
+      },
+      {
+        "file": "search_result_screen_controller.dart",
+        "controllers": [
+          "SearchResultScreenController"
+        ],
+        "linesOfCode": 149
+      },
+      {
+        "file": "artist_screen_controller.dart",
+        "controllers": [
+          "ArtistScreenController"
+        ],
+        "linesOfCode": 254
+      },
+      {
+        "file": "export_file_dialog.dart",
+        "controllers": [
+          "ExportFileDialogController"
+        ],
+        "linesOfCode": 146
+      },
+      {
+        "file": "backup_dialog.dart",
+        "controllers": [
+          "BackupDialogController"
+        ],
+        "linesOfCode": 284
+      },
+      {
+        "file": "restore_dialog.dart",
+        "controllers": [
+          "RestoreDialogController"
+        ],
+        "linesOfCode": 200
+      },
+      {
+        "file": "link_piped.dart",
+        "controllers": [
+          "PipedLinkedController"
+        ],
+        "linesOfCode": 181
+      },
+      {
+        "file": "songinfo_bottom_sheet.dart",
+        "controllers": [
+          "SongInfoController"
+        ],
+        "linesOfCode": 424
+      },
+      {
+        "file": "sort_widget.dart",
+        "controllers": [
+          "SortWidgetController"
+        ],
+        "linesOfCode": 367
+      },
+      {
+        "file": "add_to_playlist.dart",
+        "controllers": [
+          "AddToPlaylistController"
+        ],
+        "linesOfCode": 220
+      },
+      {
+        "file": "playlist_album_screen_con_base.dart",
+        "controllers": [
+          "PlaylistAlbumScreenControllerBase"
+        ],
+        "linesOfCode": 63
+      },
+      {
+        "file": "piped_service.dart",
+        "controllers": [
+          "PipedServices"
+        ],
+        "linesOfCode": 162
+      },
+      {
+        "file": "downloader.dart",
+        "controllers": [
+          "Downloader"
+        ],
+        "linesOfCode": 237
+      }
+    ]
+  },
+  "streamAnalysis": {
+    "totalStreamSubscriptions": 1,
+    "filesWithStreams": 1,
+    "streamFiles": [
+      {
+        "file": "stream_service.dart",
+        "streamCount": 1,
+        "streams": [
+          "Line 23: await yt.videos.streamsClient.getManifest(videoId,..."
+        ]
+      }
+    ]
+  },
+  "asyncAnalysis": {
+    "totalAsyncAwaitUsage": 600,
+    "filesWithAsyncAwait": 40,
+    "asyncFiles": [
+      {
+        "file": "home.dart",
+        "asyncCount": 2,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 61: await expression"
+        ]
+      },
+      {
+        "file": "theme_controller.dart",
+        "asyncCount": 5,
+        "asyncUsages": [
+          "setTheme (async function)",
+          "Line 65: await expression",
+          "setWindowsTitleBarColor (async function)"
+        ]
+      },
+      {
+        "file": "google_login_webview.dart",
+        "asyncCount": 10,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 45: await expression",
+          "_handleLoginSuccess (async function)"
+        ]
+      },
+      {
+        "file": "settings_screen_controller.dart",
+        "asyncCount": 40,
+        "asyncUsages": [
+          "_createInAppSongDownDir (async function)",
+          "Line 75: await expression",
+          "Line 77: await expression"
+        ]
+      },
+      {
+        "file": "home_screen_controller.dart",
+        "asyncCount": 19,
+        "asyncUsages": [
+          "loadContent (async function)",
+          "Line 51: await expression",
+          "loadContentFromDb (async function)"
+        ]
+      },
+      {
+        "file": "home_screen.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "playlist_screen_controller.dart",
+        "asyncCount": 37,
+        "asyncUsages": [
+          "fetchPlaylistDetails (async function)",
+          "Line 102: await expression",
+          "Line 103: await expression"
+        ]
+      },
+      {
+        "file": "library_controller.dart",
+        "asyncCount": 48,
+        "asyncUsages": [
+          "init (async function)",
+          "Line 40: await expression",
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "search_screen_controller.dart",
+        "asyncCount": 11,
+        "asyncUsages": [
+          "_init (async function)",
+          "Line 32: await expression",
+          "onChanged (async function)"
+        ]
+      },
+      {
+        "file": "search_result_screen_controller.dart",
+        "asyncCount": 6,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 55: await expression",
+          "getContinuationContents (async function)"
+        ]
+      },
+      {
+        "file": "artist_screen_controller.dart",
+        "asyncCount": 11,
+        "asyncUsages": [
+          "_checkIfAddedToLibrary (async function)",
+          "Line 77: await expression",
+          "Line 79: await expression"
+        ]
+      },
+      {
+        "file": "artist_screen.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "album_screen_controller.dart",
+        "asyncCount": 15,
+        "asyncUsages": [
+          "fetchAlbumDetails (async function)",
+          "Line 62: await expression",
+          "Line 65: await expression"
+        ]
+      },
+      {
+        "file": "export_file_dialog.dart",
+        "asyncCount": 4,
+        "asyncUsages": [
+          "scanFilesToExport (async function)",
+          "export (async function)",
+          "Line 138: await expression"
+        ]
+      },
+      {
+        "file": "backup_dialog.dart",
+        "asyncCount": 16,
+        "asyncUsages": [
+          "scanFilesToBackup (async function)",
+          "Line 175: await expression",
+          "Line 176: await expression"
+        ]
+      },
+      {
+        "file": "song_list_tile.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "restore_dialog.dart",
+        "asyncCount": 15,
+        "asyncUsages": [
+          "restore (async function)",
+          "Line 134: await expression",
+          "Line 138: await expression"
+        ]
+      },
+      {
+        "file": "link_piped.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "getAllInstList (async function)"
+        ]
+      },
+      {
+        "file": "create_playlist_dialog.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "songinfo_bottom_sheet.dart",
+        "asyncCount": 12,
+        "asyncUsages": [
+          "then (async function)",
+          "Anonymous async function/block",
+          "Line 345: await expression"
+        ]
+      },
+      {
+        "file": "add_to_playlist.dart",
+        "asyncCount": 11,
+        "asyncUsages": [
+          "_getAllPlaylist (async function)",
+          "Line 180: await expression",
+          "Line 188: await expression"
+        ]
+      },
+      {
+        "file": "home_search_bar.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "piped_sync_widget.dart",
+        "asyncCount": 2,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 31: await expression"
+        ]
+      },
+      {
+        "file": "playlist_album_screen_con_base.dart",
+        "asyncCount": 3,
+        "asyncUsages": [
+          "fetchSongsfromDatabase (async function)",
+          "Line 64: await expression",
+          "Line 69: await expression"
+        ]
+      },
+      {
+        "file": "helper.dart",
+        "asyncCount": 2,
+        "asyncUsages": [
+          "newVersionCheck (async function)",
+          "Line 171: await expression"
+        ]
+      },
+      {
+        "file": "custom_exceptions.dart",
+        "asyncCount": 1,
+        "asyncUsages": [
+          "Line 147: await expression"
+        ]
+      },
+      {
+        "file": "performance_optimization.dart",
+        "asyncCount": 6,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 29: await expression",
+          "Line 31: await expression"
+        ]
+      },
+      {
+        "file": "house_keeping.dart",
+        "asyncCount": 9,
+        "asyncUsages": [
+          "removeExpiredSongsUrlFromDb (async function)",
+          "Line 26: await expression",
+          "removeDeletedOfflineSongsFromDb (async function)"
+        ]
+      },
+      {
+        "file": "main.dart",
+        "asyncCount": 25,
+        "asyncUsages": [
+          "main (async function)",
+          "Line 39: await expression",
+          "_prepareBackgroundServices (async function)"
+        ]
+      },
+      {
+        "file": "permission_service.dart",
+        "asyncCount": 20,
+        "asyncUsages": [
+          "getExtStoragePermission (async function)",
+          "Line 13: await expression",
+          "Line 18: await expression"
+        ]
+      },
+      {
+        "file": "background_task.dart",
+        "asyncCount": 4,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 12: await expression",
+          "getStreamInfo (async function)"
+        ]
+      },
+      {
+        "file": "music_service.dart",
+        "asyncCount": 96,
+        "asyncUsages": [
+          "init (async function)",
+          "Line 78: await expression",
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "stream_service.dart",
+        "asyncCount": 2,
+        "asyncUsages": [
+          "fetch (async function)",
+          "Line 23: await expression"
+        ]
+      },
+      {
+        "file": "youtube_config_service.dart",
+        "asyncCount": 51,
+        "asyncUsages": [
+          "init (async function)",
+          "Line 65: await expression",
+          "fetchYouTubeConfig (async function)"
+        ]
+      },
+      {
+        "file": "piped_service.dart",
+        "asyncCount": 21,
+        "asyncUsages": [
+          "login (async function)",
+          "Line 30: await expression",
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "downloader.dart",
+        "asyncCount": 23,
+        "asyncUsages": [
+          "checkPermissionNDir (async function)",
+          "Line 42: await expression",
+          "Line 49: await expression"
+        ]
+      },
+      {
+        "file": "continuations.dart",
+        "asyncCount": 9,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 30: await expression",
+          "Anonymous async function/block"
+        ]
+      },
+      {
+        "file": "youtube_cookie_manager.dart",
+        "asyncCount": 48,
+        "asyncUsages": [
+          "init (async function)",
+          "Line 59: await expression",
+          "Line 67: await expression"
+        ]
+      },
+      {
+        "file": "synced_lyrics_service.dart",
+        "asyncCount": 6,
+        "asyncUsages": [
+          "Anonymous async function/block",
+          "Line 9: await expression",
+          "Line 12: await expression"
+        ]
+      },
+      {
+        "file": "widget_test.dart",
+        "asyncCount": 4,
+        "asyncUsages": [
+          "testWidgets (async function)",
+          "Line 16: await expression",
+          "Line 23: await expression"
+        ]
+      }
+    ]
+  },
+  "codeQualityMetrics": {
+    "filesWithHighComplexity": [
+      {
+        "file": "home.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 185
+      },
+      {
+        "file": "google_login_webview.dart",
+        "nestingDepth": 7,
+        "linesOfCode": 183
+      },
+      {
+        "file": "home_screen_controller.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 333
+      },
+      {
+        "file": "home_screen.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 298
+      },
+      {
+        "file": "playlist_screen_controller.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 390
+      },
+      {
+        "file": "playlist_screen.dart",
+        "nestingDepth": 7,
+        "linesOfCode": 735
+      },
+      {
+        "file": "library_controller.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 614
+      },
+      {
+        "file": "search_result_screen.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 152
+      },
+      {
+        "file": "search_result_screen_controller.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 149
+      },
+      {
+        "file": "search_result_screen_v2.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 177
+      },
+      {
+        "file": "search_screen.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 149
+      },
+      {
+        "file": "artist_screen_controller.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 254
+      },
+      {
+        "file": "artist_screen.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 300
+      },
+      {
+        "file": "album_screen.dart",
+        "nestingDepth": 7,
+        "linesOfCode": 550
+      },
+      {
+        "file": "restore_dialog.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 200
+      },
+      {
+        "file": "modification_list.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 121
+      },
+      {
+        "file": "quickpickswidget.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 138
+      },
+      {
+        "file": "create_playlist_dialog.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 186
+      },
+      {
+        "file": "category_buttons.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 104
+      },
+      {
+        "file": "song_download_btn.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 85
+      },
+      {
+        "file": "songinfo_bottom_sheet.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 424
+      },
+      {
+        "file": "list_widget.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 259
+      },
+      {
+        "file": "image_widget.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 155
+      },
+      {
+        "file": "up_next_queue.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 173
+      },
+      {
+        "file": "add_to_playlist.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 220
+      },
+      {
+        "file": "sliding_up_panel.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 505
+      },
+      {
+        "file": "player.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 175
+      },
+      {
+        "file": "backgroud_image.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 71
+      },
+      {
+        "file": "mini_player_content.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 388
+      },
+      {
+        "file": "mini_player.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 544
+      },
+      {
+        "file": "scroll_controller_manager.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 187
+      },
+      {
+        "file": "performance_optimization.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 52
+      },
+      {
+        "file": "house_keeping.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 55
+      },
+      {
+        "file": "main.dart",
+        "nestingDepth": 7,
+        "linesOfCode": 335
+      },
+      {
+        "file": "music_service.dart",
+        "nestingDepth": 7,
+        "linesOfCode": 1013
+      },
+      {
+        "file": "youtube_config_service.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 329
+      },
+      {
+        "file": "piped_service.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 162
+      },
+      {
+        "file": "nav_parser.dart",
+        "nestingDepth": 7,
+        "linesOfCode": 936
+      },
+      {
+        "file": "downloader.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 237
+      },
+      {
+        "file": "youtube_cookie_manager.dart",
+        "nestingDepth": 6,
+        "linesOfCode": 400
+      },
+      {
+        "file": "synced_lyrics_service.dart",
+        "nestingDepth": 5,
+        "linesOfCode": 33
+      }
+    ],
+    "largestFiles": [
+      {
+        "file": "get_localization.dart",
+        "linesOfCode": 9627
+      },
+      {
+        "file": "music_service.dart",
+        "linesOfCode": 1013
+      },
+      {
+        "file": "nav_parser.dart",
+        "linesOfCode": 936
+      },
+      {
+        "file": "playlist_screen.dart",
+        "linesOfCode": 735
+      },
+      {
+        "file": "library_controller.dart",
+        "linesOfCode": 614
+      },
+      {
+        "file": "album_screen.dart",
+        "linesOfCode": 550
+      },
+      {
+        "file": "mini_player.dart",
+        "linesOfCode": 544
+      },
+      {
+        "file": "sliding_up_panel.dart",
+        "linesOfCode": 505
+      },
+      {
+        "file": "songinfo_bottom_sheet.dart",
+        "linesOfCode": 424
+      },
+      {
+        "file": "youtube_cookie_manager.dart",
+        "linesOfCode": 400
+      }
+    ]
+  },
+  "lintSummary": {
+    "totalIssues": 11,
+    "issues": [
+      {
+        "severity": "info",
+        "message": "Don't invoke 'print' in production code",
+        "location": "lib/services/audio_handler.dart:73:5",
+        "rule": "avoid_print"
+      },
+      {
+        "severity": "info",
+        "message": "Don't invoke 'print' in production code",
+        "location": "lib/services/audio_handler.dart:74:5",
+        "rule": "avoid_print"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary 'const' keyword",
+        "location": "lib/ui/widgets/lyrics_dialog.dart:17:20",
+        "rule": "unnecessary_const"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary 'const' keyword",
+        "location": "lib/ui/widgets/shimmer_widgets/home_shimmer.dart:30:24",
+        "rule": "unnecessary_const"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary 'const' keyword",
+        "location": "lib/ui/widgets/shimmer_widgets/home_shimmer.dart:47:37",
+        "rule": "unnecessary_const"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary 'const' keyword",
+        "location": "lib/ui/widgets/shimmer_widgets/home_shimmer.dart:65:20",
+        "rule": "unnecessary_const"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary braces in a string interpolation",
+        "location": "lib/utils/error_handler.dart:36:16",
+        "rule": "unnecessary_brace_in_string_interps"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary braces in a string interpolation",
+        "location": "lib/utils/error_handler.dart:37:20",
+        "rule": "unnecessary_brace_in_string_interps"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary braces in a string interpolation",
+        "location": "lib/utils/error_handler.dart:42:16",
+        "rule": "unnecessary_brace_in_string_interps"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary braces in a string interpolation",
+        "location": "lib/utils/error_handler.dart:43:20",
+        "rule": "unnecessary_brace_in_string_interps"
+      },
+      {
+        "severity": "info",
+        "message": "Unnecessary braces in a string interpolation",
+        "location": "lib/utils/scroll_controller_manager.dart:252:40",
+        "rule": "unnecessary_brace_in_string_interps"
+      }
+    ],
+    "issuesByType": {
+      "avoid_print": 2,
+      "unnecessary_const": 4,
+      "unnecessary_brace_in_string_interps": 5
+    }
+  },
+  "generatedAt": "2025-08-06T10:15:30.263720"
+}

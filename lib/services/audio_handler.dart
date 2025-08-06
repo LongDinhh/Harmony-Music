@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:hive/hive.dart';
@@ -23,6 +24,8 @@ import '../ui/screens/Home/home_screen_controller.dart';
 import '/services/background_task.dart';
 import '/services/permission_service.dart';
 import '../utils/helper.dart';
+import '../utils/custom_exceptions.dart';
+import '../utils/error_handler.dart';
 import '/models/media_Item_builder.dart';
 import '/services/utils.dart';
 import '../ui/screens/Settings/settings_screen_controller.dart';
@@ -70,8 +73,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       macOS: false,
     );
 
-    print("GetPlatform.isAndroid: ${GetPlatform.isAndroid}");
-    print("GetPlatform.isIOS: ${GetPlatform.isIOS}");
+    // Platform detection logged via debug mode only
+    if (kDebugMode) {
+      debugPrint("Platform detected - Android: ${GetPlatform.isAndroid}, iOS: ${GetPlatform.isIOS}");
+    }
 
     // Configure after initialization
     JustAudioMediaKit.title = 'Harmony music';
@@ -118,7 +123,8 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       // No need to set empty source in new API
       // Player will be ready to accept audio sources when needed
     } catch (r) {
-      printERROR(r.toString());
+      AppErrorHandler.handleError(r, null, context: 'AudioService initialization');
+      throw AudioException.loadFailed();
     }
   }
 
@@ -170,10 +176,10 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
       //print("set ${playbackState.value.queueIndex},${event.currentIndex}");
     }, onError: (Object e, StackTrace st) async {
       if (e is PlayerException) {
-        printERROR('Error code: ${e.code}');
-        printERROR('Error message: ${e.message}');
+        AppErrorHandler.handleError(e, st, context: 'PlayerException');
+        throw AudioException.playbackError('Code: ${e.code}, Message: ${e.message}');
       } else {
-        printERROR('An error occurred: $e');
+        AppErrorHandler.handleError(e, st, context: 'Audio playback error');
         Duration curPos = _player.position;
         // Use gentle approach for error handling
         if (_player.playing) {
@@ -681,7 +687,7 @@ class MyAudioHandler extends BaseAudioHandler with GetxServiceMixin {
                   streamInfo == null ? 0 : streamInfo[1]["loudnessDb"]);
             }
           } catch (e) {
-            printERROR(e);
+            AppErrorHandler.handleError(e, null, context: 'Audio queue processing');
           }
         }
         break;

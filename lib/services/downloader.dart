@@ -18,6 +18,8 @@ import '../ui/widgets/snackbar.dart';
 import '/services/permission_service.dart';
 import '../ui/screens/Settings/settings_screen_controller.dart';
 import '/utils/helper.dart';
+import '../utils/custom_exceptions.dart';
+import '../utils/error_handler.dart';
 import '/models/media_Item_builder.dart';
 import '../ui/screens/Library/library_controller.dart';
 
@@ -251,7 +253,7 @@ class Downloader extends GetxService {
 
           // Verify file exists and is accessible
           if (!await file.exists()) {
-            printERROR("File does not exist for metadata writing: $filePath");
+            AppErrorHandler.handleError("File does not exist: $filePath", null, context: 'Metadata writing');
             return;
           }
 
@@ -265,7 +267,7 @@ class Downloader extends GetxService {
               );
               artworkBytes = response.data;
             } catch (e) {
-              printERROR("Failed to download artwork: $e");
+              AppErrorHandler.handleError(e, null, context: 'Artwork download');
             }
           }
 
