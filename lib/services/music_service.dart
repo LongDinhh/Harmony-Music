@@ -62,69 +62,85 @@ class MusicServices extends getx.GetxService {
 
   final dio = Dio();
 
+  /// Main initialization method - coordinates all setup steps
   Future<void> init() async {
-    //check visitor id in data base, if not generate one , set lang code
+    await _setupContext();
+    _configureDioSecurity();
+    await _initializeCookies();
+    _setupInterceptors();
+    await _initializeAppData();
+    await _setupVisitorId();
+  }
+
+  /// Sets up the YouTube API context with current timestamp
+  Future<void> _setupContext() async {
     final date = DateTime.now();
     _context['context']['client']['clientVersion'] =
         "1.${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}.03.00";
+    
     final signatureTimestamp = getDatestamp() - 1;
     _context['playbackContext'] = {
       'contentPlaybackContext': {'signatureTimestamp': signatureTimestamp},
     };
+  }
 
-    // Configure Dio with certificate pinning and security settings
-    _configureDioSecurity();
-
-    // Khởi tạo cookie từ storage
-    await _initializeCookies();
-
-    // Thêm interceptor cho SAPISIDHASH (đã tối ưu)
+  /// Sets up Dio interceptors for cookie and SAPISIDHASH handling
+  void _setupInterceptors() {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        try {
-          // Sử dụng cached cookie string để tối ưu hiệu suất
-          final cookies = await YouTubeCookieManager.getCachedCookieString();
-          if (cookies.isNotEmpty) {
-            options.headers['cookie'] = cookies;
-
-            // Lấy SAPISID và dataSyncId song song để tối ưu
-            final sapisid =
-                await YouTubeCookieManager.getYouTubeCookie('SAPISID');
-            final dataSyncId = await YouTubeConfigService.getDatasyncId();
-
-            if (sapisid != null && dataSyncId != null) {
-              // Tạo SAPISIDHASH với datasyncId từ storage
-              final sapisidHash = await getSApiSidHash(
-                  dataSyncId, sapisid['value'],
-                  origin: domain);
-              if (sapisidHash != null) {
-                options.headers['Authorization'] = 'SAPISIDHASH $sapisidHash';
-              }
-            }
-          }
-        } catch (e) {
-          AppErrorHandler.handleError(e, null, context: 'Cookie interceptor');
-        }
-
+        await _handleRequestInterceptor(options);
         handler.next(options);
       },
       onResponse: (response, handler) async {
-        // Cập nhật cookie từ response headers nếu có
-        final responseCookies = response.headers.map['set-cookie'];
-        if (responseCookies != null && responseCookies.isNotEmpty) {
-          await YouTubeCookieManager.saveFromResponseHeaders(responseCookies);
-        }
+        await _handleResponseInterceptor(response);
         handler.next(response);
       },
     ));
+  }
 
-    // Flow khởi tạo app: call API domain, cập nhật cookie, lưu visitorId và datasyncId
-    await _initializeAppData();
+  /// Handles request interceptor logic for cookies and authorization
+  Future<void> _handleRequestInterceptor(RequestOptions options) async {
+    try {
+      final cookies = await YouTubeCookieManager.getCachedCookieString();
+      if (cookies.isNotEmpty) {
+        options.headers['cookie'] = cookies;
+        await _addAuthorizationHeader(options);
+      }
+    } catch (e) {
+      AppErrorHandler.handleError(e, null, context: 'Cookie interceptor');
+    }
+  }
 
+  /// Adds SAPISIDHASH authorization header if credentials available
+  Future<void> _addAuthorizationHeader(RequestOptions options) async {
+    final sapisid = await YouTubeCookieManager.getYouTubeCookie('SAPISID');
+    final dataSyncId = await YouTubeConfigService.getDatasyncId();
+
+    if (sapisid != null && dataSyncId != null) {
+      final sapisidHash = await getSApiSidHash(
+        dataSyncId, 
+        sapisid['value'],
+        origin: domain,
+      );
+      if (sapisidHash != null) {
+        options.headers['Authorization'] = 'SAPISIDHASH $sapisidHash';
+      }
+    }
+  }
+
+  /// Handles response interceptor logic for cookie updates
+  Future<void> _handleResponseInterceptor(Response response) async {
+    final responseCookies = response.headers.map['set-cookie'];
+    if (responseCookies != null && responseCookies.isNotEmpty) {
+      await YouTubeCookieManager.saveFromResponseHeaders(responseCookies);
+    }
+  }
+
+  /// Sets up visitor ID from storage or uses fallback
+  Future<void> _setupVisitorId() async {
     final appPrefsBox = Hive.box('AppPrefs');
     hlCode = appPrefsBox.get('contentLanguage') ?? "vi";
 
-    // Kiểm tra visitorId từ storage trước
     final visitorData = await YouTubeConfigService.getVisitorData();
     if (visitorData != null) {
       _headers['X-Goog-Visitor-Id'] = visitorData;
@@ -132,7 +148,7 @@ class MusicServices extends getx.GetxService {
       return;
     }
 
-    // Fallback: sử dụng visitorId mặc định nếu không có trong storage
+    // Fallback visitor ID
     _headers['X-Goog-Visitor-Id'] =
         "CgttN24wcmd5UzNSWSi2lvq2BjIKCgJKUBIEGgAgYQ%3D%3D";
   }
