@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '../../widgets/songinfo_bottom_sheet.dart';
 import '../player_controller.dart';
 import 'albumart_lyrics.dart';
-import 'backgroud_image.dart';
+import 'background_image.dart';
 import 'lyrics_switch.dart';
 import 'player_control.dart';
 

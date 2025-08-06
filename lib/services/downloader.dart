@@ -20,7 +20,7 @@ import '../ui/screens/Settings/settings_screen_controller.dart';
 import '/utils/helper.dart';
 import '../utils/custom_exceptions.dart';
 import '../utils/error_handler.dart';
-import '/models/media_Item_builder.dart';
+import '/models/media_item_builder.dart';
 import '../ui/screens/Library/library_controller.dart';
 
 //import '../models/thumbnail.dart' as th;

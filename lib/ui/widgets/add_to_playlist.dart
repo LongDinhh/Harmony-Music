@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:widget_marquee/widget_marquee.dart';
 
 import '../../services/piped_service.dart';
-import '/models/media_Item_builder.dart';
+import '/models/media_item_builder.dart';
 import '/ui/widgets/create_playlist_dialog.dart';
 import '../../models/playlist.dart';
 import 'common_dialog_widget.dart';

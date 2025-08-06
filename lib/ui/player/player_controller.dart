@@ -15,7 +15,7 @@ import '/services/synced_lyrics_service.dart';
 import '/ui/screens/Settings/settings_screen_controller.dart';
 
 import '../../utils/helper.dart';
-import '/models/media_Item_builder.dart';
+import '/models/media_item_builder.dart';
 import '../screens/Home/home_screen_controller.dart';
 import '../widgets/sliding_up_panel.dart';
 import '/models/durationstate.dart';

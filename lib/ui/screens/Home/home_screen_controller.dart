@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 import '../../../utils/haptic_utils.dart';
 import '../../../utils/scroll_controller_manager.dart';
 
-import '/models/media_Item_builder.dart';
+import '/models/media_item_builder.dart';
 import '/ui/player/player_controller.dart';
 import '../../../utils/update_check_flag_file.dart';
 import '../../../utils/helper.dart';

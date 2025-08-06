@@ -336,7 +336,8 @@ class MusicServices extends getx.GetxService {
         return await requestFn();
       } on DioException catch (e) {
         if (i == 2) {
-          AppErrorHandler.handleError(e, null, context: 'Request after 3 attempts');
+          AppErrorHandler.handleError(e, null,
+              context: 'Request after 3 attempts');
           throw NetworkError();
         }
         await Future.delayed(Duration(milliseconds: 1000 * (i + 1)));
@@ -1184,7 +1185,9 @@ class MusicServices extends getx.GetxService {
       if (finalDatasyncId == null) {
         finalDatasyncId = await YouTubeConfigService.getDatasyncId();
         if (finalDatasyncId == null) {
-          AppErrorHandler.logWarning("No datasyncId available for SAPISIDHASH generation", context: 'SAPISIDHASH');
+          AppErrorHandler.logWarning(
+              "No datasyncId available for SAPISIDHASH generation",
+              context: 'SAPISIDHASH');
           return null;
         }
       }

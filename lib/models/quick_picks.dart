@@ -1,5 +1,5 @@
 import 'package:audio_service/audio_service.dart';
-import 'media_Item_builder.dart';
+import 'media_item_builder.dart';
 
 class QuickPicks {
   QuickPicks(this.songList, {this.title = "Discover"});
