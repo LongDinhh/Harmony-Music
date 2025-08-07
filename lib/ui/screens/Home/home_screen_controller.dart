@@ -146,7 +146,20 @@ class HomeScreenController extends GetxController
           ? homeContentResponse['contents'] as List
           : homeContentResponse as List;
       
-      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'} ${homeContentListMap.length}');
+      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'} count: ${homeContentListMap.length}');
+      
+      // Debug: Check data structure
+      if (homeContentListMap.isNotEmpty) {
+        final firstItem = homeContentListMap[0];
+        printINFO('First item type: ${firstItem.runtimeType}');
+        if (firstItem is Map) {
+          printINFO('First item keys: ${firstItem.keys}');
+          if (firstItem['contents'] != null && (firstItem['contents'] as List).isNotEmpty) {
+            final firstContent = (firstItem['contents'] as List)[0];
+            printINFO('First content type: ${firstContent.runtimeType}');
+          }
+        }
+      }
 
       try {
         final songId = box.get("recentSongId");
@@ -239,29 +252,43 @@ class HomeScreenController extends GetxController
     List<dynamic> contents,
   ) {
     List contentTemp = [];
+    printINFO('_setContentList: Processing ${contents.length} items');
+    
     for (var content in contents) {
-      if ((content["contents"][0]).runtimeType == Playlist) {
+      printINFO('Content item: ${content.runtimeType}, keys: ${content is Map ? content.keys : 'not a map'}');
+      
+      if (content is Map && content["contents"] != null && (content["contents"] as List).isNotEmpty) {
+        final firstContentItem = (content["contents"] as List)[0];
+        printINFO('First content item type: ${firstContentItem.runtimeType}');
+        
+        if (firstContentItem.runtimeType == Playlist) {
         final tmp = PlaylistContent(
             playlistList: (content["contents"]).whereType<Playlist>().toList(),
             title: content["title"]);
         if (tmp.playlistList.length >= 2) {
           contentTemp.add(tmp);
         }
-      } else if ((content["contents"][0]).runtimeType == Album) {
+      } else if (firstContentItem.runtimeType == Album) {
         final tmp = AlbumContent(
             albumList: (content["contents"]).whereType<Album>().toList(),
             title: content["title"]);
         if (tmp.albumList.length >= 2) {
           contentTemp.add(tmp);
         }
-      } else if ((content["contents"][0]).runtimeType == MediaItem) {
+      } else if (firstContentItem.runtimeType == MediaItem) {
         final songs = (content["contents"]).whereType<MediaItem>().toList();
         if (songs.length >= 2) {
           final tmp = QuickPicks(songs, title: content["title"]);
           contentTemp.add(tmp);
         }
+      } else {
+        printINFO('Unknown content type: ${firstContentItem.runtimeType}');
+      }
+      } else {
+        printINFO('Content structure invalid - no contents array or empty');
       }
     }
+    printINFO('_setContentList: Generated ${contentTemp.length} content items');
     return contentTemp;
   }
 
