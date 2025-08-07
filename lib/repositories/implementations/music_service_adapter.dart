@@ -127,10 +127,17 @@ class MusicServiceAdapter implements MusicRepository {
 
       final response = await _musicService.getHome(limit: limit);
       
-      // Cache home content
-      await _cacheRepository.cacheHomeScreenData(response);
+      // Convert List response to Map format expected by repository interface
+      final homeContentMap = {
+        'contents': response,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'limit': limit,
+      };
       
-      return response;
+      // Cache home content
+      await _cacheRepository.cacheHomeScreenData(homeContentMap);
+      
+      return homeContentMap;
     } catch (error) {
       throw MusicException.networkError('Failed to get home content: ${error.toString()}');
     }

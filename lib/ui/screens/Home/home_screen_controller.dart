@@ -137,9 +137,14 @@ class HomeScreenController extends GetxController
           Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
       
       // Use YouTubeMusicRepository if available, fallback to direct service call
-      final homeContentListMap = _musicRepository != null
+      final homeContentResponse = _musicRepository != null
           ? await _musicRepository!.getHomeContent(limit: limitContent)
           : await _musicServices.getHome(limit: limitContent);
+      
+      // Extract the actual content list from repository response or use direct response
+      final homeContentListMap = _musicRepository != null
+          ? homeContentResponse['contents'] as List
+          : homeContentResponse as List;
       
       printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'}');
 
