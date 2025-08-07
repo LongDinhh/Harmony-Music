@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import '../interfaces/music_repository.dart';
 import '../interfaces/cache_repository.dart';
 import '../exceptions/repository_exception.dart';
+import '../../models/media_item.dart';
+import '../../models/playlist.dart';
 import '../../models/album.dart';
 import '../../models/artist.dart';
-import '../../models/playlist.dart';
-import '../../models/media_item_builder.dart';
 import '../../services/ytmusic_api_service.dart';
 import '../../utils/error_handler.dart';
 
-/// New implementation of MusicRepository using dart_ytmusic_api
+/// Implementation of MusicRepository using YTMusicAPIService (dart_ytmusic_api)
 class YTMusicRepository implements MusicRepository {
   final YTMusicAPIService _ytMusicService;
   final CacheRepository _cacheRepository;
@@ -20,198 +20,37 @@ class YTMusicRepository implements MusicRepository {
   YTMusicRepository(this._ytMusicService, this._cacheRepository);
 
   @override
-  Future<List<MediaItem>> searchSongs(String query, {int limit = 30}) async {
-    try {
-      // Check cache first
-      final cachedResults = await _cacheRepository.getCachedSearchResults(query);
-      if (cachedResults != null) {
-        final songs = (cachedResults['songs'] as List?)
-            ?.map((e) => MediaItemBuilder.fromJson(e))
-            .toList() ?? [];
-        return songs.take(limit).toList();
-      }
-
-      // Fetch from API
-      final response = await _ytMusicService.search(query, filter: 'songs', limit: limit);
-      final songs = _parseSearchResponse(response);
-      
-      // Cache results
-      await _cacheRepository.cacheSearchResults(query, {'songs': songs.map((s) => MediaItemBuilder.toJson(s)).toList()});
-      
-      return songs;
-    } catch (error) {
-      throw MusicException.searchFailed('Failed to search songs: ${error.toString()}');
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> searchWithFilter(
-    String query, {
-    String? filter,
-    String? scope,
-    int limit = 30,
-    bool ignoreSpelling = false,
-  }) async {
-    try {
-      final response = await _ytMusicService.search(
-        query,
-        filter: filter,
-        scope: scope,
-        limit: limit,
-        ignoreSpelling: ignoreSpelling,
-      );
-      return response;
-    } catch (error) {
-      throw MusicException.searchFailed('Failed to search with filter: ${error.toString()}');
-    }
-  }
-
-  @override
-  Future<Album> getAlbum(String albumId) async {
-    try {
-      // Check cache first
-      final cachedAlbum = await _cacheRepository.getCachedAlbumData(albumId);
-      if (cachedAlbum != null) {
-        return Album.fromJson(cachedAlbum);
-      }
-
-      // Fetch album data
-      final response = await _ytMusicService.getAlbum(albumId);
-      
-      if (response.isEmpty) {
-        throw MusicException.albumNotFound(albumId);
-      }
-
-      final albumData = _parseAlbumResponse(response);
-      final album = Album.fromJson(albumData);
-      
-      // Cache album data
-      await _cacheRepository.cacheAlbumData(albumId, albumData);
-      
-      return album;
-    } catch (error) {
-      if (error is MusicException) rethrow;
-      throw MusicException.albumNotFound('Failed to get album $albumId: ${error.toString()}');
-    }
-  }
-
-  @override
-  Future<Artist> getArtist(String artistId) async {
-    try {
-      // Check cache first
-      final cachedArtist = await _cacheRepository.getCachedArtistData(artistId);
-      if (cachedArtist != null) {
-        return Artist.fromJson(cachedArtist);
-      }
-
-      // Fetch artist data
-      final response = await _ytMusicService.getArtist(artistId);
-      
-      final artistData = _parseArtistResponse(response);
-      final artist = Artist.fromJson(artistData);
-      
-      // Cache artist data
-      await _cacheRepository.cacheArtistData(artistId, artistData);
-      
-      return artist;
-    } catch (error) {
-      if (error is MusicException) rethrow;
-      throw MusicException.artistNotFound('Failed to get artist $artistId: ${error.toString()}');
-    }
-  }
-
-  @override
   Future<Map<String, dynamic>> getHomeContent({int limit = 4, bool forceRefresh = false}) async {
     try {
-      print("===============getHomeContent new (forceRefresh: $forceRefresh)");
-      
-      // Skip cache if forceRefresh is true
+      // Check cache first if not forcing refresh
       if (!forceRefresh) {
         final cachedContent = await _cacheRepository.getCachedHomeScreenData();
         if (cachedContent != null) {
-          print("Loading home content from cache");
-          // Convert cached serializable format back to Models
           return _convertSerializableFormatToModels(cachedContent);
         }
       }
 
-      print("Loading home content from network");
+      // Fetch from API
       final response = await _ytMusicService.getHomeData(limit: limit);
-      
-      // Parse response into proper Models
       final parsedResponse = _parseHomeContentResponse(response);
       
-      // Convert Models to serializable format for caching
+      // Cache the serializable format
       final serializableResponse = _convertModelsToSerializableFormat(parsedResponse);
-      
-      // Cache the serializable content
       await _cacheRepository.cacheHomeScreenData(serializableResponse);
       
       return parsedResponse;
     } catch (error) {
-      throw MusicException.networkError('Failed to get home content: ${error.toString()}');
+      throw MusicException('Failed to get home content: $error');
     }
   }
 
   @override
-  Future<Map<String, dynamic>> getWatchPlaylist({
-    String videoId = "",
-    String? playlistId,
-    int limit = 25,
-    bool radio = false,
-    bool shuffle = false,
-    String? additionalParamsNext,
-    bool onlyRelated = false,
-  }) async {
+  Future<Map<String, dynamic>> search(String query, {String? filter, int limit = 20}) async {
     try {
-      final response = await _ytMusicService.getWatchPlaylist(
-        videoId: videoId,
-        playlistId: playlistId,
-        limit: limit,
-        radio: radio,
-        shuffle: shuffle,
-        additionalParamsNext: additionalParamsNext,
-        onlyRelated: onlyRelated,
-      );
-      return response;
+      final response = await _ytMusicService.search(query, type: filter, limit: limit);
+      return _parseSearchResponse(response);
     } catch (error) {
-      throw MusicException.networkError('Failed to get watch playlist: ${error.toString()}');
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> getPlaylistOrAlbumSongs({
-    String? playlistId,
-    String? albumId,
-    int limit = 3000,
-    bool related = false,
-    int suggestionsLimit = 0,
-  }) async {
-    try {
-      // Check cache first if playlistId is provided
-      if (playlistId != null) {
-        final cachedPlaylist = await _cacheRepository.getCachedPlaylistData(playlistId);
-        if (cachedPlaylist != null) {
-          return cachedPlaylist;
-        }
-      }
-
-      final response = await _ytMusicService.getPlaylistOrAlbumSongs(
-        playlistId: playlistId,
-        albumId: albumId,
-        limit: limit,
-        related: related,
-        suggestionsLimit: suggestionsLimit,
-      );
-
-      // Cache playlist data if playlistId is provided
-      if (playlistId != null) {
-        await _cacheRepository.cachePlaylistData(playlistId, response);
-      }
-
-      return response;
-    } catch (error) {
-      throw MusicException.networkError('Failed to get playlist/album songs: ${error.toString()}');
+      throw MusicException('Failed to search: $error');
     }
   }
 
@@ -220,36 +59,80 @@ class YTMusicRepository implements MusicRepository {
     try {
       return await _ytMusicService.getSearchSuggestions(query);
     } catch (error) {
-      throw MusicException.searchFailed('Failed to get search suggestions: ${error.toString()}');
+      throw MusicException('Failed to get search suggestions: $error');
     }
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getCharts({String? countryCode = "vi"}) async {
+  Future<Map<String, dynamic>> getAlbum(String albumId) async {
     try {
-      return await _ytMusicService.getCharts(countryCode: countryCode);
+      final response = await _ytMusicService.getAlbum(albumId);
+      return _parseAlbumResponse(response);
     } catch (error) {
-      throw MusicException.networkError('Failed to get charts: ${error.toString()}');
+      throw MusicException('Failed to get album: $error');
     }
   }
 
   @override
-  Future<List> getSongDetails(String songId) async {
+  Future<Map<String, dynamic>> getArtist(String artistId) async {
     try {
-      return await _ytMusicService.getSongWithId(songId);
+      final response = await _ytMusicService.getArtist(artistId);
+      return _parseArtistResponse(response);
     } catch (error) {
-      throw MusicException.networkError('Failed to get song details: ${error.toString()}');
+      throw MusicException('Failed to get artist: $error');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPlaylistOrAlbumSongs(String playlistId) async {
+    try {
+      final response = await _ytMusicService.getPlaylistOrAlbumSongs(playlistId);
+      return {'songs': _parsePlaylistSongs(response)};
+    } catch (error) {
+      throw MusicException('Failed to get playlist songs: $error');
+    }
+  }
+
+  @override
+  Future<dynamic> getWatchPlaylist(String videoId, String? playlistId) async {
+    try {
+      return await _ytMusicService.getWatchPlaylist(videoId, playlistId);
+    } catch (error) {
+      throw MusicException('Failed to get watch playlist: $error');
+    }
+  }
+
+  @override
+  Future<List> getSongWithId(String songId) async {
+    try {
+      final response = await _ytMusicService.getSongWithId(songId);
+      return [response];
+    } catch (error) {
+      throw MusicException('Failed to get song: $error');
     }
   }
 
   @override
   Future<dynamic> getRelatedContent(String videoId, String hlCode, {bool forceRefresh = false}) async {
     try {
-      // Note: Related content is usually dynamic and short-lived, so we don't cache it extensively
-      // But if needed, forceRefresh parameter is available for future cache implementation
-      return await _ytMusicService.getContentRelatedToSong(videoId, hlCode);
+      // Check cache first if not forcing refresh
+      if (!forceRefresh) {
+        final cacheKey = 'related_$videoId';
+        final cachedContent = await _cacheRepository.getCachedData(cacheKey);
+        if (cachedContent != null) {
+          return cachedContent;
+        }
+      }
+
+      final response = await _ytMusicService.getContentRelatedToSong(videoId, hlCode);
+      
+      // Cache the response
+      final cacheKey = 'related_$videoId';
+      await _cacheRepository.cacheData(cacheKey, response);
+      
+      return response;
     } catch (error) {
-      throw MusicException.networkError('Failed to get related content: ${error.toString()}');
+      throw MusicException('Failed to get related content: $error');
     }
   }
 
@@ -258,393 +141,316 @@ class YTMusicRepository implements MusicRepository {
     try {
       return await _ytMusicService.getLyrics(browseId);
     } catch (error) {
-      throw MusicException.networkError('Failed to get lyrics: ${error.toString()}');
+      throw MusicException('Failed to get lyrics: $error');
     }
   }
 
   @override
-  Future<dynamic> getArtistRelatedContent(
-    Map<String, dynamic> browseEndpoint,
-    String category, {
-    String additionalParams = "",
-  }) async {
+  Future<List<Map<String, dynamic>>> getCharts(String countryCode) async {
     try {
-      return await _ytMusicService.getArtistRelatedContent(
-        browseEndpoint,
-        category,
-        additionalParams: additionalParams,
-      );
-    } catch (error) {
-      throw MusicException.networkError('Failed to get artist related content: ${error.toString()}');
-    }
-  }
-
-  @override
-  Future<String> getAlbumBrowseId(String audioPlaylistId) async {
-    try {
-      return await _ytMusicService.getAlbumBrowseId(audioPlaylistId);
-    } catch (error) {
-      throw MusicException.networkError('Failed to get album browse ID: ${error.toString()}');
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> getSearchContinuation(
-    Map additionalParamsNext, {
-    int limit = 10,
-  }) async {
-    try {
-      return await _ytMusicService.getSearchContinuation(
-        additionalParamsNext,
-        limit: limit,
-      );
-    } catch (error) {
-      throw MusicException.networkError('Failed to get search continuation: ${error.toString()}');
-    }
-  }
-
-  // Helper methods for parsing responses (similar to original implementation)
-  List<MediaItem> _parseSearchResponse(Map<String, dynamic> response) {
-    try {
-      final contents = response['contents'] as List? ?? [];
-      final songs = <MediaItem>[];
-      
-      for (final content in contents) {
-        if (content is Map<String, dynamic>) {
-          try {
-            final song = MediaItemBuilder.fromJson(content);
-            songs.add(song);
-          } catch (e) {
-            // Skip invalid items
-            continue;
-          }
-        }
+      final response = await _ytMusicService.getCharts(countryCode);
+      if (response is List) {
+        return response.cast<Map<String, dynamic>>();
       }
-      
-      return songs;
+      return [];
     } catch (error) {
-      throw MusicException.parseError('Failed to parse search response: ${error.toString()}');
+      throw MusicException('Failed to get charts: $error');
     }
   }
 
-  Map<String, dynamic> _parseAlbumResponse(Map<String, dynamic> response) {
+  @override
+  Future<String?> getSongYear(String songId) async {
     try {
-      // Extract album information from the response
-      return {
-        'title': response['title'] ?? 'Unknown Album',
-        'browseId': response['browseId'] ?? '',
-        'artists': response['artists'] ?? [],
-        'year': response['year'],
-        'description': response['description'],
-        'audioPlaylistId': response['audioPlaylistId'],
-        'thumbnails': response['thumbnails'] ?? [],
-      };
+      final response = await _ytMusicService.getSongYear(songId);
+      return response?.toString();
     } catch (error) {
-      throw MusicException.parseError('Failed to parse album response: ${error.toString()}');
+      return null;
     }
   }
 
-  Map<String, dynamic> _parseArtistResponse(Map<String, dynamic> response) {
+  @override
+  Future<String?> getAlbumBrowseId(String albumName) async {
     try {
-      // Extract artist information from the response
-      return {
-        'artist': response['name'] ?? response['artist'] ?? 'Unknown Artist',
-        'browseId': response['browseId'] ?? '',
-        'radioId': response['radioId'],
-        'subscribers': response['subscribers'],
-        'thumbnails': response['thumbnails'] ?? [],
-      };
+      return await _ytMusicService.getAlbumBrowseId(albumName);
     } catch (error) {
-      throw MusicException.parseError('Failed to parse artist response: ${error.toString()}');
+      return null;
     }
   }
+
+  @override
+  Future<Map<String, dynamic>> getArtistRelatedContent(String artistId) async {
+    try {
+      final response = await _ytMusicService.getArtistRelatedContent(artistId);
+      return {'content': response};
+    } catch (error) {
+      throw MusicException('Failed to get artist related content: $error');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getSearchContinuation(String continuationToken) async {
+    try {
+      final response = await _ytMusicService.getSearchContinuation(continuationToken);
+      return {'results': response};
+    } catch (error) {
+      throw MusicException('Failed to get search continuation: $error');
+    }
+  }
+
+  // Helper methods for parsing responses and converting between formats
 
   Map<String, dynamic> _parseHomeContentResponse(dynamic response) {
+    print('Loading home content from network');
+    
+    if (response == null) {
+      print('API returned null response');
+      return {'contents': []};
+    }
+
     try {
-      // Handle both direct API response (List) and wrapped response (Map with 'contents')
-      List<dynamic> homeContentList = [];
+      List<dynamic> sections = [];
       
       if (response is List) {
-        homeContentList = response;
-      } else if (response is Map && response.containsKey('contents')) {
-        homeContentList = response['contents'] as List? ?? [];
-      } else if (response is Map) {
-        // Try to find the list in the response
-        for (final value in response.values) {
-          if (value is List && value.isNotEmpty) {
-            homeContentList = value;
-            break;
-          }
-        }
+        sections = response;
+      } else if (response is Map && response['sections'] != null) {
+        sections = response['sections'];
+      } else {
+        print('Unexpected response format: ${response.runtimeType}');
+        return {'contents': []};
       }
 
-      print("Parsing ${homeContentList.length} home content sections");
-      
-      // Debug: Print raw response structure
-      if (homeContentList.isNotEmpty) {
-        final firstSection = homeContentList[0];
-        print("First section type: ${firstSection.runtimeType}");
-        if (firstSection is Map) {
-          print("First section keys: ${firstSection.keys}");
-          if (firstSection['contents'] is List) {
-            final contents = firstSection['contents'] as List;
-            print("First section contents count: ${contents.length}");
-            if (contents.isNotEmpty) {
-              final firstContent = contents[0];
-              print("First content type: ${firstContent.runtimeType}");
-              if (firstContent is Map) {
-                print("First content keys: ${firstContent.keys}");
-              }
-            }
-          }
-        }
-      }
+      print('Parsing ${sections.length} home content sections');
 
-      final List<Map<String, dynamic>> parsedContents = [];
+      List<Map<String, dynamic>> contentTemp = [];
 
-      for (final section in homeContentList) {
-        if (section is! Map) {
-          print("Skipping non-Map section: ${section.runtimeType}");
-          continue;
-        }
+      for (var section in sections) {
+        if (section is! Map) continue;
         
-        final sectionMap = Map<String, dynamic>.from(section);
-        final title = sectionMap['title'] as String? ?? 'Unknown Section';
-        final contents = sectionMap['contents'] as List? ?? [];
+        final title = section['title'] ?? section['header'] ?? 'Unknown Section';
+        final contents = section['contents'] ?? section['items'] ?? [];
         
-        print("Processing section: $title with ${contents.length} items");
+        if (contents is! List || contents.isEmpty) continue;
         
-        if (contents.isEmpty) {
-          print("Skipping empty section: $title");
-          continue;
-        }
+        print('Processing section: $title with ${contents.length} items');
 
-        // Determine content type and handle both Maps and Model objects
-        final firstItem = contents.first;
-        print("First item type in $title: ${firstItem.runtimeType}");
-        
-        // Handle already parsed Model objects
-        if (firstItem is Playlist) {
-          print("Section $title contains Playlist objects");
-          final playlists = contents.whereType<Playlist>().toList();
-          print("Found ${playlists.length} playlists for section: $title");
-          if (playlists.length >= 1) {
-            parsedContents.add({
-              'title': title,
-              'contents': playlists,
-            });
-          }
-        } else if (firstItem is Album) {
-          print("Section $title contains Album objects");
-          final albums = contents.whereType<Album>().toList();
-          print("Found ${albums.length} albums for section: $title");
-          if (albums.length >= 1) {
-            parsedContents.add({
-              'title': title,
-              'contents': albums,
-            });
-          }
-        } else if (firstItem is MediaItem) {
-          print("Section $title contains MediaItem objects");
-          final songs = contents.whereType<MediaItem>().toList();
-          print("Found ${songs.length} songs for section: $title");
-          if (songs.length >= 1) {
-            parsedContents.add({
-              'title': title,
-              'contents': songs,
-            });
-          }
-        }
-        // Handle raw Map data that needs parsing
-        else if (firstItem is Map) {
-          final firstItemMap = Map<String, dynamic>.from(firstItem);
-          print("Section $title contains Map objects with keys: ${firstItemMap.keys}");
-          
-          if (_isPlaylistData(firstItemMap)) {
-            final playlists = <Playlist>[];
-            for (final item in contents) {
-              if (item is Map) {
-                try {
-                  final playlist = Playlist.fromJson(Map<String, dynamic>.from(item));
-                  playlists.add(playlist);
-                } catch (e) {
-                  print("Failed to parse playlist: $e");
-                  continue;
-                }
-              }
-            }
-            print("Parsed ${playlists.length} playlists for section: $title");
-            if (playlists.length >= 1) {
-              parsedContents.add({
-                'title': title,
-                'contents': playlists,
-              });
-            }
-          } else if (_isAlbumData(firstItemMap)) {
-            final albums = <Album>[];
-            for (final item in contents) {
-              if (item is Map) {
-                try {
-                  final album = Album.fromJson(Map<String, dynamic>.from(item));
-                  albums.add(album);
-                } catch (e) {
-                  print("Failed to parse album: $e");
-                  continue;
-                }
-              }
-            }
-            print("Parsed ${albums.length} albums for section: $title");
-            if (albums.length >= 1) {
-              parsedContents.add({
-                'title': title,
-                'contents': albums,
-              });
-            }
-          } else if (_isSongData(firstItemMap)) {
-            final songs = <MediaItem>[];
-            for (final item in contents) {
-              if (item is Map) {
-                try {
-                  final song = MediaItemBuilder.fromJson(Map<String, dynamic>.from(item));
-                  songs.add(song);
-                } catch (e) {
-                  print("Failed to parse song: $e");
-                  continue;
-                }
-              }
-            }
-            print("Parsed ${songs.length} songs for section: $title");
-            if (songs.length >= 1) {
-              parsedContents.add({
-                'title': title,
-                'contents': songs,
-              });
-            }
-          } else {
-            print("Unknown Map content type in section: $title, keys: ${firstItemMap.keys}");
-          }
+        final firstItem = contents[0];
+        print('First item type in $title: ${firstItem.runtimeType}');
+
+        List<dynamic> parsedItems = [];
+
+        // Parse items based on type or content structure
+        if (_isPlaylistSection(contents)) {
+          print('Section $title contains Playlist objects');
+          parsedItems = _parsePlaylistItems(contents);
+        } else if (_isAlbumSection(contents)) {
+          print('Section $title contains Album objects');
+          parsedItems = _parseAlbumItems(contents);
+        } else if (_isSongSection(contents)) {
+          print('Section $title contains MediaItem objects');
+          parsedItems = _parseSongItems(contents);
         } else {
-          print("Unknown content type in section: $title, type: ${firstItem.runtimeType}");
+          print('Unknown section type for: $title');
+          continue;
+        }
+
+        if (parsedItems.isNotEmpty) {
+          contentTemp.add({
+            'title': title,
+            'contents': parsedItems,
+          });
+          print('Found ${parsedItems.length} items for section: $title');
         }
       }
 
-      print("Successfully parsed ${parsedContents.length} content sections");
+      print('Successfully parsed ${contentTemp.length} content sections');
+      return {'contents': contentTemp};
+    } catch (error) {
+      print('Error parsing home content: $error');
+      return {'contents': []};
+    }
+  }
+
+  bool _isPlaylistSection(List contents) {
+    return contents.any((item) => 
+      item is Map && (
+        item['type'] == 'playlist' ||
+        item['playlistId'] != null ||
+        item['browseId']?.toString().startsWith('VL') == true
+      )
+    );
+  }
+
+  bool _isAlbumSection(List contents) {
+    return contents.any((item) => 
+      item is Map && (
+        item['type'] == 'album' ||
+        item['albumId'] != null ||
+        item['browseId']?.toString().startsWith('MPREb') == true
+      )
+    );
+  }
+
+  bool _isSongSection(List contents) {
+    return contents.any((item) => 
+      item is Map && (
+        item['type'] == 'song' ||
+        item['videoId'] != null ||
+        item['duration'] != null
+      )
+    );
+  }
+
+  List<Playlist> _parsePlaylistItems(List contents) {
+    return contents.where((item) => item is Map).map((item) {
+      return Playlist(
+        id: item['playlistId'] ?? item['browseId'] ?? '',
+        title: item['title'] ?? '',
+        description: item['description'] ?? '',
+        thumbnails: _parseThumbnails(item['thumbnails']),
+        author: item['author']?['name'] ?? '',
+        year: item['year']?.toString(),
+        videoCount: item['videoCount']?.toString(),
+      );
+    }).toList();
+  }
+
+  List<Album> _parseAlbumItems(List contents) {
+    return contents.where((item) => item is Map).map((item) {
+      return Album(
+        id: item['albumId'] ?? item['browseId'] ?? '',
+        title: item['title'] ?? '',
+        artist: item['artist']?['name'] ?? item['artists']?.first?['name'] ?? '',
+        thumbnails: _parseThumbnails(item['thumbnails']),
+        year: item['year']?.toString(),
+        type: item['type'] ?? 'Album',
+      );
+    }).toList();
+  }
+
+  List<MediaItem> _parseSongItems(List contents) {
+    return contents.where((item) => item is Map).map((item) {
+      return MediaItem(
+        id: item['videoId'] ?? '',
+        title: item['title'] ?? '',
+        artist: item['artist']?['name'] ?? item['artists']?.first?['name'] ?? '',
+        duration: item['duration'] ?? '',
+        thumbnails: _parseThumbnails(item['thumbnails']),
+        album: item['album']?['name'],
+        year: item['year']?.toString(),
+      );
+    }).toList();
+  }
+
+  List<Map<String, dynamic>> _parseThumbnails(dynamic thumbnails) {
+    if (thumbnails == null) return [];
+    if (thumbnails is List) {
+      return thumbnails.cast<Map<String, dynamic>>();
+    }
+    return [];
+  }
+
+  Map<String, dynamic> _parseSearchResponse(Map<String, dynamic> response) {
+    // Parse search response from dart_ytmusic_api format to our format
+    return response;
+  }
+
+  Map<String, dynamic> _parseAlbumResponse(dynamic response) {
+    // Parse album response
+    return response is Map<String, dynamic> ? response : {};
+  }
+
+  Map<String, dynamic> _parseArtistResponse(dynamic response) {
+    // Parse artist response
+    return response is Map<String, dynamic> ? response : {};
+  }
+
+  List<MediaItem> _parsePlaylistSongs(dynamic response) {
+    if (response == null) return [];
+    
+    List<dynamic> songs = [];
+    if (response is Map && response['tracks'] != null) {
+      songs = response['tracks'];
+    } else if (response is List) {
+      songs = response;
+    }
+
+    return songs.where((song) => song is Map).map((song) {
+      return MediaItem(
+        id: song['videoId'] ?? '',
+        title: song['title'] ?? '',
+        artist: song['artist']?['name'] ?? song['artists']?.first?['name'] ?? '',
+        duration: song['duration'] ?? '',
+        thumbnails: _parseThumbnails(song['thumbnails']),
+        album: song['album']?['name'],
+      );
+    }).toList();
+  }
+
+  // Convert models to serializable format for Hive caching
+  Map<String, dynamic> _convertModelsToSerializableFormat(Map<String, dynamic> parsedResponse) {
+    final contents = parsedResponse['contents'] as List? ?? [];
+    
+    final serializableContents = contents.map((section) {
+      if (section is! Map) return section;
+      
+      final sectionContents = section['contents'] as List? ?? [];
+      final serializableItems = sectionContents.map((item) {
+        if (item is Playlist) {
+          return {
+            '_type': 'Playlist',
+            'data': item.toJson(),
+          };
+        } else if (item is Album) {
+          return {
+            '_type': 'Album',
+            'data': item.toJson(),
+          };
+        } else if (item is MediaItem) {
+          return {
+            '_type': 'MediaItem',
+            'data': item.toJson(),
+          };
+        }
+        return item;
+      }).toList();
       
       return {
-        'contents': parsedContents,
+        'title': section['title'],
+        'contents': serializableItems,
       };
-    } catch (error) {
-      throw MusicException.parseError('Failed to parse home content response: ${error.toString()}');
-    }
+    }).toList();
+    
+    return {'contents': serializableContents};
   }
 
-  // Helper methods to identify content types
-  bool _isPlaylistData(Map<String, dynamic> data) {
-    return data.containsKey('playlistId') && data.containsKey('title');
-  }
-
-  bool _isAlbumData(Map<String, dynamic> data) {
-    return data.containsKey('browseId') && 
-           data.containsKey('title') && 
-           data.containsKey('artists');
-  }
-
-  bool _isSongData(Map<String, dynamic> data) {
-    return data.containsKey('videoId') && data.containsKey('title');
-  }
-
-  // Convert Model objects to serializable format for caching (same as original)
-  Map<String, dynamic> _convertModelsToSerializableFormat(Map<String, dynamic> parsedResponse) {
-    try {
-      final contents = parsedResponse['contents'] as List;
-      final serializableContents = <Map<String, dynamic>>[];
-
-      for (final section in contents) {
-        if (section is Map<String, dynamic>) {
-          final title = section['title'] as String;
-          final sectionContents = section['contents'] as List;
-          final serializableSectionContents = <Map<String, dynamic>>[];
-
-          for (final item in sectionContents) {
-            if (item is MediaItem) {
-              serializableSectionContents.add({
-                '_type': 'MediaItem',
-                'data': MediaItemBuilder.toJson(item),
-              });
-            } else if (item is Playlist) {
-              serializableSectionContents.add({
-                '_type': 'Playlist', 
-                'data': item.toJson(),
-              });
-            } else if (item is Album) {
-              serializableSectionContents.add({
-                '_type': 'Album',
-                'data': item.toJson(),
-              });
-            }
-          }
-
-          serializableContents.add({
-            'title': title,
-            'contents': serializableSectionContents,
-          });
-        }
-      }
-
-      return {
-        'contents': serializableContents,
-      };
-    } catch (error) {
-      print("Error converting models to serializable format: $error");
-      return parsedResponse; // Return original if conversion fails
-    }
-  }
-
-  // Convert serializable format back to Model objects (same as original)
+  // Convert serializable format back to models
   Map<String, dynamic> _convertSerializableFormatToModels(Map<String, dynamic> serializableResponse) {
-    try {
-      final contents = serializableResponse['contents'] as List;
-      final modelContents = <Map<String, dynamic>>[];
-
-      for (final section in contents) {
-        if (section is Map<String, dynamic>) {
-          final title = section['title'] as String;
-          final sectionContents = section['contents'] as List;
-          final modelSectionContents = <dynamic>[];
-
-          for (final item in sectionContents) {
-            if (item is Map<String, dynamic> && item.containsKey('_type') && item.containsKey('data')) {
-              final type = item['_type'] as String;
-              final data = item['data'] as Map<String, dynamic>;
-
-              switch (type) {
-                case 'MediaItem':
-                  modelSectionContents.add(MediaItemBuilder.fromJson(data));
-                  break;
-                case 'Playlist':
-                  modelSectionContents.add(Playlist.fromJson(data));
-                  break;
-                case 'Album':
-                  modelSectionContents.add(Album.fromJson(data));
-                  break;
-              }
-            }
+    final contents = serializableResponse['contents'] as List? ?? [];
+    
+    final modelContents = contents.map((section) {
+      if (section is! Map) return section;
+      
+      final sectionContents = section['contents'] as List? ?? [];
+      final modelItems = sectionContents.map((item) {
+        if (item is Map && item['_type'] != null && item['data'] != null) {
+          switch (item['_type']) {
+            case 'Playlist':
+              return Playlist.fromJson(item['data']);
+            case 'Album':
+              return Album.fromJson(item['data']);
+            case 'MediaItem':
+              return MediaItem.fromJson(item['data']);
           }
-
-          modelContents.add({
-            'title': title,
-            'contents': modelSectionContents,
-          });
         }
-      }
-
+        return item;
+      }).toList();
+      
       return {
-        'contents': modelContents,
+        'title': section['title'],
+        'contents': modelItems,
       };
-    } catch (error) {
-      print("Error converting serializable format to models: $error");
-      // If conversion fails, try to parse as if it's raw format
-      return _parseHomeContentResponse(serializableResponse);
-    }
+    }).toList();
+    
+    return {'contents': modelContents};
   }
 }
