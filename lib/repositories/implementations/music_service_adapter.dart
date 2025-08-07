@@ -122,22 +122,36 @@ class MusicServiceAdapter implements MusicRepository {
       // Check cache first
       final cachedContent = await _cacheRepository.getCachedHomeScreenData();
       if (cachedContent != null) {
-        return cachedContent;
+        // Convert cached serializable data back to MediaItems
+        final deserializedContents = _convertFromSerializableFormat(cachedContent['contents']);
+        return {
+          'contents': deserializedContents,
+          'timestamp': cachedContent['timestamp'],
+          'limit': cachedContent['limit'],
+        };
       }
 
       final response = await _musicService.getHome(limit: limit);
       
+      // Convert MediaItems to serializable format for caching
+      final serializableResponse = _convertToSerializableFormat(response);
+      
       // Convert List response to Map format expected by repository interface
       final homeContentMap = {
-        'contents': response,
+        'contents': serializableResponse,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
         'limit': limit,
       };
       
-      // Cache home content
+      // Cache the serializable version
       await _cacheRepository.cacheHomeScreenData(homeContentMap);
       
-      return homeContentMap;
+      // Return the original response structure for the controller
+      return {
+        'contents': response,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'limit': limit,
+      };
     } catch (error) {
       throw MusicException.networkError('Failed to get home content: ${error.toString()}');
     }
@@ -334,6 +348,56 @@ class MusicServiceAdapter implements MusicRepository {
       };
     } catch (error) {
       throw MusicException.parseError('Failed to parse artist response: ${error.toString()}');
+    }
+  }
+
+  /// Convert home content to serializable format for caching
+  dynamic _convertToSerializableFormat(dynamic data) {
+    if (data is List) {
+      return data.map((item) => _convertToSerializableFormat(item)).toList();
+    } else if (data is Map<String, dynamic>) {
+      final result = <String, dynamic>{};
+      for (final entry in data.entries) {
+        result[entry.key] = _convertToSerializableFormat(entry.value);
+      }
+      return result;
+    } else if (data is MediaItem) {
+      // Convert MediaItem to JSON
+      return MediaItemBuilder.toJson(data);
+    } else {
+      // Return primitive types as-is
+      return data;
+    }
+  }
+
+  /// Convert serializable format back to original format with MediaItems
+  dynamic _convertFromSerializableFormat(dynamic data) {
+    if (data is List) {
+      return data.map((item) => _convertFromSerializableFormat(item)).toList();
+    } else if (data is Map<String, dynamic>) {
+      // Check if this looks like a MediaItem JSON
+      if (data.containsKey('videoId') && data.containsKey('title')) {
+        try {
+          return MediaItemBuilder.fromJson(data);
+        } catch (e) {
+          // If conversion fails, return as Map
+          final result = <String, dynamic>{};
+          for (final entry in data.entries) {
+            result[entry.key] = _convertFromSerializableFormat(entry.value);
+          }
+          return result;
+        }
+      } else {
+        // Regular Map, convert recursively
+        final result = <String, dynamic>{};
+        for (final entry in data.entries) {
+          result[entry.key] = _convertFromSerializableFormat(entry.value);
+        }
+        return result;
+      }
+    } else {
+      // Return primitive types as-is
+      return data;
     }
   }
 }
