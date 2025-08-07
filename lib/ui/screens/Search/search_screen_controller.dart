@@ -37,7 +37,7 @@ class SearchScreenController extends GetxController with ProcessLink {
     try {
       _musicRepository = Get.find<MusicRepository>();
     } catch (e) {
-      printWARNING('MusicRepository not available, using direct service calls');
+      printWarning('MusicRepository not available, using direct service calls');
     }
     
     queryBox = await Hive.openBox("searchQuery");
