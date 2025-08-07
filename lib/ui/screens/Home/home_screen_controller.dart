@@ -146,7 +146,7 @@ class HomeScreenController extends GetxController
           ? homeContentResponse['contents'] as List
           : homeContentResponse as List;
       
-      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'}');
+      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'} ${homeContentListMap.length}');
 
       try {
         final songId = box.get("recentSongId");
