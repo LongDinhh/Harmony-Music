@@ -265,107 +265,28 @@ class HomeScreenController extends GetxController
         final contentsList = (content["contents"] as List);
         final title = content["title"] as String;
         
-        if (firstContentItem is Map) {
-          // Check if this is serialized data with _type field
-          if (firstContentItem.containsKey('_type') && firstContentItem.containsKey('data')) {
-            final type = firstContentItem['_type'] as String;
-            printINFO('Found serialized data type: $type');
-            
-            if (type == 'Playlist') {
-              printINFO('Converting serialized playlist data to Playlist objects');
-              final playlists = contentsList
-                  .whereType<Map>()
-                  .where((map) => map['_type'] == 'Playlist')
-                  .map((map) => Playlist.fromJson(Map<String, dynamic>.from(map['data'])))
-                  .toList();
-              
-              if (playlists.length >= 2) {
-                final tmp = PlaylistContent(playlistList: playlists, title: title);
-                contentTemp.add(tmp);
-              }
-            } else if (type == 'Album') {
-              printINFO('Converting serialized album data to Album objects');
-              final albums = contentsList
-                  .whereType<Map>()
-                  .where((map) => map['_type'] == 'Album')
-                  .map((map) => Album.fromJson(Map<String, dynamic>.from(map['data'])))
-                  .toList();
-              
-              if (albums.length >= 2) {
-                final tmp = AlbumContent(albumList: albums, title: title);
-                contentTemp.add(tmp);
-              }
-            } else if (type == 'MediaItem') {
-              printINFO('Converting serialized song data to MediaItem objects');
-              final songs = contentsList
-                  .whereType<Map>()
-                  .where((map) => map['_type'] == 'MediaItem')
-                  .map((map) => MediaItemBuilder.fromJson(Map<String, dynamic>.from(map['data'])))
-                  .toList();
-              
-              if (songs.length >= 2) {
-                final tmp = QuickPicks(songs, title: title);
-                contentTemp.add(tmp);
-              }
-            } else {
-              printINFO('Unknown serialized type: $type');
-            }
-          }
-          // Check for regular Map structure (non-serialized)
-          else if (_isPlaylistMap(firstContentItem)) {
-            printINFO('Converting playlist maps to Playlist objects');
-            final playlists = contentsList
-                .whereType<Map>()
-                .map((map) => Playlist.fromJson(Map<String, dynamic>.from(map)))
-                .toList();
-            
-            if (playlists.length >= 2) {
-              final tmp = PlaylistContent(playlistList: playlists, title: title);
-              contentTemp.add(tmp);
-            }
-          } else if (_isAlbumMap(firstContentItem)) {
-            printINFO('Converting album maps to Album objects');
-            final albums = contentsList
-                .whereType<Map>()
-                .map((map) => Album.fromJson(Map<String, dynamic>.from(map)))
-                .toList();
-            
-            if (albums.length >= 2) {
-              final tmp = AlbumContent(albumList: albums, title: title);
-              contentTemp.add(tmp);
-            }
-          } else if (_isMediaItemMap(firstContentItem)) {
-            printINFO('Converting song maps to MediaItem objects');
-            final songs = contentsList
-                .whereType<Map>()
-                .map((map) => MediaItemBuilder.fromJson(Map<String, dynamic>.from(map)))
-                .toList();
-            
-            if (songs.length >= 2) {
-              final tmp = QuickPicks(songs, title: title);
-              contentTemp.add(tmp);
-            }
-          } else {
-            printINFO('Unknown map structure in content: ${firstContentItem.keys}');
-          }
-        } else if (firstContentItem.runtimeType == Playlist) {
+        // Repository now returns proper Model objects, use original logic
+        if (firstContentItem.runtimeType == Playlist) {
+          printINFO('Processing Playlist content');
           final tmp = PlaylistContent(
               playlistList: (content["contents"]).whereType<Playlist>().toList(),
-              title: content["title"]);
+              title: title);
           if (tmp.playlistList.length >= 2) {
             contentTemp.add(tmp);
           }
         } else if (firstContentItem.runtimeType == Album) {
+          printINFO('Processing Album content');
           final tmp = AlbumContent(
               albumList: (content["contents"]).whereType<Album>().toList(),
-              title: content["title"]);
+              title: title);
           if (tmp.albumList.length >= 2) {
             contentTemp.add(tmp);
           }
         } else if (firstContentItem.runtimeType == MediaItem) {
+          printINFO('Processing MediaItem content');
           final songs = (content["contents"]).whereType<MediaItem>().toList();
           if (songs.length >= 2) {
-            final tmp = QuickPicks(songs, title: content["title"]);
+            final tmp = QuickPicks(songs, title: title);
             contentTemp.add(tmp);
           }
         } else {
@@ -379,18 +300,7 @@ class HomeScreenController extends GetxController
     return contentTemp;
   }
 
-  // Helper methods to detect Map object types
-  bool _isPlaylistMap(Map map) {
-    return map.containsKey('playlistId') && map.containsKey('title');
-  }
 
-  bool _isAlbumMap(Map map) {
-    return map.containsKey('browseId') && map.containsKey('title') && map.containsKey('artists');
-  }
-
-  bool _isMediaItemMap(Map map) {
-    return map.containsKey('videoId') && map.containsKey('title');
-  }
 
   Future<void> changeDiscoverContent(dynamic val, {String? songId}) async {
     QuickPicks? quickPicks_;

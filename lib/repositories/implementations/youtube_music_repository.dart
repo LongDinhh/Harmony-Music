@@ -133,15 +133,19 @@ class YouTubeMusicRepository implements MusicRepository {
       // Check cache first
       final cachedContent = await _cacheRepository.getCachedHomeScreenData();
       if (cachedContent != null) {
-        return cachedContent;
+        // Parse cached content into proper Models
+        return _parseHomeContentResponse(cachedContent);
       }
 
       final response = await _apiService.getHomeData(limit: limit);
       
-      // Cache home content
-      await _cacheRepository.cacheHomeScreenData(response);
+      // Parse response into proper Models before caching
+      final parsedResponse = _parseHomeContentResponse(response);
       
-      return response;
+      // Cache the parsed content
+      await _cacheRepository.cacheHomeScreenData(parsedResponse);
+      
+      return parsedResponse;
     } catch (error) {
       throw MusicException.networkError('Failed to get home content: ${error.toString()}');
     }
@@ -341,5 +345,131 @@ class YouTubeMusicRepository implements MusicRepository {
     } catch (error) {
       throw MusicException.parseError('Failed to parse artist response: ${error.toString()}');
     }
+  }
+
+  Map<String, dynamic> _parseHomeContentResponse(dynamic response) {
+    try {
+      // Handle both direct API response (List) and wrapped response (Map with 'contents')
+      List<dynamic> homeContentList = [];
+      
+      if (response is List) {
+        homeContentList = response;
+      } else if (response is Map && response.containsKey('contents')) {
+        homeContentList = response['contents'] as List? ?? [];
+      } else if (response is Map) {
+        // Try to find the list in the response
+        for (final value in response.values) {
+          if (value is List && value.isNotEmpty) {
+            homeContentList = value;
+            break;
+          }
+        }
+      }
+
+      print("Parsing ${homeContentList.length} home content sections");
+
+      final List<Map<String, dynamic>> parsedContents = [];
+
+      for (final section in homeContentList) {
+        if (section is! Map) continue;
+        
+        final sectionMap = Map<String, dynamic>.from(section);
+        final title = sectionMap['title'] as String? ?? 'Unknown Section';
+        final contents = sectionMap['contents'] as List? ?? [];
+        
+        if (contents.isEmpty) continue;
+
+        // Determine content type and parse accordingly
+        final firstItem = contents.first;
+        if (firstItem is! Map) continue;
+        
+        final firstItemMap = Map<String, dynamic>.from(firstItem);
+        
+        // Parse into proper Model objects
+        if (_isPlaylistData(firstItemMap)) {
+          final playlists = <Playlist>[];
+          for (final item in contents) {
+            if (item is Map) {
+              try {
+                final playlist = Playlist.fromJson(Map<String, dynamic>.from(item));
+                playlists.add(playlist);
+              } catch (e) {
+                print("Failed to parse playlist: $e");
+                continue;
+              }
+            }
+          }
+          if (playlists.length >= 2) {
+            parsedContents.add({
+              'title': title,
+              'contents': playlists,
+            });
+          }
+        } else if (_isAlbumData(firstItemMap)) {
+          final albums = <Album>[];
+          for (final item in contents) {
+            if (item is Map) {
+              try {
+                final album = Album.fromJson(Map<String, dynamic>.from(item));
+                albums.add(album);
+              } catch (e) {
+                print("Failed to parse album: $e");
+                continue;
+              }
+            }
+          }
+          if (albums.length >= 2) {
+            parsedContents.add({
+              'title': title,
+              'contents': albums,
+            });
+          }
+        } else if (_isSongData(firstItemMap)) {
+          final songs = <MediaItem>[];
+          for (final item in contents) {
+            if (item is Map) {
+              try {
+                final song = MediaItemBuilder.fromJson(Map<String, dynamic>.from(item));
+                songs.add(song);
+              } catch (e) {
+                print("Failed to parse song: $e");
+                continue;
+              }
+            }
+          }
+          if (songs.length >= 2) {
+            parsedContents.add({
+              'title': title,
+              'contents': songs,
+            });
+          }
+        } else {
+          print("Unknown content type in section: $title, keys: ${firstItemMap.keys}");
+        }
+      }
+
+      print("Successfully parsed ${parsedContents.length} content sections");
+      
+      return {
+        'contents': parsedContents,
+      };
+    } catch (error) {
+      throw MusicException.parseError('Failed to parse home content response: ${error.toString()}');
+    }
+  }
+
+  // Helper methods to identify content types
+  bool _isPlaylistData(Map<String, dynamic> data) {
+    return data.containsKey('playlistId') && data.containsKey('title');
+  }
+
+  bool _isAlbumData(Map<String, dynamic> data) {
+    return data.containsKey('browseId') && 
+           data.containsKey('title') && 
+           data.containsKey('artists');
+  }
+
+  bool _isSongData(Map<String, dynamic> data) {
+    return data.containsKey('videoId') && data.containsKey('title');
   }
 }
