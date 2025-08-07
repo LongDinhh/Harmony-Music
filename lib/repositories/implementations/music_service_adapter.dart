@@ -8,6 +8,7 @@ import '../exceptions/repository_exception.dart';
 import '../../models/album.dart';
 import '../../models/artist.dart';
 import '../../models/playlist.dart';
+import '../../models/quick_picks.dart';
 import '../../models/media_item_builder.dart';
 import '../../services/music_service.dart';
 
@@ -363,7 +364,46 @@ class MusicServiceAdapter implements MusicRepository {
       return result;
     } else if (data is MediaItem) {
       // Convert MediaItem to JSON
-      return MediaItemBuilder.toJson(data);
+      return {
+        '_type': 'MediaItem',
+        'data': MediaItemBuilder.toJson(data),
+      };
+    } else if (data is Playlist) {
+      // Convert Playlist to JSON
+      return {
+        '_type': 'Playlist',
+        'data': data.toJson(),
+      };
+    } else if (data is Album) {
+      // Convert Album to JSON
+      return {
+        '_type': 'Album',
+        'data': data.toJson(),
+      };
+    } else if (data is AlbumContent) {
+      // Convert AlbumContent to JSON
+      return {
+        '_type': 'AlbumContent',
+        'data': data.toJson(),
+      };
+    } else if (data is PlaylistContent) {
+      // Convert PlaylistContent to JSON
+      return {
+        '_type': 'PlaylistContent',
+        'data': data.toJson(),
+      };
+    } else if (data is Artist) {
+      // Convert Artist to JSON
+      return {
+        '_type': 'Artist',
+        'data': data.toJson(),
+      };
+    } else if (data is QuickPicks) {
+      // Convert QuickPicks to JSON
+      return {
+        '_type': 'QuickPicks',
+        'data': data.toJson(),
+      };
     } else {
       // Return primitive types as-is
       return data;
@@ -375,17 +415,34 @@ class MusicServiceAdapter implements MusicRepository {
     if (data is List) {
       return data.map((item) => _convertFromSerializableFormat(item)).toList();
     } else if (data is Map<String, dynamic>) {
-      // Check if this looks like a MediaItem JSON
-      if (data.containsKey('videoId') && data.containsKey('title')) {
+      // Check if this is a typed object
+      if (data.containsKey('_type') && data.containsKey('data')) {
         try {
-          return MediaItemBuilder.fromJson(data);
-        } catch (e) {
-          // If conversion fails, return as Map
-          final result = <String, dynamic>{};
-          for (final entry in data.entries) {
-            result[entry.key] = _convertFromSerializableFormat(entry.value);
+          final type = data['_type'] as String;
+          final objectData = data['data'] as Map<String, dynamic>;
+          
+          switch (type) {
+            case 'MediaItem':
+              return MediaItemBuilder.fromJson(objectData);
+            case 'Playlist':
+              return Playlist.fromJson(objectData);
+            case 'Album':
+              return Album.fromJson(objectData);
+            case 'AlbumContent':
+              return AlbumContent.fromJson(objectData);
+            case 'PlaylistContent':
+              return PlaylistContent.fromJson(objectData);
+            case 'Artist':
+              return Artist.fromJson(objectData);
+            case 'QuickPicks':
+              return QuickPicks.fromJson(objectData);
+            default:
+              // Unknown type, return the data as-is
+              return _convertFromSerializableFormat(objectData);
           }
-          return result;
+        } catch (e) {
+          // If conversion fails, try to convert the data recursively
+          return _convertFromSerializableFormat(data['data']);
         }
       } else {
         // Regular Map, convert recursively
