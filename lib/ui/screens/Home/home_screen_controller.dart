@@ -47,7 +47,7 @@ class HomeScreenController extends GetxController
     try {
       _musicRepository = Get.find<MusicRepository>();
     } catch (e) {
-      printWarning('MusicRepository not available, using direct service calls');
+      print('Warning: MusicRepository not available, using direct service calls');
     }
     
     loadContent();
