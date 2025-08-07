@@ -131,24 +131,27 @@ class YouTubeMusicRepository implements MusicRepository {
     try {
       print("===============getHomeContent new (forceRefresh: $forceRefresh)");
       
-      // Skip cache if forceRefresh is true
-      if (!forceRefresh) {
-        final cachedContent = await _cacheRepository.getCachedHomeScreenData();
-        if (cachedContent != null) {
-          print("Loading home content from cache");
-          // Parse cached content into proper Models
-          return _parseHomeContentResponse(cachedContent);
-        }
-      }
+             // Skip cache if forceRefresh is true
+       if (!forceRefresh) {
+         final cachedContent = await _cacheRepository.getCachedHomeScreenData();
+         if (cachedContent != null) {
+           print("Loading home content from cache");
+           // Convert cached serializable format back to Models
+           return _convertSerializableFormatToModels(cachedContent);
+         }
+       }
 
       print("Loading home content from network");
       final response = await _apiService.getHomeData(limit: limit);
       
-      // Parse response into proper Models before caching
+      // Parse response into proper Models
       final parsedResponse = _parseHomeContentResponse(response);
       
-      // Cache the parsed content
-      await _cacheRepository.cacheHomeScreenData(parsedResponse);
+      // Convert Models to serializable format for caching
+      final serializableResponse = _convertModelsToSerializableFormat(parsedResponse);
+      
+      // Cache the serializable content
+      await _cacheRepository.cacheHomeScreenData(serializableResponse);
       
       return parsedResponse;
     } catch (error) {
@@ -546,5 +549,100 @@ class YouTubeMusicRepository implements MusicRepository {
 
   bool _isSongData(Map<String, dynamic> data) {
     return data.containsKey('videoId') && data.containsKey('title');
+  }
+
+  // Convert Model objects to serializable format for caching
+  Map<String, dynamic> _convertModelsToSerializableFormat(Map<String, dynamic> parsedResponse) {
+    try {
+      final contents = parsedResponse['contents'] as List;
+      final serializableContents = <Map<String, dynamic>>[];
+
+      for (final section in contents) {
+        if (section is Map<String, dynamic>) {
+          final title = section['title'] as String;
+          final sectionContents = section['contents'] as List;
+          final serializableSectionContents = <Map<String, dynamic>>[];
+
+          for (final item in sectionContents) {
+            if (item is MediaItem) {
+              serializableSectionContents.add({
+                '_type': 'MediaItem',
+                'data': MediaItemBuilder.toJson(item),
+              });
+            } else if (item is Playlist) {
+              serializableSectionContents.add({
+                '_type': 'Playlist', 
+                'data': item.toJson(),
+              });
+            } else if (item is Album) {
+              serializableSectionContents.add({
+                '_type': 'Album',
+                'data': item.toJson(),
+              });
+            }
+          }
+
+          serializableContents.add({
+            'title': title,
+            'contents': serializableSectionContents,
+          });
+        }
+      }
+
+      return {
+        'contents': serializableContents,
+      };
+    } catch (error) {
+      print("Error converting models to serializable format: $error");
+      return parsedResponse; // Return original if conversion fails
+    }
+  }
+
+  // Convert serializable format back to Model objects
+  Map<String, dynamic> _convertSerializableFormatToModels(Map<String, dynamic> serializableResponse) {
+    try {
+      final contents = serializableResponse['contents'] as List;
+      final modelContents = <Map<String, dynamic>>[];
+
+      for (final section in contents) {
+        if (section is Map<String, dynamic>) {
+          final title = section['title'] as String;
+          final sectionContents = section['contents'] as List;
+          final modelSectionContents = <dynamic>[];
+
+          for (final item in sectionContents) {
+            if (item is Map<String, dynamic> && item.containsKey('_type') && item.containsKey('data')) {
+              final type = item['_type'] as String;
+              final data = item['data'] as Map<String, dynamic>;
+
+              switch (type) {
+                case 'MediaItem':
+                  modelSectionContents.add(MediaItemBuilder.fromJson(data));
+                  break;
+                case 'Playlist':
+                  modelSectionContents.add(Playlist.fromJson(data));
+                  break;
+                case 'Album':
+                  modelSectionContents.add(Album.fromJson(data));
+                  break;
+              }
+            }
+          }
+
+          modelContents.add({
+            'title': title,
+            'contents': modelSectionContents,
+          });
+        }
+      }
+
+      return {
+        'contents': modelContents,
+      };
+    } catch (error) {
+      print("Error converting serializable format to models: $error");
+      // If conversion fails, try to parse as if it's raw format
+      return _parseHomeContentResponse(serializableResponse);
+    }
   }
 }
