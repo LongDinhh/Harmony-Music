@@ -122,6 +122,7 @@ class MusicServiceAdapter implements MusicRepository {
     try {
       // Check cache first
       final cachedContent = await _cacheRepository.getCachedHomeScreenData();
+      print("===============getHomeContent cachedContent: $cachedContent");
       if (cachedContent != null) {
         // Convert cached serializable data back to MediaItems
         final deserializedContents = _convertFromSerializableFormat(cachedContent['contents']);
