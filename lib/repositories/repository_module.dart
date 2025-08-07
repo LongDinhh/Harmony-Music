@@ -7,14 +7,13 @@ import 'interfaces/cache_repository.dart';
 import 'interfaces/user_repository.dart';
 
 // Implementations
-import 'implementations/youtube_music_repository.dart';
+import 'implementations/ytmusic_repository.dart';
 import 'implementations/hive_library_repository.dart';
 import 'implementations/hive_cache_repository.dart';
 import 'implementations/hive_user_repository.dart';
 
 // Services
-import '../services/music_service.dart';
-import '../services/api_service.dart';
+import '../services/ytmusic_api_service.dart';
 
 /// Repository module for dependency injection setup
 class RepositoryModule {
@@ -40,20 +39,33 @@ class RepositoryModule {
       fenix: true,
     );
     
-    // 4. Register APIService first (extracted from MusicServices)
-    Get.lazyPut<APIService>(
-      () => Get.find<MusicServices>().apiService,
+    // 4. Register YTMusicAPIService and initialize it
+    Get.lazyPut<YTMusicAPIService>(
+      () {
+        final service = YTMusicAPIService();
+        // Note: We'll initialize this async in the init method
+        return service;
+      },
       fenix: true,
     );
 
-    // 5. Register music repository (uses YouTubeMusicRepository)
+    // 5. Register music repository (uses YTMusicRepository with dart_ytmusic_api)
     Get.lazyPut<MusicRepository>(
-      () => YouTubeMusicRepository(
-        Get.find<APIService>(),
+      () => YTMusicRepository(
+        Get.find<YTMusicAPIService>(),
         Get.find<CacheRepository>(),
       ),
       fenix: true,
     );
+    
+    // 6. Initialize YTMusicAPIService async
+    try {
+      final ytMusicService = Get.find<YTMusicAPIService>();
+      await ytMusicService.initialize();
+    } catch (error) {
+      print('Warning: Failed to initialize YTMusicAPIService: $error');
+      // Continue without throwing - app can still work with fallback
+    }
   }
   
   /// Clean up all repositories
@@ -69,6 +81,11 @@ class RepositoryModule {
     }
     if (Get.isRegistered<UserRepository>()) {
       Get.delete<UserRepository>();
+    }
+    if (Get.isRegistered<YTMusicAPIService>()) {
+      final service = Get.find<YTMusicAPIService>();
+      service.dispose();
+      Get.delete<YTMusicAPIService>();
     }
   }
   
