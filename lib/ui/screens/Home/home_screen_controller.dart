@@ -14,15 +14,15 @@ import '/models/album.dart';
 import '/models/playlist.dart';
 import '/models/quick_picks.dart';
 import '/services/music_service.dart';
-// import '/repositories/interfaces/music_repository.dart';
-// import '/repositories/exceptions/repository_exception.dart';
+import '/repositories/interfaces/music_repository.dart';
+import '/repositories/exceptions/repository_exception.dart';
 import '../Settings/settings_screen_controller.dart';
 import '/ui/widgets/new_version_dialog.dart';
 
 class HomeScreenController extends GetxController
     with ScrollControllerManagerMixin {
   final MusicServices _musicServices = Get.find<MusicServices>();
-  // MusicRepository? _musicRepository;
+  MusicRepository? _musicRepository;
   final isContentFetched = false.obs;
   final tabIndex = 0.obs;
   final networkError = false.obs;
@@ -43,12 +43,13 @@ class HomeScreenController extends GetxController
     // Initialize current route
     currentRoute.value = getCurrentRouteName() ?? '/homeScreen';
     
-    // TODO: Repository integration will be added in a future update
-    // try {
-    //   _musicRepository = Get.find<MusicRepository>();
-    // } catch (e) {
-    //   print('Warning: MusicRepository not available, using direct service calls');
-    // }
+    // Try to get repository, fallback to direct service calls if not available
+    try {
+      _musicRepository = Get.find<MusicRepository>();
+      printINFO('MusicRepository initialized successfully');
+    } catch (e) {
+      printERROR('MusicRepository not available, using direct service calls: $e');
+    }
     
     loadContent();
     if (updateCheckFlag) _checkNewVersion();
@@ -135,14 +136,20 @@ class HomeScreenController extends GetxController
       final limitContent =
           Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
       
-      // TODO: Use repository when available
-      final homeContentListMap = await _musicServices.getHome(limit: limitContent);
+      // Use YouTubeMusicRepository if available, fallback to direct service call
+      final homeContentListMap = _musicRepository != null
+          ? await _musicRepository!.getHomeContent(limit: limitContent)
+          : await _musicServices.getHome(limit: limitContent);
+      
+      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'}');
 
       try {
         final songId = box.get("recentSongId");
         if (songId != null) {
-          // TODO: Use repository when available
-          final rel = await _musicServices.getContentRelatedToSong(songId, getContentHlCode());
+          // Use YouTubeMusicRepository if available, fallback to direct service call
+          final rel = _musicRepository != null
+              ? await _musicRepository!.getRelatedContent(songId, getContentHlCode())
+              : await _musicServices.getContentRelatedToSong(songId, getContentHlCode());
           final con = rel.removeAt(0);
           quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]));
           middleContentTemp.addAll(rel);
