@@ -25,7 +25,7 @@ abstract class MusicRepository {
   Future<Artist> getArtist(String artistId);
 
   /// Get home screen content (quick picks, playlists, albums)
-  Future<Map<String, dynamic>> getHomeContent({int limit = 4});
+  Future<Map<String, dynamic>> getHomeContent({int limit = 4, bool forceRefresh = false});
 
   /// Get watch playlist for a specific video
   Future<Map<String, dynamic>> getWatchPlaylist({
@@ -57,7 +57,7 @@ abstract class MusicRepository {
   Future<List> getSongDetails(String songId);
 
   /// Get content related to a song
-  Future<dynamic> getRelatedContent(String videoId, String hlCode);
+  Future<dynamic> getRelatedContent(String videoId, String hlCode, {bool forceRefresh = false});
 
   /// Get lyrics for a song
   Future<dynamic> getLyrics(String browseId);

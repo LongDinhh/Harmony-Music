@@ -124,7 +124,7 @@ class HomeScreenController extends GetxController
     }
   }
 
-  Future<void> loadContentFromNetwork({bool silent = false}) async {
+  Future<void> loadContentFromNetwork({bool silent = false, bool forceRefresh = false}) async {
     final box = Hive.box("AppPrefs");
 
     // Clean up idle scroll controllers when loading new content
@@ -138,7 +138,7 @@ class HomeScreenController extends GetxController
       
       // Use YouTubeMusicRepository if available, fallback to direct service call
       final homeContentResponse = _musicRepository != null
-          ? await _musicRepository!.getHomeContent(limit: limitContent)
+          ? await _musicRepository!.getHomeContent(limit: limitContent, forceRefresh: forceRefresh)
           : await _musicServices.getHome(limit: limitContent);
       
       // Extract the actual content list from repository response or use direct response
@@ -146,7 +146,7 @@ class HomeScreenController extends GetxController
           ? homeContentResponse['contents'] as List
           : homeContentResponse as List;
       
-      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'} count: ${homeContentListMap.length}');
+      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'} (forceRefresh: $forceRefresh) count: ${homeContentListMap.length}');
       
       // Debug: Check data structure
       if (homeContentListMap.isNotEmpty) {
@@ -166,7 +166,7 @@ class HomeScreenController extends GetxController
         if (songId != null) {
           // Use YouTubeMusicRepository if available, fallback to direct service call
           final rel = _musicRepository != null
-              ? await _musicRepository!.getRelatedContent(songId, getContentHlCode())
+              ? await _musicRepository!.getRelatedContent(songId, getContentHlCode(), forceRefresh: forceRefresh)
               : await _musicServices.getContentRelatedToSong(songId, getContentHlCode());
           final con = rel.removeAt(0);
           quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]));
@@ -206,7 +206,7 @@ class HomeScreenController extends GetxController
       isRefreshing.value = true;
 
       // Force load data từ network, bỏ qua cache
-      await loadContentFromNetwork(silent: false);
+      await loadContentFromNetwork(silent: false, forceRefresh: true);
     } catch (e) {
       printERROR("Error refreshing home screen data: $e");
     } finally {

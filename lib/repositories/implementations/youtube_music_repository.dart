@@ -127,16 +127,21 @@ class YouTubeMusicRepository implements MusicRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> getHomeContent({int limit = 4}) async {
+  Future<Map<String, dynamic>> getHomeContent({int limit = 4, bool forceRefresh = false}) async {
     try {
-      print("===============getHomeContent new");
-      // Check cache first
-      final cachedContent = await _cacheRepository.getCachedHomeScreenData();
-      if (cachedContent != null) {
-        // Parse cached content into proper Models
-        return _parseHomeContentResponse(cachedContent);
+      print("===============getHomeContent new (forceRefresh: $forceRefresh)");
+      
+      // Skip cache if forceRefresh is true
+      if (!forceRefresh) {
+        final cachedContent = await _cacheRepository.getCachedHomeScreenData();
+        if (cachedContent != null) {
+          print("Loading home content from cache");
+          // Parse cached content into proper Models
+          return _parseHomeContentResponse(cachedContent);
+        }
       }
 
+      print("Loading home content from network");
       final response = await _apiService.getHomeData(limit: limit);
       
       // Parse response into proper Models before caching
@@ -241,8 +246,10 @@ class YouTubeMusicRepository implements MusicRepository {
   }
 
   @override
-  Future<dynamic> getRelatedContent(String videoId, String hlCode) async {
+  Future<dynamic> getRelatedContent(String videoId, String hlCode, {bool forceRefresh = false}) async {
     try {
+      // Note: Related content is usually dynamic and short-lived, so we don't cache it extensively
+      // But if needed, forceRefresh parameter is available for future cache implementation
       return await _apiService.getContentRelatedToSong(videoId, hlCode);
     } catch (error) {
       throw MusicException.networkError('Failed to get related content: ${error.toString()}');
