@@ -129,6 +129,7 @@ class YouTubeMusicRepository implements MusicRepository {
   @override
   Future<Map<String, dynamic>> getHomeContent({int limit = 4}) async {
     try {
+      print("===============getHomeContent new");
       // Check cache first
       final cachedContent = await _cacheRepository.getCachedHomeScreenData();
       if (cachedContent != null) {
