@@ -11,10 +11,10 @@ import 'implementations/youtube_music_repository.dart';
 import 'implementations/hive_library_repository.dart';
 import 'implementations/hive_cache_repository.dart';
 import 'implementations/hive_user_repository.dart';
-import 'implementations/music_service_adapter.dart';
 
 // Services
 import '../services/music_service.dart';
+import '../services/api_service.dart';
 
 /// Repository module for dependency injection setup
 class RepositoryModule {
@@ -40,10 +40,16 @@ class RepositoryModule {
       fenix: true,
     );
     
-    // 4. Register music repository (uses adapter to wrap existing MusicServices)
+    // 4. Register APIService first (extracted from MusicServices)
+    Get.lazyPut<APIService>(
+      () => Get.find<MusicServices>().apiService,
+      fenix: true,
+    );
+
+    // 5. Register music repository (uses YouTubeMusicRepository)
     Get.lazyPut<MusicRepository>(
-      () => MusicServiceAdapter(
-        Get.find<MusicServices>(),
+      () => YouTubeMusicRepository(
+        Get.find<APIService>(),
         Get.find<CacheRepository>(),
       ),
       fenix: true,
