@@ -18,6 +18,7 @@ import '/services/youtube_cookie_manager.dart';
 import '/services/music_service.dart';
 import '/services/downloader.dart';
 import '/services/piped_service.dart';
+import '/repositories/repository_module.dart';
 import '/utils/helper.dart';
 import '/utils/error_handler.dart';
 
@@ -113,6 +114,15 @@ Future<void> _initializeAppParallel() async {
     Get.lazyPut<Downloader>(() => Downloader(), fenix: true);
     Get.lazyPut<PipedServices>(() => PipedServices(), fenix: true);
     AppErrorHandler.logInfo('Essential services initialized', context: 'Init');
+
+    // Initialize repositories
+    try {
+      await RepositoryModule.init();
+      AppErrorHandler.logInfo('Repositories initialized', context: 'Init');
+    } catch (e) {
+      AppErrorHandler.handleError(e, null, context: 'Repository Init');
+      // Continue without repositories - controllers will fall back to direct service calls
+    }
 
     // Initialize audio service with timeout
     try {

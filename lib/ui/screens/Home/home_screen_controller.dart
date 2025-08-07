@@ -14,12 +14,15 @@ import '/models/album.dart';
 import '/models/playlist.dart';
 import '/models/quick_picks.dart';
 import '/services/music_service.dart';
+import '/repositories/interfaces/music_repository.dart';
+import '/repositories/exceptions/repository_exception.dart';
 import '../Settings/settings_screen_controller.dart';
 import '/ui/widgets/new_version_dialog.dart';
 
 class HomeScreenController extends GetxController
     with ScrollControllerManagerMixin {
   final MusicServices _musicServices = Get.find<MusicServices>();
+  MusicRepository? _musicRepository;
   final isContentFetched = false.obs;
   final tabIndex = 0.obs;
   final networkError = false.obs;
@@ -39,6 +42,14 @@ class HomeScreenController extends GetxController
     super.onInit();
     // Initialize current route
     currentRoute.value = getCurrentRouteName() ?? '/homeScreen';
+    
+    // Try to get repository, fallback to direct service calls if not available
+    try {
+      _musicRepository = Get.find<MusicRepository>();
+    } catch (e) {
+      printWARNING('MusicRepository not available, using direct service calls');
+    }
+    
     loadContent();
     if (updateCheckFlag) _checkNewVersion();
   }
@@ -123,14 +134,19 @@ class HomeScreenController extends GetxController
       List middleContentTemp = [];
       final limitContent =
           Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
-      final homeContentListMap =
-          await _musicServices.getHome(limit: limitContent);
+      
+      // Use repository if available, fallback to direct service call
+      final homeContentListMap = _musicRepository != null
+          ? await _musicRepository!.getHomeContent(limit: limitContent)
+          : await _musicServices.getHome(limit: limitContent);
 
       try {
         final songId = box.get("recentSongId");
         if (songId != null) {
-          final rel = (await _musicServices.getContentRelatedToSong(
-              songId, getContentHlCode()));
+          // Use repository if available, fallback to direct service call
+          final rel = _musicRepository != null
+              ? await _musicRepository!.getRelatedContent(songId, getContentHlCode())
+              : await _musicServices.getContentRelatedToSong(songId, getContentHlCode());
           final con = rel.removeAt(0);
           quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]));
           middleContentTemp.addAll(rel);

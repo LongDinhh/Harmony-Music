@@ -4,10 +4,13 @@ import 'package:hive/hive.dart';
 
 import '/utils/app_link_controller.dart' show ProcessLink;
 import '/services/music_service.dart';
+import '/repositories/interfaces/music_repository.dart';
+import '/utils/helper.dart';
 
 class SearchScreenController extends GetxController with ProcessLink {
   final textInputController = TextEditingController();
   final musicServices = Get.find<MusicServices>();
+  MusicRepository? _musicRepository;
   final suggestionList = [].obs;
   final historyQuerylist = [].obs;
   late Box<dynamic> queryBox;
@@ -29,6 +32,14 @@ class SearchScreenController extends GetxController with ProcessLink {
         isSearchBarInFocus.value = focusNode.hasFocus;
       });
     }
+    
+    // Try to get repository, fallback to direct service calls if not available
+    try {
+      _musicRepository = Get.find<MusicRepository>();
+    } catch (e) {
+      printWARNING('MusicRepository not available, using direct service calls');
+    }
+    
     queryBox = await Hive.openBox("searchQuery");
     historyQuerylist.value = queryBox.values.toList().reversed.toList();
   }
@@ -46,7 +57,10 @@ class SearchScreenController extends GetxController with ProcessLink {
       return;
     }
 
-    suggestionList.value = await musicServices.getSearchSuggestion(text);
+    // Use repository if available, fallback to direct service call
+    suggestionList.value = _musicRepository != null
+        ? await _musicRepository!.getSearchSuggestions(text)
+        : await musicServices.getSearchSuggestion(text);
   }
 
   Future<void> suggestionInput(String txt) async {
