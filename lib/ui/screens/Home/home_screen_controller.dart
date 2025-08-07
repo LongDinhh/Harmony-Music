@@ -271,7 +271,7 @@ class HomeScreenController extends GetxController
           final tmp = PlaylistContent(
               playlistList: (content["contents"]).whereType<Playlist>().toList(),
               title: title);
-          if (tmp.playlistList.length >= 2) {
+          if (tmp.playlistList.length >= 1) {
             contentTemp.add(tmp);
           }
         } else if (firstContentItem.runtimeType == Album) {
@@ -279,13 +279,13 @@ class HomeScreenController extends GetxController
           final tmp = AlbumContent(
               albumList: (content["contents"]).whereType<Album>().toList(),
               title: title);
-          if (tmp.albumList.length >= 2) {
+          if (tmp.albumList.length >= 1) {
             contentTemp.add(tmp);
           }
         } else if (firstContentItem.runtimeType == MediaItem) {
           printINFO('Processing MediaItem content');
           final songs = (content["contents"]).whereType<MediaItem>().toList();
-          if (songs.length >= 2) {
+          if (songs.length >= 1) {
             final tmp = QuickPicks(songs, title: title);
             contentTemp.add(tmp);
           }

@@ -374,23 +374,55 @@ class YouTubeMusicRepository implements MusicRepository {
       }
 
       print("Parsing ${homeContentList.length} home content sections");
+      
+      // Debug: Print raw response structure
+      if (homeContentList.isNotEmpty) {
+        final firstSection = homeContentList[0];
+        print("First section type: ${firstSection.runtimeType}");
+        if (firstSection is Map) {
+          print("First section keys: ${firstSection.keys}");
+          if (firstSection['contents'] is List) {
+            final contents = firstSection['contents'] as List;
+            print("First section contents count: ${contents.length}");
+            if (contents.isNotEmpty) {
+              final firstContent = contents[0];
+              print("First content type: ${firstContent.runtimeType}");
+              if (firstContent is Map) {
+                print("First content keys: ${firstContent.keys}");
+              }
+            }
+          }
+        }
+      }
 
       final List<Map<String, dynamic>> parsedContents = [];
 
       for (final section in homeContentList) {
-        if (section is! Map) continue;
+        if (section is! Map) {
+          print("Skipping non-Map section: ${section.runtimeType}");
+          continue;
+        }
         
         final sectionMap = Map<String, dynamic>.from(section);
         final title = sectionMap['title'] as String? ?? 'Unknown Section';
         final contents = sectionMap['contents'] as List? ?? [];
         
-        if (contents.isEmpty) continue;
+        print("Processing section: $title with ${contents.length} items");
+        
+        if (contents.isEmpty) {
+          print("Skipping empty section: $title");
+          continue;
+        }
 
         // Determine content type and parse accordingly
         final firstItem = contents.first;
-        if (firstItem is! Map) continue;
+        if (firstItem is! Map) {
+          print("Skipping section $title - first item is not Map: ${firstItem.runtimeType}");
+          continue;
+        }
         
         final firstItemMap = Map<String, dynamic>.from(firstItem);
+        print("First item in $title has keys: ${firstItemMap.keys}");
         
         // Parse into proper Model objects
         if (_isPlaylistData(firstItemMap)) {
@@ -406,7 +438,8 @@ class YouTubeMusicRepository implements MusicRepository {
               }
             }
           }
-          if (playlists.length >= 2) {
+          print("Parsed ${playlists.length} playlists for section: $title");
+          if (playlists.length >= 1) {
             parsedContents.add({
               'title': title,
               'contents': playlists,
@@ -425,7 +458,8 @@ class YouTubeMusicRepository implements MusicRepository {
               }
             }
           }
-          if (albums.length >= 2) {
+          print("Parsed ${albums.length} albums for section: $title");
+          if (albums.length >= 1) {
             parsedContents.add({
               'title': title,
               'contents': albums,
@@ -444,7 +478,8 @@ class YouTubeMusicRepository implements MusicRepository {
               }
             }
           }
-          if (songs.length >= 2) {
+          print("Parsed ${songs.length} songs for section: $title");
+          if (songs.length >= 1) {
             parsedContents.add({
               'title': title,
               'contents': songs,
