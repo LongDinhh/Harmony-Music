@@ -257,39 +257,94 @@ class HomeScreenController extends GetxController
     for (var content in contents) {
       printINFO('Content item: ${content.runtimeType}, keys: ${content is Map ? content.keys : 'not a map'}');
       
-      if (content is Map && content["contents"] != null && (content["contents"] as List).isNotEmpty) {
+            if (content is Map && content["contents"] != null && (content["contents"] as List).isNotEmpty) {
         final firstContentItem = (content["contents"] as List)[0];
         printINFO('First content item type: ${firstContentItem.runtimeType}');
         
-        if (firstContentItem.runtimeType == Playlist) {
-        final tmp = PlaylistContent(
-            playlistList: (content["contents"]).whereType<Playlist>().toList(),
-            title: content["title"]);
-        if (tmp.playlistList.length >= 2) {
-          contentTemp.add(tmp);
+        // Convert Map data to proper objects
+        final contentsList = (content["contents"] as List);
+        final title = content["title"] as String;
+        
+        if (firstContentItem is Map) {
+          // Determine content type by checking Map structure
+          if (_isPlaylistMap(firstContentItem)) {
+            printINFO('Converting playlist maps to Playlist objects');
+            final playlists = contentsList
+                .whereType<Map>()
+                .map((map) => Playlist.fromJson(Map<String, dynamic>.from(map)))
+                .toList();
+            
+            if (playlists.length >= 2) {
+              final tmp = PlaylistContent(playlistList: playlists, title: title);
+              contentTemp.add(tmp);
+            }
+          } else if (_isAlbumMap(firstContentItem)) {
+            printINFO('Converting album maps to Album objects');
+            final albums = contentsList
+                .whereType<Map>()
+                .map((map) => Album.fromJson(Map<String, dynamic>.from(map)))
+                .toList();
+            
+            if (albums.length >= 2) {
+              final tmp = AlbumContent(albumList: albums, title: title);
+              contentTemp.add(tmp);
+            }
+          } else if (_isMediaItemMap(firstContentItem)) {
+            printINFO('Converting song maps to MediaItem objects');
+            final songs = contentsList
+                .whereType<Map>()
+                .map((map) => MediaItemBuilder.fromJson(Map<String, dynamic>.from(map)))
+                .toList();
+            
+            if (songs.length >= 2) {
+              final tmp = QuickPicks(songs, title: title);
+              contentTemp.add(tmp);
+            }
+          } else {
+            printINFO('Unknown map structure in content: ${firstContentItem.keys}');
+          }
+        } else if (firstContentItem.runtimeType == Playlist) {
+          final tmp = PlaylistContent(
+              playlistList: (content["contents"]).whereType<Playlist>().toList(),
+              title: content["title"]);
+          if (tmp.playlistList.length >= 2) {
+            contentTemp.add(tmp);
+          }
+        } else if (firstContentItem.runtimeType == Album) {
+          final tmp = AlbumContent(
+              albumList: (content["contents"]).whereType<Album>().toList(),
+              title: content["title"]);
+          if (tmp.albumList.length >= 2) {
+            contentTemp.add(tmp);
+          }
+        } else if (firstContentItem.runtimeType == MediaItem) {
+          final songs = (content["contents"]).whereType<MediaItem>().toList();
+          if (songs.length >= 2) {
+            final tmp = QuickPicks(songs, title: content["title"]);
+            contentTemp.add(tmp);
+          }
+        } else {
+          printINFO('Unknown content type: ${firstContentItem.runtimeType}');
         }
-      } else if (firstContentItem.runtimeType == Album) {
-        final tmp = AlbumContent(
-            albumList: (content["contents"]).whereType<Album>().toList(),
-            title: content["title"]);
-        if (tmp.albumList.length >= 2) {
-          contentTemp.add(tmp);
-        }
-      } else if (firstContentItem.runtimeType == MediaItem) {
-        final songs = (content["contents"]).whereType<MediaItem>().toList();
-        if (songs.length >= 2) {
-          final tmp = QuickPicks(songs, title: content["title"]);
-          contentTemp.add(tmp);
-        }
-      } else {
-        printINFO('Unknown content type: ${firstContentItem.runtimeType}');
-      }
       } else {
         printINFO('Content structure invalid - no contents array or empty');
       }
     }
     printINFO('_setContentList: Generated ${contentTemp.length} content items');
     return contentTemp;
+  }
+
+  // Helper methods to detect Map object types
+  bool _isPlaylistMap(Map map) {
+    return map.containsKey('playlistId') && map.containsKey('title');
+  }
+
+  bool _isAlbumMap(Map map) {
+    return map.containsKey('browseId') && map.containsKey('title') && map.containsKey('artists');
+  }
+
+  bool _isMediaItemMap(Map map) {
+    return map.containsKey('videoId') && map.containsKey('title');
   }
 
   Future<void> changeDiscoverContent(dynamic val, {String? songId}) async {
