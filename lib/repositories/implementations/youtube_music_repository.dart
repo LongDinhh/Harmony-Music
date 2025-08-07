@@ -414,79 +414,112 @@ class YouTubeMusicRepository implements MusicRepository {
           continue;
         }
 
-        // Determine content type and parse accordingly
+        // Determine content type and handle both Maps and Model objects
         final firstItem = contents.first;
-        if (firstItem is! Map) {
-          print("Skipping section $title - first item is not Map: ${firstItem.runtimeType}");
-          continue;
-        }
+        print("First item type in $title: ${firstItem.runtimeType}");
         
-        final firstItemMap = Map<String, dynamic>.from(firstItem);
-        print("First item in $title has keys: ${firstItemMap.keys}");
-        
-        // Parse into proper Model objects
-        if (_isPlaylistData(firstItemMap)) {
-          final playlists = <Playlist>[];
-          for (final item in contents) {
-            if (item is Map) {
-              try {
-                final playlist = Playlist.fromJson(Map<String, dynamic>.from(item));
-                playlists.add(playlist);
-              } catch (e) {
-                print("Failed to parse playlist: $e");
-                continue;
-              }
-            }
-          }
-          print("Parsed ${playlists.length} playlists for section: $title");
+        // Handle already parsed Model objects
+        if (firstItem is Playlist) {
+          print("Section $title contains Playlist objects");
+          final playlists = contents.whereType<Playlist>().toList();
+          print("Found ${playlists.length} playlists for section: $title");
           if (playlists.length >= 1) {
             parsedContents.add({
               'title': title,
               'contents': playlists,
             });
           }
-        } else if (_isAlbumData(firstItemMap)) {
-          final albums = <Album>[];
-          for (final item in contents) {
-            if (item is Map) {
-              try {
-                final album = Album.fromJson(Map<String, dynamic>.from(item));
-                albums.add(album);
-              } catch (e) {
-                print("Failed to parse album: $e");
-                continue;
-              }
-            }
-          }
-          print("Parsed ${albums.length} albums for section: $title");
+        } else if (firstItem is Album) {
+          print("Section $title contains Album objects");
+          final albums = contents.whereType<Album>().toList();
+          print("Found ${albums.length} albums for section: $title");
           if (albums.length >= 1) {
             parsedContents.add({
               'title': title,
               'contents': albums,
             });
           }
-        } else if (_isSongData(firstItemMap)) {
-          final songs = <MediaItem>[];
-          for (final item in contents) {
-            if (item is Map) {
-              try {
-                final song = MediaItemBuilder.fromJson(Map<String, dynamic>.from(item));
-                songs.add(song);
-              } catch (e) {
-                print("Failed to parse song: $e");
-                continue;
-              }
-            }
-          }
-          print("Parsed ${songs.length} songs for section: $title");
+        } else if (firstItem is MediaItem) {
+          print("Section $title contains MediaItem objects");
+          final songs = contents.whereType<MediaItem>().toList();
+          print("Found ${songs.length} songs for section: $title");
           if (songs.length >= 1) {
             parsedContents.add({
               'title': title,
               'contents': songs,
             });
           }
+        }
+        // Handle raw Map data that needs parsing
+        else if (firstItem is Map) {
+          final firstItemMap = Map<String, dynamic>.from(firstItem);
+          print("Section $title contains Map objects with keys: ${firstItemMap.keys}");
+          
+          if (_isPlaylistData(firstItemMap)) {
+            final playlists = <Playlist>[];
+            for (final item in contents) {
+              if (item is Map) {
+                try {
+                  final playlist = Playlist.fromJson(Map<String, dynamic>.from(item));
+                  playlists.add(playlist);
+                } catch (e) {
+                  print("Failed to parse playlist: $e");
+                  continue;
+                }
+              }
+            }
+            print("Parsed ${playlists.length} playlists for section: $title");
+            if (playlists.length >= 1) {
+              parsedContents.add({
+                'title': title,
+                'contents': playlists,
+              });
+            }
+          } else if (_isAlbumData(firstItemMap)) {
+            final albums = <Album>[];
+            for (final item in contents) {
+              if (item is Map) {
+                try {
+                  final album = Album.fromJson(Map<String, dynamic>.from(item));
+                  albums.add(album);
+                } catch (e) {
+                  print("Failed to parse album: $e");
+                  continue;
+                }
+              }
+            }
+            print("Parsed ${albums.length} albums for section: $title");
+            if (albums.length >= 1) {
+              parsedContents.add({
+                'title': title,
+                'contents': albums,
+              });
+            }
+          } else if (_isSongData(firstItemMap)) {
+            final songs = <MediaItem>[];
+            for (final item in contents) {
+              if (item is Map) {
+                try {
+                  final song = MediaItemBuilder.fromJson(Map<String, dynamic>.from(item));
+                  songs.add(song);
+                } catch (e) {
+                  print("Failed to parse song: $e");
+                  continue;
+                }
+              }
+            }
+            print("Parsed ${songs.length} songs for section: $title");
+            if (songs.length >= 1) {
+              parsedContents.add({
+                'title': title,
+                'contents': songs,
+              });
+            }
+          } else {
+            print("Unknown Map content type in section: $title, keys: ${firstItemMap.keys}");
+          }
         } else {
-          print("Unknown content type in section: $title, keys: ${firstItemMap.keys}");
+          print("Unknown content type in section: $title, type: ${firstItem.runtimeType}");
         }
       }
 
