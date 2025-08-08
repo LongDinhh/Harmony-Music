@@ -147,7 +147,8 @@ class ServiceIntegrationTest {
             ServiceRegistry.instance.getService<MusicServices>();
 
         // If we get here without throwing, error handling is working
-        // Service should not be null if properly initialized
+        // Service is properly initialized (GetX services are never null)
+        printINFO('✅ MusicService is accessible: ${musicService.runtimeType}');
       } catch (e) {
         // This is expected if service is not properly initialized
         printWARN('⚠️ Expected error in error handling test: $e');

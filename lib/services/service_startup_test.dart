@@ -1,5 +1,4 @@
 import '../utils/helper.dart';
-import '../utils/error_handler.dart';
 import 'service_registry.dart';
 import 'music_service.dart';
 

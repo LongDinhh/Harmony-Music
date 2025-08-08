@@ -12,8 +12,7 @@ import 'youtube_config_service.dart';
 // Import các service mới
 import 'network_service.dart';
 import 'cookie_service.dart';
-import 'api_service.dart'; // Keep for interface
-import 'dart_ytmusic_api_service.dart'; // New service implementation
+import 'api_service.dart';
 import 'youtube_data_parser_service.dart';
 
 enum AudioQuality {
@@ -26,7 +25,7 @@ class MusicServices extends getx.GetxService {
   // Service dependencies - lazy initialization
   NetworkService? _networkService;
   CookieService? _cookieService;
-  IAPIService? _apiService; // Use interface, implemented by DartYTMusicAPIService
+  APIService? _apiService;
   YouTubeDataParserService? _parserService;
 
   // Legacy headers for backward compatibility
@@ -75,7 +74,7 @@ class MusicServices extends getx.GetxService {
     try {
       _networkService = NetworkService.instance;
       _cookieService = CookieService.instance;
-      _apiService = DartYTMusicAPIService.instance; // Use new service
+      _apiService = APIService.instance;
       _parserService = YouTubeDataParserService.instance;
     } catch (e) {
       // Services will be initialized lazily if not available
@@ -95,8 +94,8 @@ class MusicServices extends getx.GetxService {
     return _cookieService!;
   }
 
-  IAPIService get apiService {
-    _apiService ??= DartYTMusicAPIService.instance;
+  APIService get apiService {
+    _apiService ??= APIService.instance;
     return _apiService!;
   }
 

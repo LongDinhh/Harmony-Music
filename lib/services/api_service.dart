@@ -46,6 +46,9 @@ abstract class IAPIService {
       {String additionalParams = ""});
   Future<Map<String, dynamic>> getSearchContinuation(Map additionalParamsNext,
       {int limit = 10});
+  
+  /// Update language code setter
+  set hlCode(String code);
 }
 
 /// Concrete implementation của API Service
@@ -1035,6 +1038,7 @@ class APIService extends getx.GetxService implements IAPIService {
   }
 
   /// Update language code trong context
+  @override
   set hlCode(String code) {
     _context['context']['client']['hl'] = code;
   }

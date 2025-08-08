@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 /// Performance testing utility for tracking rebuilds and wrapping widgets with performance overlays
 class PerformanceTesting {
