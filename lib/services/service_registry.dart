@@ -2,6 +2,7 @@ import 'package:get/get.dart' as getx;
 import 'network_service.dart';
 import 'cookie_service.dart';
 import 'api_service.dart';
+import 'dart_ytmusic_api_service.dart';
 import 'youtube_data_parser_service.dart';
 import 'music_service.dart';
 
