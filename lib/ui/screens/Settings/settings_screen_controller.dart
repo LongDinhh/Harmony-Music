@@ -135,7 +135,6 @@ class SettingsScreenController extends GetxController {
 
   void setAppLanguage(String? val) {
     Get.updateLocale(Locale(val!));
-    Get.find<MusicServices>().hlCode = val;
     Get.find<HomeScreenController>().loadContentFromNetwork(silent: true);
     currentAppLanguageCode.value = val;
     setBox.put('currentAppLanguageCode', val);

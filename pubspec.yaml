@@ -88,6 +88,7 @@ dependencies:
       ref: b23f419bea57426b91da7a0a5768db10a302ee8c
   crypto: ^3.0.6
   dart_ytmusic_api: ^1.2.1
+  rxdart: any
 dev_dependencies:
 
   # The "flutter_lints" package below contains a set of recommended lints to

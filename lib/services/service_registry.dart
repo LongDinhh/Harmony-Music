@@ -1,8 +1,5 @@
 import 'package:get/get.dart' as getx;
-import 'network_service.dart';
-import 'cookie_service.dart';
-import 'api_service.dart';
-import 'youtube_data_parser_service.dart';
+import 'package:harmonymusic/utils/helper.dart';
 import 'music_service.dart';
 
 /// Service Registry để quản lý tất cả các service dependencies
@@ -26,9 +23,9 @@ class ServiceRegistry {
       }
 
       _isInitialized = true;
-      print('✅ All services initialized successfully');
+      printINFO('✅ All services initialized successfully');
     } catch (e) {
-      print('❌ Error initializing services: $e');
+      printERROR('❌ Error initializing services: $e');
       rethrow;
     }
   }
@@ -41,9 +38,9 @@ class ServiceRegistry {
       }
 
       _isInitialized = false;
-      print('✅ All services cleaned up successfully');
+      printINFO('✅ All services cleaned up successfully');
     } catch (e) {
-      print('❌ Error cleaning up services: $e');
+      printERROR('❌ Error cleaning up services: $e');
     }
   }
 

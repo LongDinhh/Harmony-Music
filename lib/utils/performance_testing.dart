@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 /// Performance testing utility for tracking rebuilds and wrapping widgets with performance overlays
 class PerformanceTesting {
@@ -49,10 +48,10 @@ class PerformanceTesting {
   static void printRebuildStats() {
     if (kDebugMode) {
       print('\n=== REBUILD STATISTICS ===');
-      _rebuildCounters.entries.forEach((entry) {
+      for (var entry in _rebuildCounters.entries) {
         final lastRebuild = _lastRebuildTimes[entry.key];
         print('${entry.key}: ${entry.value} rebuilds (last: $lastRebuild)');
-      });
+      }
       print('========================\n');
     }
   }
@@ -103,10 +102,10 @@ mixin PerformanceTrackingMixin<T extends StatefulWidget> on State<T> {
 /// Widget wrapper that automatically tracks rebuilds for StatelessWidget
 class PerformanceTrackedWidget extends StatelessWidget {
   const PerformanceTrackedWidget({
-    Key? key,
+    super.key,
     required this.child,
     required this.name,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final String name;
@@ -121,12 +120,12 @@ class PerformanceTrackedWidget extends StatelessWidget {
 /// Performance overlay container for hot rebuild areas
 class PerformanceOverlayContainer extends StatelessWidget {
   const PerformanceOverlayContainer({
-    Key? key,
+    super.key,
     required this.child,
     required this.name,
     this.enabled = true,
     this.showOverlay = false,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final String name;

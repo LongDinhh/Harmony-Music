@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import 'package:harmonymusic/utils/helper.dart';
 import '../utils/error_handler.dart';
 import 'network_service.dart';
 import '/models/album.dart';
@@ -95,7 +96,8 @@ class APIService extends getx.GetxService implements IAPIService {
       _parserService = YouTubeDataParserService.instance;
     } catch (e) {
       // Services will be initialized lazily if not available
-      print('⚠️ Some services not yet initialized, will initialize lazily: $e');
+      printERROR(
+          '⚠️ Some services not yet initialized, will initialize lazily: $e');
     }
   }
 
