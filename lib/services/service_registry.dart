@@ -2,6 +2,7 @@ import 'package:get/get.dart' as getx;
 import 'network_service.dart';
 import 'cookie_service.dart';
 import 'api_service.dart';
+import 'dart_ytmusic_adapter_service.dart';
 import 'youtube_data_parser_service.dart';
 import 'music_service.dart';
 
@@ -19,14 +20,23 @@ class ServiceRegistry {
     if (_isInitialized) return;
 
     try {
-      // Services sẽ được initialize lazily thông qua singleton pattern
-      // Chỉ cần đảm bảo MusicServices được register với GetX
+      // Initialize the dart_ytmusic_api adapter service first
+      if (!getx.Get.isRegistered<DartYTMusicAdapterService>()) {
+        getx.Get.put<DartYTMusicAdapterService>(DartYTMusicAdapterService.instance, permanent: true);
+      }
+
+      // Initialize API service
+      if (!getx.Get.isRegistered<APIService>()) {
+        getx.Get.put<APIService>(APIService.instance, permanent: true);
+      }
+
+      // Initialize MusicServices
       if (!getx.Get.isRegistered<MusicServices>()) {
         getx.Get.put<MusicServices>(MusicServices(), permanent: true);
       }
 
       _isInitialized = true;
-      print('✅ All services initialized successfully');
+      print('✅ All services initialized successfully with dart_ytmusic_api');
     } catch (e) {
       print('❌ Error initializing services: $e');
       rethrow;
