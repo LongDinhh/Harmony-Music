@@ -69,8 +69,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "48502a426e39c92caea1ad1092c988bd57b5cea8"
+      ref: "9825078fbe905e238f86dcecf9d8a2f7e598ad0b"
+      resolved-ref: "9825078fbe905e238f86dcecf9d8a2f7e598ad0b"
       url: "https://github.com/LongDinhh/audio_metadata_reader.git"
     source: git
     version: "1.4.2"
@@ -461,10 +461,10 @@ packages:
     dependency: transitive
     description:
       name: intl
-      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.20.2"
+    version: "0.19.0"
   ionicons:
     dependency: "direct main"
     description:
