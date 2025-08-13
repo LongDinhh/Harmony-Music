@@ -9,7 +9,6 @@ import 'constant.dart';
 
 /// Abstract interface cho Cookie Service
 abstract class ICookieService {
-  Future<void> initializeCookies();
   Future<String> getCookieString();
   Future<void> refreshCookies();
   Future<String?> generateSAPISIDHASH({String? datasyncId, String? origin});
@@ -23,39 +22,6 @@ class CookieService extends getx.GetxService implements ICookieService {
   static CookieService get instance => _instance ??= CookieService._();
 
   CookieService._();
-
-  @override
-  void onInit() {
-    super.onInit();
-    initializeCookies();
-  }
-
-  @override
-  Future<void> initializeCookies() async {
-    try {
-      // Khởi tạo cookie từ storage hoặc tạo mới
-      final cookieString = await getCookieString();
-      if (cookieString.isEmpty) {
-        // Fallback cookie nếu không có cookie nào
-        await _setFallbackCookie();
-      }
-      printINFO('Cookie service initialized successfully');
-    } catch (e) {
-      AppErrorHandler.handleError(e, null, context: 'Cookie initialization');
-      await _setFallbackCookie();
-    }
-  }
-
-  Future<void> _setFallbackCookie() async {
-    try {
-      // Sử dụng consent cookie cơ bản
-      const fallbackCookie = 'CONSENT=YES+1';
-      // Note: Trong thực tế, bạn có thể muốn lưu cookie này vào storage
-      printINFO('Set fallback cookie: $fallbackCookie');
-    } catch (e) {
-      AppErrorHandler.handleError(e, null, context: 'Fallback cookie setup');
-    }
-  }
 
   @override
   Future<String> getCookieString() async {

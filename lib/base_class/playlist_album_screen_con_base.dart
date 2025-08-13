@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 import '../models/album.dart';
-import '../models/media_item_builder.dart';
+import '../models/media_Item_builder.dart';
 import '../models/playlist.dart';
-import '../services/music_service.dart';
+import '../repositories/repositories.dart';
 import '../ui/widgets/sort_widget.dart';
 
 /// An abstract base class for managing playlist and album screens in the application.
 /// This class provides a set of methods and properties to handle various operations
 /// such as fetching album/playlist details, managing songs, and performing additional operations.
 abstract class PlaylistAlbumScreenControllerBase extends GetxController {
-  /// Instance of [MusicServices] used to interact with music-related services.
-  final MusicServices musicServices = Get.find<MusicServices>();
+  /// Instance of [MusicRepository] used to interact with music-related services.
+  final MusicRepository musicRepository = Get.find<MusicRepository>();
 
   /// Observable boolean indicating whether the album is offline.
   final RxBool isOffline = false.obs;

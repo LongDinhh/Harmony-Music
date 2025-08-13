@@ -38,6 +38,7 @@ dependencies:
     git:
       url: https://github.com/LongDinhh/audio_metadata_reader.git
       branch: main
+      ref: 9825078fbe905e238f86dcecf9d8a2f7e598ad0b
   buttons_tabbar: ^1.3.13
   cached_network_image: ^3.4.0
   dio: ^5.7.0
@@ -86,6 +87,8 @@ dependencies:
       branch: master
       ref: b23f419bea57426b91da7a0a5768db10a302ee8c
   crypto: ^3.0.6
+  dart_ytmusic_api: ^1.2.1
+  rxdart: any
 dev_dependencies:
 
   # The "flutter_lints" package below contains a set of recommended lints to

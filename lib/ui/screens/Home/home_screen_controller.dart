@@ -6,20 +6,20 @@ import 'package:hive/hive.dart';
 import '../../../utils/haptic_utils.dart';
 import '../../../utils/scroll_controller_manager.dart';
 
-import '/models/media_item_builder.dart';
+import '/models/media_Item_builder.dart';
 import '/ui/player/player_controller.dart';
 import '../../../utils/update_check_flag_file.dart';
 import '../../../utils/helper.dart';
 import '/models/album.dart';
 import '/models/playlist.dart';
 import '/models/quick_picks.dart';
-import '/services/music_service.dart';
+import '/repositories/repositories.dart';
 import '../Settings/settings_screen_controller.dart';
 import '/ui/widgets/new_version_dialog.dart';
 
 class HomeScreenController extends GetxController
     with ScrollControllerManagerMixin {
-  final MusicServices _musicServices = Get.find<MusicServices>();
+  final MusicRepository _musicRepository = Get.find<MusicRepository>();
   final isContentFetched = false.obs;
   final tabIndex = 0.obs;
   final networkError = false.obs;
@@ -124,12 +124,12 @@ class HomeScreenController extends GetxController
       final limitContent =
           Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
       final homeContentListMap =
-          await _musicServices.getHome(limit: limitContent);
+          await _musicRepository.getHomeContent(limit: limitContent);
 
       try {
         final songId = box.get("recentSongId");
         if (songId != null) {
-          final rel = (await _musicServices.getContentRelatedToSong(
+          final rel = (await _musicRepository.getContentRelatedToSong(
               songId, getContentHlCode()));
           final con = rel.removeAt(0);
           quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]));
@@ -152,9 +152,8 @@ class HomeScreenController extends GetxController
       cachedHomeScreenData(updateAll: true);
       await Hive.box("AppPrefs")
           .put("homeScreenDataTime", DateTime.now().millisecondsSinceEpoch);
-      // ignore: unused_catch_stack
-    } on NetworkError catch (r, e) {
-      printERROR("Home Content not loaded due to ${r.message}");
+    } catch (e) {
+      printERROR("Home Content not loaded due to $e");
       await Future.delayed(const Duration(seconds: 1));
       networkError.value = !silent;
     }
@@ -247,7 +246,7 @@ class HomeScreenController extends GetxController
     songId ??= Hive.box("AppPrefs").get("recentSongId");
     if (songId != null) {
       try {
-        final value = await _musicServices.getContentRelatedToSong(
+        final value = await _musicRepository.getContentRelatedToSong(
             songId, getContentHlCode());
         middleContent.value = _setContentList(value);
         if (value.isNotEmpty && (value[0]['title']).contains("like")) {

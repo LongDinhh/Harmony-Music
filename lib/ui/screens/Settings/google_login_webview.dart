@@ -41,7 +41,7 @@ class _GoogleLoginWebViewState extends State<GoogleLoginWebView> {
             });
 
             // Kiểm tra nếu đã chuyển đến music.youtube.com (đăng nhập thành công)
-            if (url.contains('music.youtube.com')) {
+            if (url.startsWith('https://music.youtube.com')) {
               await _handleLoginSuccess(url);
             }
           },
@@ -64,7 +64,6 @@ class _GoogleLoginWebViewState extends State<GoogleLoginWebView> {
 
   Future<void> _handleLoginSuccess(String url) async {
     if (_loginCompleted) return;
-    _loginCompleted = true;
 
     try {
       // Lấy tất cả cookie từ WebView
@@ -78,6 +77,9 @@ class _GoogleLoginWebViewState extends State<GoogleLoginWebView> {
       final allCookies = [...youtubeCookies];
 
       if (allCookies.isNotEmpty) {
+        _loginCompleted = true;
+        printINFO('Login completed');
+
         // Chuyển đổi cookie sang format lưu trữ với thởi hạn chính xác
         final cookieMap = <String, dynamic>{};
 

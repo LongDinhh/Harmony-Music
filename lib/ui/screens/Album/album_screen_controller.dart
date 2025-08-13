@@ -8,7 +8,7 @@ import 'package:harmonymusic/utils/helper.dart';
 import 'package:hive/hive.dart';
 
 import '../../../mixins/additional_opeartion_mixin.dart';
-import '../../../models/media_item_builder.dart';
+import '../../../models/media_Item_builder.dart';
 import '../Home/home_screen_controller.dart';
 import '../Library/library_controller.dart';
 
@@ -62,7 +62,7 @@ class AlbumScreenController extends PlaylistAlbumScreenControllerBase
       if (!await checkIfAddedToLibrary(albumId)) {
         // Fetch album details online
         final content =
-            await musicServices.getPlaylistOrAlbumSongs(albumId: albumId);
+            await musicRepository.getPlaylistOrAlbumSongs(albumId: albumId);
         content['browseId'] = albumId;
         album.value = Album.fromJson(content);
         animationController.forward();
