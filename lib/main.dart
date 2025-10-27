@@ -17,6 +17,7 @@ import '/services/youtube_cookie_manager.dart';
 import '/services/music_service.dart';
 import '/services/downloader.dart';
 import '/services/piped_service.dart';
+import '/repositories/repositories.dart';
 import '/utils/helper.dart';
 import '/utils/error_handler.dart';
 
@@ -111,7 +112,11 @@ Future<void> _initializeAppParallel() async {
     Get.put<MusicServices>(MusicServices(), permanent: true);
     Get.lazyPut<Downloader>(() => Downloader(), fenix: true);
     Get.lazyPut<PipedServices>(() => PipedServices(), fenix: true);
-    AppErrorHandler.logInfo('Essential services initialized', context: 'Init');
+    
+    // Initialize repositories for dependency injection
+    Get.lazyPut<MusicRepository>(() => YouTubeMusicRepository(), fenix: true);
+    
+    AppErrorHandler.logInfo('Essential services and repositories initialized', context: 'Init');
 
     // Initialize audio service with timeout
     try {

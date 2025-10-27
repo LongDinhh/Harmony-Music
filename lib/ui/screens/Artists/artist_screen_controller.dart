@@ -9,6 +9,7 @@ import '/ui/widgets/sort_widget.dart';
 import '../../../models/artist.dart';
 import '../../../utils/helper.dart';
 import '../Library/library_controller.dart';
+import '/repositories/repositories.dart';
 import '/services/music_service.dart';
 import '/ui/screens/Home/home_screen_controller.dart';
 import '/ui/screens/Settings/settings_screen_controller.dart';
@@ -17,7 +18,8 @@ class ArtistScreenController extends GetxController
     with GetSingleTickerProviderStateMixin, ScrollControllerManagerMixin {
   final isArtistContentFetced = false.obs;
   final navigationRailCurrentIndex = 0.obs;
-  final musicServices = Get.find<MusicServices>();
+  final musicRepository = Get.find<MusicRepository>();
+  final musicServices = Get.find<MusicServices>(); // Keep for artist related content
   final railItems = <String>[].obs;
   final artistData = <String, dynamic>{}.obs;
   final sepataredContent = <String, dynamic>{}.obs;

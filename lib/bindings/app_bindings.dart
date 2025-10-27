@@ -8,6 +8,7 @@ import '/ui/screens/Settings/settings_screen_controller.dart';
 import '/ui/screens/Library/library_controller.dart';
 import '/ui/screens/Artists/artist_screen_controller.dart';
 import '/ui/utils/theme_controller.dart';
+import '/repositories/repositories.dart';
 
 /// App-wide dependency injection bindings
 /// This ensures proper lifecycle management and prevents memory leaks
@@ -16,6 +17,9 @@ class AppBindings extends Bindings {
   void dependencies() {
     // Core services - initialized once per app lifecycle
     _bindCoreServices();
+
+    // Repository layer - data access layer
+    _bindRepositories();
 
     // UI controllers - with proper lifecycle management
     _bindUIControllers();
@@ -39,6 +43,31 @@ class AppBindings extends Bindings {
 
     Get.lazyPut<PipedServices>(
       () => PipedServices(),
+      fenix: true,
+    );
+  }
+
+  /// Repository layer - clean architecture data access layer
+  void _bindRepositories() {
+    // Music repository - YouTube Music API integration
+    Get.lazyPut<MusicRepository>(
+      () => YouTubeMusicRepository(
+        musicService: Get.find<MusicServices>(),
+      ),
+      fenix: true,
+    );
+
+    // Library repository - local Hive database
+    Get.lazyPut<LibraryRepository>(
+      () => HiveLibraryRepository(
+        pipedService: Get.find<PipedServices>(),
+      ),
+      fenix: true,
+    );
+
+    // Cache repository - advanced caching with expiration
+    Get.lazyPut<CacheRepository>(
+      () => HiveCacheRepository(),
       fenix: true,
     );
   }
