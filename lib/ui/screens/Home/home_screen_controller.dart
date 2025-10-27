@@ -14,12 +14,15 @@ import '/models/album.dart';
 import '/models/playlist.dart';
 import '/models/quick_picks.dart';
 import '/services/music_service.dart';
+import '/repositories/interfaces/music_repository.dart';
+import '/repositories/exceptions/repository_exception.dart';
 import '../Settings/settings_screen_controller.dart';
 import '/ui/widgets/new_version_dialog.dart';
 
 class HomeScreenController extends GetxController
     with ScrollControllerManagerMixin {
   final MusicServices _musicServices = Get.find<MusicServices>();
+  MusicRepository? _musicRepository;
   final isContentFetched = false.obs;
   final tabIndex = 0.obs;
   final networkError = false.obs;
@@ -39,6 +42,15 @@ class HomeScreenController extends GetxController
     super.onInit();
     // Initialize current route
     currentRoute.value = getCurrentRouteName() ?? '/homeScreen';
+    
+    // Try to get repository, fallback to direct service calls if not available
+    try {
+      _musicRepository = Get.find<MusicRepository>();
+      printINFO('MusicRepository initialized successfully');
+    } catch (e) {
+      printERROR('MusicRepository not available, using direct service calls: $e');
+    }
+    
     loadContent();
     if (updateCheckFlag) _checkNewVersion();
   }
@@ -112,7 +124,7 @@ class HomeScreenController extends GetxController
     }
   }
 
-  Future<void> loadContentFromNetwork({bool silent = false}) async {
+  Future<void> loadContentFromNetwork({bool silent = false, bool forceRefresh = false}) async {
     final box = Hive.box("AppPrefs");
 
     // Clean up idle scroll controllers when loading new content
@@ -123,14 +135,39 @@ class HomeScreenController extends GetxController
       List middleContentTemp = [];
       final limitContent =
           Get.find<SettingsScreenController>().noOfHomeScreenContent.value;
-      final homeContentListMap =
-          await _musicServices.getHome(limit: limitContent);
+      
+      // Use YouTubeMusicRepository if available, fallback to direct service call
+      final homeContentResponse = _musicRepository != null
+          ? await _musicRepository!.getHomeContent(limit: limitContent, forceRefresh: forceRefresh)
+          : await _musicServices.getHome(limit: limitContent);
+      
+      // Extract the actual content list from repository response or use direct response
+      final homeContentListMap = _musicRepository != null
+          ? homeContentResponse['contents'] as List
+          : homeContentResponse as List;
+      
+      printINFO('Home content loaded via ${_musicRepository != null ? 'Repository' : 'Direct Service'} (forceRefresh: $forceRefresh) count: ${homeContentListMap.length}');
+      
+      // Debug: Check data structure
+      if (homeContentListMap.isNotEmpty) {
+        final firstItem = homeContentListMap[0];
+        printINFO('First item type: ${firstItem.runtimeType}');
+        if (firstItem is Map) {
+          printINFO('First item keys: ${firstItem.keys}');
+          if (firstItem['contents'] != null && (firstItem['contents'] as List).isNotEmpty) {
+            final firstContent = (firstItem['contents'] as List)[0];
+            printINFO('First content type: ${firstContent.runtimeType}');
+          }
+        }
+      }
 
       try {
         final songId = box.get("recentSongId");
         if (songId != null) {
-          final rel = (await _musicServices.getContentRelatedToSong(
-              songId, getContentHlCode()));
+          // Use YouTubeMusicRepository if available, fallback to direct service call
+          final rel = _musicRepository != null
+              ? await _musicRepository!.getRelatedContent(songId, getContentHlCode(), forceRefresh: forceRefresh)
+              : await _musicServices.getContentRelatedToSong(songId, getContentHlCode());
           final con = rel.removeAt(0);
           quickPicks.value = QuickPicks(List<MediaItem>.from(con["contents"]));
           middleContentTemp.addAll(rel);
@@ -168,7 +205,7 @@ class HomeScreenController extends GetxController
       isRefreshing.value = true;
 
       // Force load data từ network, bỏ qua cache
-      await loadContentFromNetwork(silent: false);
+      await loadContentFromNetwork(silent: false, forceRefresh: true);
     } catch (e) {
       printERROR("Error refreshing home screen data: $e");
     } finally {
@@ -214,31 +251,55 @@ class HomeScreenController extends GetxController
     List<dynamic> contents,
   ) {
     List contentTemp = [];
+    printINFO('_setContentList: Processing ${contents.length} items');
+    
     for (var content in contents) {
-      if ((content["contents"][0]).runtimeType == Playlist) {
-        final tmp = PlaylistContent(
-            playlistList: (content["contents"]).whereType<Playlist>().toList(),
-            title: content["title"]);
-        if (tmp.playlistList.length >= 2) {
-          contentTemp.add(tmp);
+      printINFO('Content item: ${content.runtimeType}, keys: ${content is Map ? content.keys : 'not a map'}');
+      
+            if (content is Map && content["contents"] != null && (content["contents"] as List).isNotEmpty) {
+        final firstContentItem = (content["contents"] as List)[0];
+        printINFO('First content item type: ${firstContentItem.runtimeType}');
+        
+        // Convert Map data to proper objects
+        final contentsList = (content["contents"] as List);
+        final title = content["title"] as String;
+        
+        // Repository now returns proper Model objects, use original logic
+        if (firstContentItem.runtimeType == Playlist) {
+          printINFO('Processing Playlist content');
+          final tmp = PlaylistContent(
+              playlistList: (content["contents"]).whereType<Playlist>().toList(),
+              title: title);
+          if (tmp.playlistList.length >= 1) {
+            contentTemp.add(tmp);
+          }
+        } else if (firstContentItem.runtimeType == Album) {
+          printINFO('Processing Album content');
+          final tmp = AlbumContent(
+              albumList: (content["contents"]).whereType<Album>().toList(),
+              title: title);
+          if (tmp.albumList.length >= 1) {
+            contentTemp.add(tmp);
+          }
+        } else if (firstContentItem.runtimeType == MediaItem) {
+          printINFO('Processing MediaItem content');
+          final songs = (content["contents"]).whereType<MediaItem>().toList();
+          if (songs.length >= 1) {
+            final tmp = QuickPicks(songs, title: title);
+            contentTemp.add(tmp);
+          }
+        } else {
+          printINFO('Unknown content type: ${firstContentItem.runtimeType}');
         }
-      } else if ((content["contents"][0]).runtimeType == Album) {
-        final tmp = AlbumContent(
-            albumList: (content["contents"]).whereType<Album>().toList(),
-            title: content["title"]);
-        if (tmp.albumList.length >= 2) {
-          contentTemp.add(tmp);
-        }
-      } else if ((content["contents"][0]).runtimeType == MediaItem) {
-        final songs = (content["contents"]).whereType<MediaItem>().toList();
-        if (songs.length >= 2) {
-          final tmp = QuickPicks(songs, title: content["title"]);
-          contentTemp.add(tmp);
-        }
+      } else {
+        printINFO('Content structure invalid - no contents array or empty');
       }
     }
+    printINFO('_setContentList: Generated ${contentTemp.length} content items');
     return contentTemp;
   }
+
+
 
   Future<void> changeDiscoverContent(dynamic val, {String? songId}) async {
     QuickPicks? quickPicks_;
